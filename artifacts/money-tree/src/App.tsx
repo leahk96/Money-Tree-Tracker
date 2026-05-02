@@ -11,6 +11,7 @@ import BudgetPage from "@/pages/BudgetPage";
 import TreePage from "@/pages/TreePage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import SettingsPage from "@/pages/SettingsPage";
+import BudgetDemo from "@/pages/BudgetDemo";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ function AppRoutes() {
           <Onboarding />
         </ProtectedRoute>
       </Route>
+      <Route path="/demo" component={BudgetDemo} />
       <Route path="/budget" component={BudgetPage} />
       <Route path="/budget/:year/:month" component={BudgetPage} />
       <Route path="/tree" component={TreePage} />
