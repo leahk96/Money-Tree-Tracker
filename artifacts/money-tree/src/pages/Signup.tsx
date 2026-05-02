@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 export default function Signup() {
   const { signUp } = useAuth();
@@ -10,7 +11,7 @@ export default function Signup() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,23 +20,42 @@ export default function Signup() {
     if (password !== confirm) { setError("Passwords don't match"); return; }
     setLoading(true);
     setError("");
+
     const { error: authError } = await signUp(email, password);
     if (authError) {
       setError((authError as Error).message || "Something went wrong. Please try again.");
       setLoading(false);
+      return;
+    }
+
+    // Check if the user was auto-confirmed (no email confirmation required)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      // Auto-confirmed — go straight to onboarding
+      navigate("/onboarding");
     } else {
-      setSuccess(true);
-      setTimeout(() => navigate("/onboarding"), 1500);
+      // Email confirmation required — show waiting screen
+      setAwaitingConfirmation(true);
+      setLoading(false);
     }
   };
 
-  if (success) {
+  if (awaitingConfirmation) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7] px-4">
-        <div className="text-center">
-          <div className="text-6xl mb-4">🌱</div>
-          <h2 className="text-2xl font-bold text-[#1a4a1a]">Account created!</h2>
-          <p className="text-[#5a7a5a] mt-2">Let's set up your Money Tree...</p>
+        <div className="w-full max-w-md text-center">
+          <div className="text-6xl mb-4">📬</div>
+          <h2 className="text-2xl font-bold text-[#1a4a1a]">Check your email</h2>
+          <p className="text-[#5a7a5a] mt-3 text-base leading-relaxed">
+            We've sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back here to sign in.
+          </p>
+          <div className="mt-6 p-4 bg-[#f0f8f0] border border-[#c8e4c8] rounded-xl text-sm text-[#2d5a2d] text-left space-y-1">
+            <p className="font-semibold mb-2">💡 Tip: skip email confirmation</p>
+            <p>If you control this Supabase project, go to <strong>Authentication → Settings</strong> and turn off <strong>Enable email confirmations</strong> for instant sign-up.</p>
+          </div>
+          <Link to="/login" className="mt-6 inline-block text-[#228B22] font-medium hover:underline text-sm">
+            Back to sign in →
+          </Link>
         </div>
       </div>
     );

@@ -60,6 +60,8 @@ CREATE POLICY "Users can insert own profile" ON profiles
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update own profile" ON profiles
   FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own profile" ON profiles
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Months policies
 CREATE POLICY "Users can view own months" ON months
@@ -68,6 +70,8 @@ CREATE POLICY "Users can insert own months" ON months
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update own months" ON months
   FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own months" ON months
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- Line items policies (via month ownership)
 CREATE POLICY "Users can view own line items" ON line_items

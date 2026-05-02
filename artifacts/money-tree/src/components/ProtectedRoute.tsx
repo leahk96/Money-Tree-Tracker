@@ -27,7 +27,9 @@ export function ProtectedRoute({ children, requireOnboarding = true }: Protected
     return <Redirect to="/login" />;
   }
 
-  if (requireOnboarding && profile !== null && !hasCompletedOnboarding) {
+  // Redirect to onboarding if: profile doesn't exist yet (brand-new user)
+  // OR profile exists but onboarding was never finished
+  if (requireOnboarding && !hasCompletedOnboarding) {
     return <Redirect to="/onboarding" />;
   }
 
