@@ -1,16 +1,8 @@
-import { AppLayout } from "@/components/AppLayout";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
 export default function AnalyticsPage() {
-  return (
-    <ProtectedRoute>
-      <AppLayout>
-        <div className="max-w-2xl mx-auto px-4 py-8 text-center">
-          <div className="text-6xl mb-4">📊</div>
-          <h1 className="text-2xl font-bold text-[#1a4a1a]">Analytics</h1>
-          <p className="text-[#5a7a5a] mt-2">Charts and insights — coming in Phase 2.</p>
-        </div>
-      </AppLayout>
-    </ProtectedRoute>
-  );
+  const [, navigate] = useLocation();
+  useEffect(() => { navigate("/budget", { replace: true }); }, [navigate]);
+  return null;
 }

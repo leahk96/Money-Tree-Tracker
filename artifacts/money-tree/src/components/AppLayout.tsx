@@ -11,8 +11,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { to: "/budget", label: "Budget", icon: "📋", match: ["/budget"] },
-  { to: "/tree", label: "My Tree", icon: "🌳", match: ["/tree"] },
-  { to: "/analytics", label: "Analytics", icon: "📊", match: ["/analytics"] },
+  { to: "/tree",   label: "My Tree", icon: "🌳", match: ["/tree"]   },
   { to: "/settings", label: "Settings", icon: "⚙️", match: ["/settings"] },
 ];
 

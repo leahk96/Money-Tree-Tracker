@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation, useParams } from "wouter";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { supabase } from "@/lib/supabase";
@@ -8,25 +9,63 @@ import { useProfile } from "@/contexts/ProfileContext";
 import { formatCurrency, parseCurrency, CURRENCY_SYMBOL } from "@/lib/currency";
 import { Section, Month, LineItem } from "@/lib/types";
 
-const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; bg: string; border: string }> = {
-  savings: { label: "Savings", emoji: "🌱", color: "#228B22", bg: "#f0f8f0", border: "#228B22" },
-  income:  { label: "Income",  emoji: "💰", color: "#2d6a2d", bg: "#f5faf5", border: "#4a9a4a" },
-  bills:   { label: "Bills",   emoji: "🏠", color: "#c0516b", bg: "#fdf5f7", border: "#E8B4B8" },
-  needs:   { label: "Needs",   emoji: "🛒", color: "#2b6cb0", bg: "#f0f6ff", border: "#7FB3D5" },
-  wants:   { label: "Wants",   emoji: "✨", color: "#b7791f", bg: "#fffbf0", border: "#F5B041" },
-  debt:    { label: "Debt",    emoji: "💳", color: "#5a6672", bg: "#f6f7f8", border: "#9aa8b5" },
+const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
+  income:  { label: "Income",  emoji: "💰", color: "#85BB65", textColor: "#1a4a1a", rowBg: "#f4fbf4" },
+  savings: { label: "Savings", emoji: "🌱", color: "#228B22", textColor: "#1a4a1a", rowBg: "#eef8ee" },
+  bills:   { label: "Bills",   emoji: "🏠", color: "#c0516b", textColor: "#5a0e20", rowBg: "#fdf5f7" },
+  needs:   { label: "Needs",   emoji: "🛒", color: "#5a8fc0", textColor: "#1a3050", rowBg: "#f0f6ff" },
+  wants:   { label: "Wants",   emoji: "✨", color: "#d4900a", textColor: "#5a3800", rowBg: "#fffbf0" },
+  debt:    { label: "Debt",    emoji: "💳", color: "#8a9aaa", textColor: "#2a3a4a", rowBg: "#f6f7f8" },
 };
 
-const SECTION_ORDER: Section[] = ["savings", "income", "bills", "needs", "wants", "debt"];
+const SECTION_ORDER: Section[] = ["income", "savings", "bills", "needs", "wants", "debt"];
+const PIE_COLORS = ["#85BB65","#228B22","#c0516b","#5a8fc0","#d4900a","#8a9aaa"];
 
 const DEFAULT_ROWS: Record<Section, string[]> = {
-  savings: ["Emergency fund", "Investments", "Other savings"],
   income:  ["Paycheck #1", "Paycheck #2", "Side income"],
+  savings: ["Emergency fund", "Investments", "Other savings"],
   bills:   ["Rent/Mortgage", "Utilities", "Phone/Internet", "Insurance", "Subscriptions"],
   needs:   ["Groceries", "Transport", "Medical", "Personal care"],
   wants:   ["Eating out", "Shopping", "Entertainment", "Hobbies"],
   debt:    ["Credit cards", "Loans"],
 };
+
+const SHORT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+interface YtdPoint { month: string; saved: number; isCurrent: boolean; }
+
+const ChartTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white border border-[#e8f0e8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#1a4a1a]">
+      {formatCurrency(payload[0].value)}
+    </div>
+  );
+};
+
+function AmountInput({ value, onChange }: { value: number; onChange: (v: string) => void }) {
+  const [focused, setFocused] = useState(false);
+  const [local, setLocal] = useState(value === 0 ? "" : String(value));
+
+  useEffect(() => {
+    if (!focused) setLocal(value === 0 ? "" : String(value));
+  }, [value, focused]);
+
+  return (
+    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#228B22] bg-white ring-1 ring-[#228B22]/20" : "border-transparent"}`}>
+      <span className="text-xs text-[#9ab89a] pl-1.5">{CURRENCY_SYMBOL}</span>
+      <input
+        type="number" min="0" step="0.01"
+        value={focused ? local : (value === 0 ? "" : String(value))}
+        onChange={e => { setLocal(e.target.value); onChange(e.target.value); }}
+        onFocus={() => { setFocused(true); setLocal(value === 0 ? "" : String(value)); }}
+        onBlur={() => setFocused(false)}
+        placeholder="—"
+        className="w-24 py-1 pr-2 text-sm text-right bg-transparent focus:outline-none text-[#1a4a1a] font-medium tabular-nums"
+      />
+    </div>
+  );
+}
 
 function BudgetContent() {
   const { user } = useAuth();
@@ -35,11 +74,12 @@ function BudgetContent() {
   const [, navigate] = useLocation();
 
   const now = new Date();
-  const year = params.year ? parseInt(params.year) : now.getFullYear();
+  const year  = params.year  ? parseInt(params.year)  : now.getFullYear();
   const month = params.month ? parseInt(params.month) : now.getMonth() + 1;
 
   const [monthData, setMonthData] = useState<Month | null>(null);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
+  const [ytdData,   setYtdData]   = useState<YtdPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingRow, setAddingRow] = useState<Section | null>(null);
   const [newRowName, setNewRowName] = useState("");
@@ -49,36 +89,29 @@ function BudgetContent() {
 
   const monthName = new Date(year, month - 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 
+  // Load current month + YTD bar data
   const loadMonth = useCallback(async () => {
     if (!user) return;
     setLoading(true);
 
+    // Create month if missing
     let { data: existing } = await supabase
-      .from("months")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("year", year)
-      .eq("month", month)
-      .single();
+      .from("months").select("*")
+      .eq("user_id", user.id).eq("year", year).eq("month", month).single();
 
     if (!existing) {
       const goal = profile?.default_monthly_goal ?? 500;
       const { data: created } = await supabase
         .from("months")
         .insert({ user_id: user.id, year, month, savings_goal: goal })
-        .select()
-        .single();
+        .select().single();
       existing = created;
 
       if (created) {
         const defaultItems = SECTION_ORDER.flatMap((section, si) =>
           DEFAULT_ROWS[section].map((name, i) => ({
-            month_id: created.id,
-            section,
-            name,
-            amount: 0,
-            sort_order: si * 100 + i,
-            is_custom: false,
+            month_id: created.id, section, name, amount: 0,
+            sort_order: si * 100 + i, is_custom: false,
           }))
         );
         await supabase.from("line_items").insert(defaultItems);
@@ -89,11 +122,27 @@ function BudgetContent() {
 
     if (existing) {
       const { data: items } = await supabase
-        .from("line_items")
-        .select("*")
-        .eq("month_id", existing.id)
-        .order("sort_order");
+        .from("line_items").select("*").eq("month_id", existing.id).order("sort_order");
       setLineItems(items ?? []);
+    }
+
+    // Load YTD savings per month for bar chart
+    const { data: allMonths } = await supabase
+      .from("months").select("id,month,savings_goal")
+      .eq("user_id", user.id).eq("year", year).lte("month", month);
+
+    if (allMonths && allMonths.length > 0) {
+      const ids = allMonths.map((m: Month) => m.id);
+      const { data: allItems } = await supabase
+        .from("line_items").select("month_id,amount").in("month_id", ids).eq("section","savings");
+
+      const points: YtdPoint[] = allMonths.map((m: Month) => {
+        const saved = (allItems ?? [])
+          .filter((i: LineItem) => i.month_id === m.id)
+          .reduce((s: number, i: LineItem) => s + i.amount, 0);
+        return { month: SHORT_MONTHS[m.month - 1], saved, isCurrent: m.month === month };
+      });
+      setYtdData(points.sort((a, b) => SHORT_MONTHS.indexOf(a.month) - SHORT_MONTHS.indexOf(b.month)));
     }
 
     setLoading(false);
@@ -102,10 +151,9 @@ function BudgetContent() {
   useEffect(() => { loadMonth(); }, [loadMonth]);
 
   const navigateMonth = (dir: -1 | 1) => {
-    let m = month + dir;
-    let y = year;
-    if (m < 1) { m = 12; y--; }
-    if (m > 12) { m = 1; y++; }
+    let m = month + dir, y = year;
+    if (m < 1)  { m = 12; y--; }
+    if (m > 12) { m = 1;  y++; }
     navigate(`/budget/${y}/${m}`);
   };
 
@@ -122,25 +170,12 @@ function BudgetContent() {
     if (!newRowName.trim() || !monthData) return;
     const existing = lineItems.filter(i => i.section === section);
     const sortOrder = existing.length > 0 ? Math.max(...existing.map(i => i.sort_order)) + 1 : 0;
-
     const { data } = await supabase
       .from("line_items")
-      .insert({
-        month_id: monthData.id,
-        section,
-        name: newRowName.trim(),
-        amount: 0,
-        sort_order: sortOrder,
-        is_custom: true,
-      })
-      .select()
-      .single();
-
-    if (data) {
-      setLineItems(prev => [...prev, data]);
-    }
-    setNewRowName("");
-    setAddingRow(null);
+      .insert({ month_id: monthData.id, section, name: newRowName.trim(), amount: 0, sort_order: sortOrder, is_custom: true })
+      .select().single();
+    if (data) setLineItems(prev => [...prev, data]);
+    setNewRowName(""); setAddingRow(null);
   };
 
   const deleteRow = async (itemId: string) => {
@@ -157,15 +192,25 @@ function BudgetContent() {
     setEditingGoal(false);
   };
 
-  const totalForSection = (section: Section) =>
-    lineItems.filter(i => i.section === section).reduce((sum, i) => sum + i.amount, 0);
+  const totalFor = (section: Section) =>
+    lineItems.filter(i => i.section === section).reduce((s, i) => s + i.amount, 0);
 
-  const totalSaved = totalForSection("savings");
-  const totalIncome = totalForSection("income");
-  const totalSpent = (["bills", "needs", "wants", "debt"] as Section[]).reduce((s, sec) => s + totalForSection(sec), 0);
+  const income    = totalFor("income");
+  const saved     = totalFor("savings");
+  const expenses  = (["bills","needs","wants","debt"] as Section[]).reduce((a,s) => a + totalFor(s), 0);
+  const allocated = saved + expenses;
+  const leftover  = income - allocated;
+  const leftPct   = income > 0 ? Math.max(0, Math.min(100, (leftover / income) * 100)) : 0;
+
   const savingsGoal = monthData?.savings_goal ?? 500;
-  const goalPct = Math.min(100, Math.round((totalSaved / savingsGoal) * 100));
-  const goalMet = totalSaved >= savingsGoal;
+  const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
+  const goalMet = saved >= savingsGoal;
+
+  const ytdTotal = ytdData.reduce((a, p) => a + p.saved, 0);
+
+  const pieData = SECTION_ORDER
+    .map(s => ({ name: SECTION_CONFIG[s].label, value: totalFor(s) }))
+    .filter(d => d.value > 0);
 
   if (loading) {
     return (
@@ -176,57 +221,51 @@ function BudgetContent() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
-      {/* Month navigation */}
+    <div className="max-w-4xl mx-auto px-4 py-5 space-y-5 pb-10">
+
+      {/* Month nav */}
       <div className="flex items-center justify-between">
-        <button onClick={() => navigateMonth(-1)} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition text-lg">
-          ←
-        </button>
-        <h2 className="text-lg font-semibold text-[#1a4a1a]">{monthName}</h2>
-        <button onClick={() => navigateMonth(1)} className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition text-lg">
-          →
-        </button>
+        <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition">←</button>
+        <h2 className="text-base font-semibold text-[#1a4a1a]">{monthName}</h2>
+        <button onClick={() => navigateMonth(1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition">→</button>
       </div>
 
-      {/* Savings Goal Banner */}
-      <div className={`rounded-2xl p-5 ${goalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-[#FFD700] to-[#F5B041]"}`}>
-        <div className="flex items-start justify-between mb-3">
-          <div>
-            <div className="text-white/80 text-sm font-medium mb-1">Monthly savings goal</div>
-            <div className="text-white text-3xl font-bold">
-              {formatCurrency(totalSaved)} <span className="text-white/70 text-xl">/ {formatCurrency(savingsGoal)}</span>
-            </div>
+      {/* Savings goal strip */}
+      <div
+        className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 ${goalMet ? "bg-[#228B22]" : "bg-[#d4900a]"}`}
+      >
+        <div>
+          <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
+          <div className="text-white font-bold text-xl tabular-nums">
+            {formatCurrency(saved)}&nbsp;
+            <span className="text-white/60 font-normal text-sm">/ {formatCurrency(savingsGoal)}</span>
           </div>
-          <button
-            onClick={() => { setGoalInput(String(savingsGoal)); setEditingGoal(true); }}
-            className="text-white/80 hover:text-white text-sm underline"
-          >
-            Edit
-          </button>
         </div>
-
-        <div className="w-full bg-white/30 rounded-full h-2 mb-2">
-          <div
-            className="bg-white rounded-full h-2 transition-all duration-700"
-            style={{ width: `${goalPct}%` }}
-          />
+        <div className="flex-1 min-w-[160px] max-w-xs">
+          <div className="w-full bg-white/25 rounded-full h-2">
+            <div className="bg-white rounded-full h-2 transition-all duration-500" style={{ width: `${goalPct}%` }} />
+          </div>
+          <div className="text-white/80 text-xs mt-1 text-right">
+            {goalMet ? "✓ Goal met — tree growing!" : `${formatCurrency(savingsGoal - saved)} to go`}
+          </div>
         </div>
-
-        <div className="text-white/90 text-sm font-medium">
-          {goalMet ? "✓ Goal met! Your tree is growing" : `${formatCurrency(savingsGoal - totalSaved)} to go · ${goalPct}%`}
-        </div>
+        <button
+          onClick={() => { setGoalInput(String(savingsGoal)); setEditingGoal(true); }}
+          className="text-white/70 hover:text-white text-xs underline shrink-0"
+        >
+          Edit goal
+        </button>
       </div>
 
       {/* Edit goal modal */}
       {editingGoal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
             <h3 className="font-semibold text-[#1a4a1a] mb-4">Update savings goal</h3>
             <div className="relative mb-4">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#228B22] font-semibold">{CURRENCY_SYMBOL}</span>
               <input
-                type="number"
-                value={goalInput}
+                type="number" value={goalInput}
                 onChange={e => setGoalInput(e.target.value)}
                 className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#d0e4d0] focus:outline-none focus:ring-2 focus:ring-[#228B22] text-[#1a4a1a] text-lg font-semibold"
                 autoFocus
@@ -240,130 +279,180 @@ function BudgetContent() {
         </div>
       )}
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white rounded-xl border border-[#e8f0e8] p-4">
-          <div className="text-xs text-[#5a7a5a] mb-1">Income this month</div>
-          <div className="text-xl font-bold text-[#228B22]">{formatCurrency(totalIncome)}</div>
+      {/* ── BUDGET TABLE ── */}
+      <div className="bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
+        {/* Column headers */}
+        <div className="grid grid-cols-[1fr_150px_32px] bg-[#f5f8f5] border-b border-[#e8f0e8]">
+          <div className="px-4 py-2.5 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Item</div>
+          <div className="px-2 py-2.5 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide text-right">Amount</div>
+          <div />
         </div>
-        <div className="bg-white rounded-xl border border-[#e8f0e8] p-4">
-          <div className="text-xs text-[#5a7a5a] mb-1">Total spent</div>
-          <div className="text-xl font-bold text-[#c0516b]">{formatCurrency(totalSpent)}</div>
+
+        {SECTION_ORDER.map(section => {
+          const cfg = SECTION_CONFIG[section];
+          const items = lineItems.filter(i => i.section === section);
+          const sTotal = totalFor(section);
+          const isAdding = addingRow === section;
+
+          return (
+            <div key={section}>
+              {/* Section header */}
+              <div className="grid grid-cols-[1fr_150px_32px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
+                <div className="px-4 py-2 flex items-center gap-2">
+                  <span className="text-sm">{cfg.emoji}</span>
+                  <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                </div>
+                <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
+                  {sTotal > 0 ? formatCurrency(sTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                </div>
+                <div />
+              </div>
+
+              {/* Item rows */}
+              {items.map(item => (
+                <div key={item.id} className="grid grid-cols-[1fr_150px_32px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
+                  <div className="px-4 py-2 pl-10 flex items-center">
+                    <span className="text-sm text-[#2d4a2d] truncate">{item.name}</span>
+                  </div>
+                  <div className="px-1 py-1 flex items-center justify-end">
+                    <AmountInput value={item.amount} onChange={v => updateAmount(item.id, v)} />
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <button
+                      onClick={() => deleteRow(item.id)}
+                      className="opacity-0 group-hover:opacity-100 w-5 h-5 rounded text-[#c0b0b0] hover:text-red-500 hover:bg-red-50 transition text-xs flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {/* Add row */}
+              <div className="border-b border-[#f0f4f0]">
+                {isAdding ? (
+                  <div className="flex items-center gap-2 pl-10 pr-3 py-2">
+                    <input
+                      autoFocus value={newRowName}
+                      onChange={e => setNewRowName(e.target.value)}
+                      onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
+                      placeholder="Item name..."
+                      className="flex-1 px-2 py-1 text-sm rounded border border-[#d0e4d0] focus:outline-none focus:ring-1 focus:ring-[#228B22]"
+                    />
+                    <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#228B22] text-white text-xs rounded hover:bg-[#1a6b1a]">Add</button>
+                    <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9ab89a] text-xs rounded hover:bg-[#f0f8f0]">Cancel</button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { setAddingRow(section); setNewRowName(""); }}
+                    className="w-full text-left pl-10 px-4 py-2 text-xs text-[#228B22] hover:bg-[#f5fbf5] transition font-medium"
+                  >
+                    + Add row
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Footer totals */}
+        <div className="grid grid-cols-[1fr_150px_32px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
+          <div className="px-4 py-3 text-sm font-bold text-[#1a4a1a]">Total income</div>
+          <div className="px-2 py-3 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
+          <div />
+        </div>
+        <div className="grid grid-cols-[1fr_150px_32px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
+          <div className="px-4 py-3 text-sm font-bold text-[#1a4a1a]">Total allocated</div>
+          <div className="px-2 py-3 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
+          <div />
+        </div>
+        <div className={`grid grid-cols-[1fr_150px_32px] border-t-2 ${leftover >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+          <div className="px-4 py-3 text-sm font-bold text-[#1a4a1a]">Left unallocated</div>
+          <div className={`px-2 py-3 text-sm font-bold text-right tabular-nums ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+            {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+          </div>
+          <div />
         </div>
       </div>
 
-      {/* Budget sections */}
-      {SECTION_ORDER.map(section => {
-        const cfg = SECTION_CONFIG[section];
-        const items = lineItems.filter(i => i.section === section);
-        const total = items.reduce((s, i) => s + i.amount, 0);
+      {/* ── 3 CHARTS ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-        return (
-          <div
-            key={section}
-            className="bg-white rounded-xl border border-[#e8f0e8] overflow-hidden"
-            style={{ borderLeftColor: cfg.border, borderLeftWidth: 3 }}
-          >
-            <div className="flex items-center justify-between px-4 pt-4 pb-2" style={{ backgroundColor: cfg.bg }}>
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{cfg.emoji}</span>
-                <span className="font-semibold text-[#1a4a1a]">{cfg.label}</span>
-              </div>
-              <span className="font-bold text-[#1a4a1a]">{formatCurrency(total)}</span>
-            </div>
-
-            <div className="divide-y divide-[#f0f4f0]">
-              {items.map(item => (
-                <LineItemRow
-                  key={item.id}
-                  item={item}
-                  onAmountChange={updateAmount}
-                  onDelete={deleteRow}
-                />
-              ))}
-            </div>
-
-            <div className="px-4 pb-3 pt-2">
-              {addingRow === section ? (
-                <div className="flex gap-2">
-                  <input
-                    autoFocus
-                    value={newRowName}
-                    onChange={e => setNewRowName(e.target.value)}
-                    onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
-                    placeholder="Row name..."
-                    className="flex-1 px-3 py-2 text-sm rounded-lg border border-[#d0e4d0] focus:outline-none focus:ring-2 focus:ring-[#228B22] text-[#1a4a1a]"
-                  />
-                  <button onClick={() => addRow(section)} className="px-3 py-2 bg-[#228B22] text-white text-sm rounded-lg hover:bg-[#1a6b1a]">Add</button>
-                  <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-3 py-2 text-[#5a7a5a] text-sm rounded-lg hover:bg-[#f0f8f0]">Cancel</button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => { setAddingRow(section); setNewRowName(""); }}
-                  className="text-sm text-[#228B22] hover:text-[#1a6b1a] font-medium flex items-center gap-1"
-                >
-                  <span className="text-base">+</span> Add row
-                </button>
-              )}
-            </div>
+        {/* Chart 1: Amount left to spend */}
+        <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
+          <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-2">Amount left to spend</div>
+          <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+            {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
           </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function LineItemRow({ item, onAmountChange, onDelete }: {
-  item: LineItem;
-  onAmountChange: (id: string, value: string) => void;
-  onDelete: (id: string) => void;
-}) {
-  const [focused, setFocused] = useState(false);
-  const [localValue, setLocalValue] = useState(item.amount === 0 ? "" : String(item.amount));
-  const [showMenu, setShowMenu] = useState(false);
-
-  return (
-    <div className="flex items-center justify-between px-4 py-2.5 hover:bg-[#fafcfa] group relative">
-      <span className="text-sm text-[#2d4a2d] flex-1 min-w-0 pr-2 truncate">{item.name}</span>
-
-      <div className="flex items-center gap-2">
-        <div className={`flex items-center rounded-lg border transition ${focused ? "border-[#228B22] ring-1 ring-[#228B22]/30" : "border-transparent bg-[#f5f8f5]"}`}>
-          <span className="pl-2 text-sm text-[#5a7a5a]">{CURRENCY_SYMBOL}</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={focused ? localValue : (item.amount === 0 ? "" : String(item.amount))}
-            onChange={e => {
-              setLocalValue(e.target.value);
-              onAmountChange(item.id, e.target.value);
-            }}
-            onFocus={() => { setFocused(true); setLocalValue(item.amount === 0 ? "" : String(item.amount)); }}
-            onBlur={() => { setFocused(false); }}
-            placeholder="0"
-            className="w-24 pr-2 py-1.5 text-sm text-right bg-transparent focus:outline-none text-[#1a4a1a] font-medium"
-          />
+          <div className="text-xs text-[#9ab89a] mb-3">of {formatCurrency(income)} income</div>
+          <div className="w-full bg-[#e8f0e8] rounded-full h-3 overflow-hidden">
+            <div
+              className={`h-3 rounded-full transition-all duration-500 ${leftover >= 0 ? "bg-[#228B22]" : "bg-[#c0516b]"}`}
+              style={{ width: `${leftPct}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-[10px] text-[#b0c4b0] mt-1.5">
+            <span>Allocated: {formatCurrency(allocated)}</span>
+            <span>{Math.round(leftPct)}% free</span>
+          </div>
         </div>
 
-        <div className="relative">
-          <button
-            onClick={() => setShowMenu(v => !v)}
-            className="opacity-0 group-hover:opacity-100 w-6 h-6 rounded flex items-center justify-center text-[#9ab89a] hover:text-[#5a7a5a] hover:bg-[#e8f0e8] transition text-xs"
-          >
-            ···
-          </button>
-          {showMenu && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setShowMenu(false)} />
-              <div className="absolute right-0 top-7 bg-white border border-[#e8f0e8] rounded-lg shadow-lg z-20 py-1 min-w-[120px]">
-                <button
-                  onClick={() => { onDelete(item.id); setShowMenu(false); }}
-                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+        {/* Chart 2: Total saved YTD */}
+        <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
+          <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-1">Total saved year to date</div>
+          <div className="text-2xl font-bold text-[#228B22] tabular-nums mb-3">{formatCurrency(ytdTotal)}</div>
+          {ytdData.length > 0 ? (
+            <ResponsiveContainer width="100%" height={90}>
+              <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f4f0" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9ab89a" }} axisLine={false} tickLine={false} />
+                <YAxis hide />
+                <Tooltip content={<ChartTooltip />} cursor={{ fill: "#f0f8f0" }} />
+                <Bar dataKey="saved" radius={[3,3,0,0]}>
+                  {ytdData.map((p, i) => (
+                    <Cell key={i} fill={p.isCurrent ? "#228B22" : "#85BB65"} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="text-xs text-[#b0c4b0] text-center py-6">No data yet this year</div>
+          )}
+        </div>
+
+        {/* Chart 3: Breakdown */}
+        <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
+          <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-2">Breakdown</div>
+          {pieData.length > 0 ? (
+            <div className="flex items-center gap-3">
+              <PieChart width={96} height={96}>
+                <Pie
+                  data={pieData} cx={44} cy={44}
+                  innerRadius={26} outerRadius={44}
+                  paddingAngle={2} dataKey="value" stroke="none"
                 >
-                  Delete row
-                </button>
+                  {pieData.map((entry, i) => {
+                    const sIdx = SECTION_ORDER.findIndex(s => SECTION_CONFIG[s].label === entry.name);
+                    return <Cell key={i} fill={PIE_COLORS[sIdx >= 0 ? sIdx : i]} />;
+                  })}
+                </Pie>
+                <Tooltip content={<ChartTooltip />} />
+              </PieChart>
+              <div className="flex flex-col gap-1 flex-1 min-w-0">
+                {pieData.map((entry, i) => {
+                  const sIdx = SECTION_ORDER.findIndex(s => SECTION_CONFIG[s].label === entry.name);
+                  return (
+                    <div key={entry.name} className="flex items-center gap-1.5 min-w-0">
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[sIdx >= 0 ? sIdx : i] }} />
+                      <span className="text-[10px] text-[#5a7a5a] truncate flex-1">{entry.name}</span>
+                      <span className="text-[10px] font-semibold text-[#1a4a1a] tabular-nums shrink-0">{formatCurrency(entry.value)}</span>
+                    </div>
+                  );
+                })}
               </div>
-            </>
+            </div>
+          ) : (
+            <div className="text-xs text-[#b0c4b0] text-center py-6">Enter amounts to see your breakdown</div>
           )}
         </div>
       </div>
