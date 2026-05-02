@@ -1,6 +1,5 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { formatCurrency } from "@/lib/currency";
 
@@ -12,13 +11,13 @@ const QUARTERS = [
   { label: "Q4", months: "Oct–Dec" },
 ];
 
-// Demo scenario: realistic 4 months into the year — 3 goals hit, 1 missed
-const DEMO_MET = new Set([1, 3, 4]);
+// Demo scenario: Q1 perfect (all 3 months) + month 4 hit — 4 goals total, Q1 coin earned
+const DEMO_MET = new Set([1, 2, 3, 4]);
 const DEMO_AMOUNTS: Record<number, number> = {
-  1: 520, 2: 380, 3: 510, 4: 505,
+  1: 520, 2: 495, 3: 510, 4: 505,
 };
 const GOAL = 500;
-const MONTHS_MET = DEMO_MET.size; // 3
+const MONTHS_MET = DEMO_MET.size; // 4
 
 const currentMonth = new Date().getMonth() + 1;
 const q1 = [1, 2, 3].every(m => DEMO_MET.has(m));
@@ -44,7 +43,12 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
           className="w-16 h-16 rounded-full flex items-center justify-center shadow-md text-3xl"
           style={{ background: "radial-gradient(circle at 35% 35%, #FFE066, #FFA500)" }}
         >
-          🪙
+          <motion.span
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            🪙
+          </motion.span>
         </motion.div>
       ) : (
         <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#c8d8c8] bg-[#f5f8f5] flex items-center justify-center">
@@ -54,19 +58,13 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
       <span className={`text-xs font-bold ${earned ? "text-[#b07800]" : "text-[#9ab89a]"}`}>{label}</span>
       <span className="text-[10px] text-[#9ab89a] text-center leading-tight">{months}</span>
       <span className={`text-[10px] font-medium ${earned ? "text-[#b07800]" : "text-[#c0d0c0]"}`}>
-        {earned ? "Earned!" : "Locked"}
+        {earned ? "✓ Earned!" : "Locked"}
       </span>
     </motion.div>
   );
 }
 
 export default function TreeDemo() {
-  const [demoMonths, setDemoMonths] = useState(MONTHS_MET);
-
-  function triggerCelebration() {
-    setDemoMonths(n => Math.min(n + 1, 12));
-  }
-
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       <div className="bg-[#228B22] text-white text-center text-sm py-2 px-4">
@@ -97,14 +95,14 @@ export default function TreeDemo() {
           <div className="flex items-center justify-between mb-1">
             <h2 className="font-bold text-[#1a4a1a] text-base">Your Money Tree</h2>
             <span className="text-xs font-semibold text-[#228B22] bg-[#e8f5e8] px-2.5 py-1 rounded-full">
-              {demoMonths}/12 goals met
+              {MONTHS_MET}/12 goals met
             </span>
           </div>
           <p className="text-xs text-[#7a9a7a] mb-3">
             Hit your monthly savings goal and your tree grows. Miss a month and it stays put — no shortcuts, no going backwards.
           </p>
 
-          <MoneyTreeSVG monthsGoalMet={demoMonths} celebrateOnChange />
+          <MoneyTreeSVG monthsGoalMet={MONTHS_MET} />
 
           {/* Progress dots */}
           <div className="mt-3 pt-3 border-t border-[#f0f4f0] flex items-center justify-between">
@@ -113,21 +111,9 @@ export default function TreeDemo() {
             </p>
             <div className="flex gap-1 shrink-0 ml-3">
               {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className={`w-2 h-2 rounded-full transition-colors duration-300 ${i < demoMonths ? "bg-[#228B22]" : "bg-[#e0e8e0]"}`} />
+                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#228B22]" : "bg-[#e0e8e0]"}`} />
               ))}
             </div>
-          </div>
-
-          {/* Demo celebration trigger */}
-          <div className="mt-3 pt-3 border-t border-[#f0f4f0] flex items-center justify-between gap-3">
-            <p className="text-[10px] text-[#9ab89a] italic">Try the level-up animation:</p>
-            <button
-              onClick={triggerCelebration}
-              disabled={demoMonths >= 12}
-              className="text-xs font-semibold text-white bg-[#228B22] hover:bg-[#1a6b1a] disabled:opacity-40 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg transition active:scale-95"
-            >
-              🌱 Hit a goal!
-            </button>
           </div>
         </motion.div>
 
@@ -164,8 +150,8 @@ export default function TreeDemo() {
           className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-amber-200 p-4 flex items-center justify-between"
         >
           <div>
-            <div className="text-base font-bold text-[#c05a00]">🔥 3 month streak!</div>
-            <div className="text-xs text-[#9a6020] mt-0.5">Keep going — 3 more months unlocks your Q2 coin</div>
+            <div className="text-base font-bold text-[#c05a00]">🔥 4 month streak!</div>
+            <div className="text-xs text-[#9a6020] mt-0.5">Q1 coin earned — 2 more months in Q2 to get your next one</div>
           </div>
           <div className="text-4xl">🔥</div>
         </motion.div>
@@ -185,11 +171,11 @@ export default function TreeDemo() {
             <div className="text-lg font-bold text-[#1a4a1a]">Bali 2026</div>
             <div className="mt-2 text-sm text-[#5a7a5a]">
               Saved so far:&nbsp;
-              <span className="font-semibold text-[#228B22]">{formatCurrency(1535)}</span>
+              <span className="font-semibold text-[#228B22]">{formatCurrency(2030)}</span>
               <span className="text-[#9ab89a]"> / {formatCurrency(8000)}</span>
             </div>
             <div className="mt-2 w-full bg-[#e8f0e8] rounded-full h-1.5">
-              <div className="bg-[#228B22] h-1.5 rounded-full" style={{ width: "19%" }} />
+              <div className="bg-[#228B22] h-1.5 rounded-full" style={{ width: "25%" }} />
             </div>
           </div>
         </motion.div>
@@ -202,6 +188,7 @@ export default function TreeDemo() {
             <div className="h-px flex-1 bg-[#e8f0e8]" />
           </div>
 
+          {/* Quarterly coins */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -213,7 +200,7 @@ export default function TreeDemo() {
               <span className="text-xs text-[#9ab89a]">{coinsEarned}/4 earned</span>
             </div>
             <p className="text-xs text-[#7a9a7a] mb-5">
-              Hit your goal every month in a quarter and earn a coin. All 4 coins melt into a gold bullion at year end.
+              Hit your goal every month in a quarter and earn a coin. Collect all 4 and they melt into a gold bullion at year end.
             </p>
             <div className="flex justify-around">
               {QUARTERS.map((q, i) => (
@@ -222,24 +209,38 @@ export default function TreeDemo() {
             </div>
           </motion.div>
 
+          {/* Gold bullion */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18 }}
-            className={`mt-3 rounded-2xl border p-5 text-center ${bullion ? "border-[#FFD700] bg-gradient-to-br from-yellow-50 to-amber-50" : "border-[#e8f0e8] bg-white"}`}
+            className={`mt-3 rounded-2xl border p-5 ${bullion ? "border-[#FFD700] bg-gradient-to-br from-yellow-50 to-amber-50" : "border-[#e8f0e8] bg-white"}`}
           >
             {bullion ? (
-              <div className="space-y-2">
+              <div className="text-center space-y-2">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5 }} className="text-5xl">🏆</motion.div>
                 <div className="font-bold text-[#b07800] text-lg">Gold bullion unlocked!</div>
+                <div className="text-sm text-[#9a6020]">You hit your goal every single month. Extraordinary!</div>
               </div>
             ) : (
               <div className="flex items-center gap-4 text-left">
-                <div className="text-4xl opacity-30 shrink-0">🏅</div>
+                {/* Gold bar illustration */}
+                <div className="shrink-0">
+                  <svg width="52" height="34" viewBox="0 0 52 34" className="opacity-30">
+                    <rect x="4" y="8" width="44" height="22" rx="4" fill="#C8960C" />
+                    <rect x="2" y="6" width="48" height="22" rx="4" fill="#FFD700" />
+                    <rect x="6" y="10" width="40" height="14" rx="2" fill="none" stroke="#C8960C" strokeWidth="1.2" />
+                    <rect x="2" y="6" width="48" height="6" rx="4" fill="rgba(255,255,255,0.18)" />
+                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#8a6200" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
+                  </svg>
+                </div>
                 <div>
                   <div className="font-semibold text-[#9ab89a]">Gold bullion</div>
                   <div className="text-xs text-[#b0c4b0] mt-0.5">
-                    Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bullion.
+                    Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bar.
+                  </div>
+                  <div className="text-xs text-[#c8a000] mt-1.5 font-medium">
+                    {coinsEarned}/4 coins — {4 - coinsEarned} more quarter{4 - coinsEarned !== 1 ? "s" : ""} to go
                   </div>
                 </div>
               </div>
