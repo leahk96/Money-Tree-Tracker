@@ -640,18 +640,19 @@ function BudgetContent() {
 
             {/* Footer totals */}
             <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
-              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Remaining left</div>
-              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${income - allocated >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {income - allocated >= 0 ? formatCurrency(income - allocated) : `−${formatCurrency(Math.abs(income - allocated))}`}
-              </div>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total income</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
               <div />
             </div>
-            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${amountLeftToSpend >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
-              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">
-                Amount left to spend{!goalMet && <span className="font-normal text-[#9ab89a] ml-1 text-xs">(if goal met)</span>}
-              </div>
-              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
+            <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total allocated</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
+              <div />
+            </div>
+            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${income - allocated >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Remaining balance</div>
+              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${income - allocated >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                {income - allocated >= 0 ? formatCurrency(income - allocated) : `−${formatCurrency(Math.abs(income - allocated))}`}
               </div>
               <div />
             </div>
