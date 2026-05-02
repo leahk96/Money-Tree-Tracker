@@ -3,12 +3,10 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/contexts/ProfileContext";
 import { supabase } from "@/lib/supabase";
-import { CURRENCY_SYMBOL } from "@/lib/currency";
 
 const STEPS = [
-  { id: 1, label: "Your goal" },
-  { id: 2, label: "Your why" },
-  { id: 3, label: "Ready!" },
+  { id: 1, label: "Your why" },
+  { id: 2, label: "Ready!" },
 ];
 
 export default function Onboarding() {
@@ -18,7 +16,6 @@ export default function Onboarding() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const [monthlyGoal, setMonthlyGoal] = useState("500");
   const [goalName, setGoalName] = useState("");
   const [goalPhoto, setGoalPhoto] = useState<File | null>(null);
   const [goalPhotoPreview, setGoalPhotoPreview] = useState<string | null>(null);
@@ -36,18 +33,8 @@ export default function Onboarding() {
   };
 
   const handleStep1 = () => {
-    const val = parseFloat(monthlyGoal);
-    if (isNaN(val) || val <= 0) {
-      setError("Please enter a valid savings goal");
-      return;
-    }
     setError("");
     setStep(2);
-  };
-
-  const handleStep2 = () => {
-    setError("");
-    setStep(3);
   };
 
   const handleFinish = async () => {
@@ -71,10 +58,8 @@ export default function Onboarding() {
     }
 
     const { error: profileError } = await updateProfile({
-      default_monthly_goal: parseFloat(monthlyGoal),
       goal_name: goalName || null,
       goal_photo_url: photoUrl,
-      yearly_target: parseFloat(monthlyGoal) * 12,
       best_streak: 0,
     });
 
@@ -83,14 +68,6 @@ export default function Onboarding() {
       setLoading(false);
       return;
     }
-
-    const now = new Date();
-    await supabase.from("months").upsert({
-      user_id: user.id,
-      year: now.getFullYear(),
-      month: now.getMonth() + 1,
-      savings_goal: parseFloat(monthlyGoal),
-    }, { onConflict: "user_id,year,month" });
 
     navigate("/budget");
   };
@@ -132,53 +109,6 @@ export default function Onboarding() {
           )}
 
           {step === 1 && (
-            <div>
-              <h2 className="text-xl font-semibold text-[#1a4a1a] mb-2">What's your monthly savings goal?</h2>
-              <p className="text-[#5a7a5a] text-sm mb-6">
-                This is how much you want to save each month. You can always change it later.
-              </p>
-
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#228B22] font-semibold text-lg">
-                  {CURRENCY_SYMBOL}
-                </span>
-                <input
-                  type="number"
-                  value={monthlyGoal}
-                  onChange={e => setMonthlyGoal(e.target.value)}
-                  className="w-full pl-9 pr-4 py-4 text-2xl font-bold rounded-xl border border-[#d0e4d0] bg-[#f8fbf8] focus:outline-none focus:ring-2 focus:ring-[#228B22] text-[#1a4a1a] transition"
-                  placeholder="500"
-                  min="1"
-                  step="50"
-                />
-              </div>
-
-              <div className="flex gap-2 mt-3">
-                {[250, 500, 750, 1000].map(amount => (
-                  <button
-                    key={amount}
-                    onClick={() => setMonthlyGoal(String(amount))}
-                    className={`flex-1 py-1.5 text-sm rounded-lg border transition ${
-                      monthlyGoal === String(amount)
-                        ? "bg-[#228B22] text-white border-[#228B22]"
-                        : "border-[#d0e4d0] text-[#2d5a2d] hover:border-[#228B22]"
-                    }`}
-                  >
-                    {CURRENCY_SYMBOL}{amount}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={handleStep1}
-                className="w-full mt-6 py-3 bg-[#228B22] hover:bg-[#1a6b1a] text-white font-semibold rounded-xl transition"
-              >
-                Continue
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
             <div>
               <h2 className="text-xl font-semibold text-[#1a4a1a] mb-2">What are you saving for?</h2>
               <p className="text-[#5a7a5a] text-sm mb-6">
@@ -226,34 +156,24 @@ export default function Onboarding() {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-6">
-                <button
-                  onClick={() => setStep(1)}
-                  className="flex-1 py-3 border border-[#d0e4d0] text-[#2d5a2d] font-medium rounded-xl hover:bg-[#f0f8f0] transition"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleStep2}
-                  className="flex-1 py-3 bg-[#228B22] hover:bg-[#1a6b1a] text-white font-semibold rounded-xl transition"
-                >
-                  Continue
-                </button>
-              </div>
+              <button
+                onClick={handleStep1}
+                className="w-full mt-6 py-3 bg-[#228B22] hover:bg-[#1a6b1a] text-white font-semibold rounded-xl transition"
+              >
+                Continue
+              </button>
             </div>
           )}
 
-          {step === 3 && (
+          {step === 2 && (
             <div className="text-center">
               <div className="text-5xl mb-4">🌱</div>
               <h2 className="text-xl font-semibold text-[#1a4a1a] mb-2">You're all set!</h2>
               <p className="text-[#5a7a5a] text-sm mb-6">
-                Your monthly savings goal is{" "}
-                <span className="font-semibold text-[#228B22]">{CURRENCY_SYMBOL}{monthlyGoal}</span>
-                {goalName && (
-                  <> and you're saving for <span className="font-semibold text-[#228B22]">{goalName}</span></>
-                )}
-                . Time to plant your Money Tree.
+                {goalName ? (
+                  <>You're saving for <span className="font-semibold text-[#228B22]">{goalName}</span>. </>
+                ) : null}
+                Time to plant your Money Tree.
               </p>
 
               <div className="bg-[#f0f8f0] rounded-xl p-4 mb-6 text-left space-y-2">
@@ -261,7 +181,7 @@ export default function Onboarding() {
                   <span className="text-green-500">✓</span> Track your income and expenses each month
                 </div>
                 <div className="flex items-center gap-2 text-sm text-[#2d5a2d]">
-                  <span className="text-green-500">✓</span> Watch your tree grow when you hit your goal
+                  <span className="text-green-500">✓</span> Set a savings goal each month and watch your tree grow
                 </div>
                 <div className="flex items-center gap-2 text-sm text-[#2d5a2d]">
                   <span className="text-green-500">✓</span> Earn gold coins for great quarters
@@ -270,7 +190,7 @@ export default function Onboarding() {
 
               <div className="flex gap-3">
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => setStep(1)}
                   className="flex-1 py-3 border border-[#d0e4d0] text-[#2d5a2d] font-medium rounded-xl hover:bg-[#f0f8f0] transition"
                 >
                   Back
