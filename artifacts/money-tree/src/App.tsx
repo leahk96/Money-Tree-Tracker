@@ -15,6 +15,8 @@ import SummaryPage from "@/pages/SummaryPage";
 import GardenPage from "@/pages/GardenPage";
 import BudgetDemo from "@/pages/BudgetDemo";
 import TreeDemo from "@/pages/TreeDemo";
+import GardenDemo from "@/pages/GardenDemo";
+import SummaryDemo from "@/pages/SummaryDemo";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -39,6 +41,8 @@ function AppRoutes() {
       </Route>
       <Route path="/demo" component={BudgetDemo} />
       <Route path="/tree-demo" component={TreeDemo} />
+      <Route path="/garden-demo" component={GardenDemo} />
+      <Route path="/summary-demo" component={SummaryDemo} />
       <Route path="/budget" component={BudgetPage} />
       <Route path="/budget/:year/:month" component={BudgetPage} />
       <Route path="/tree" component={TreePage} />
