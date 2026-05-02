@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import {
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, ReferenceLine, CartesianGrid, Legend,
+} from "recharts";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { formatCurrency } from "@/lib/currency";
 
@@ -14,11 +18,20 @@ const DEMO_NAV = [
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 const QUARTERS = [
-  { label:"Q1", months:"Jan–Mar", q1: true  },
-  { label:"Q2", months:"Apr–Jun", q1: false },
-  { label:"Q3", months:"Jul–Sep", q1: false },
-  { label:"Q4", months:"Oct–Dec", q1: false },
+  { label:"Q1", months:"Jan–Mar" },
+  { label:"Q2", months:"Apr–Jun" },
+  { label:"Q3", months:"Jul–Sep" },
+  { label:"Q4", months:"Oct–Dec" },
 ];
+
+interface MonthData {
+  month: string;
+  saved: number;
+  goal: number;
+  needs: number;
+  wants: number;
+  hasData: boolean;
+}
 
 interface YearScenario {
   year: number;
@@ -27,7 +40,7 @@ interface YearScenario {
   bestStreak: number;
   currentStreak: number;
   q1: boolean; q2: boolean; q3: boolean; q4: boolean;
-  months: { saved: number; goal: number; hasData: boolean }[];
+  months: MonthData[];
 }
 
 const SCENARIOS: Record<number, YearScenario> = {
@@ -35,59 +48,74 @@ const SCENARIOS: Record<number, YearScenario> = {
     year: 2024, goalsMetCount: 9, totalSaved: 4800, bestStreak: 5, currentStreak: 0,
     q1: true, q2: false, q3: true, q4: false,
     months: [
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 510, goal: 500, hasData: true },
-      { saved: 505, goal: 500, hasData: true },
-      { saved: 380, goal: 500, hasData: true },
-      { saved: 500, goal: 500, hasData: true },
-      { saved: 490, goal: 500, hasData: true },
-      { saved: 510, goal: 500, hasData: true },
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 515, goal: 500, hasData: true },
-      { saved: 350, goal: 500, hasData: true },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
+      { month:"Jan", saved:520, goal:500, needs:410, wants:280, hasData:true },
+      { month:"Feb", saved:510, goal:500, needs:390, wants:260, hasData:true },
+      { month:"Mar", saved:505, goal:500, needs:420, wants:290, hasData:true },
+      { month:"Apr", saved:380, goal:500, needs:480, wants:380, hasData:true },
+      { month:"May", saved:500, goal:500, needs:415, wants:310, hasData:true },
+      { month:"Jun", saved:490, goal:500, needs:440, wants:340, hasData:true },
+      { month:"Jul", saved:510, goal:500, needs:395, wants:255, hasData:true },
+      { month:"Aug", saved:520, goal:500, needs:380, wants:240, hasData:true },
+      { month:"Sep", saved:515, goal:500, needs:405, wants:270, hasData:true },
+      { month:"Oct", saved:350, goal:500, needs:460, wants:360, hasData:true },
+      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
     ],
   },
   2025: {
     year: 2025, goalsMetCount: 11, totalSaved: 6200, bestStreak: 8, currentStreak: 0,
     q1: true, q2: true, q3: true, q4: false,
     months: [
-      { saved: 550, goal: 500, hasData: true },
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 530, goal: 500, hasData: true },
-      { saved: 510, goal: 500, hasData: true },
-      { saved: 540, goal: 500, hasData: true },
-      { saved: 505, goal: 500, hasData: true },
-      { saved: 560, goal: 500, hasData: true },
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 515, goal: 500, hasData: true },
-      { saved: 480, goal: 500, hasData: true },
-      { saved: 490, goal: 500, hasData: true },
-      { saved: 0,   goal: 500, hasData: false },
+      { month:"Jan", saved:550, goal:500, needs:395, wants:240, hasData:true },
+      { month:"Feb", saved:520, goal:500, needs:380, wants:210, hasData:true },
+      { month:"Mar", saved:530, goal:500, needs:410, wants:250, hasData:true },
+      { month:"Apr", saved:510, goal:500, needs:400, wants:265, hasData:true },
+      { month:"May", saved:540, goal:500, needs:385, wants:230, hasData:true },
+      { month:"Jun", saved:505, goal:500, needs:415, wants:255, hasData:true },
+      { month:"Jul", saved:560, goal:500, needs:370, wants:200, hasData:true },
+      { month:"Aug", saved:520, goal:500, needs:390, wants:225, hasData:true },
+      { month:"Sep", saved:515, goal:500, needs:405, wants:245, hasData:true },
+      { month:"Oct", saved:480, goal:500, needs:430, wants:295, hasData:true },
+      { month:"Nov", saved:490, goal:500, needs:420, wants:280, hasData:true },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
     ],
   },
   2026: {
-    year: 2026, goalsMetCount: 3, totalSaved: 1550, bestStreak: 3, currentStreak: 3,
-    q1: false, q2: false, q3: false, q4: false,
+    year: 2026, goalsMetCount: 4, totalSaved: 2030, bestStreak: 4, currentStreak: 4,
+    q1: true, q2: false, q3: false, q4: false,
     months: [
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 510, goal: 500, hasData: true },
-      { saved: 520, goal: 500, hasData: true },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
-      { saved: 0,   goal: 500, hasData: false },
+      { month:"Jan", saved:520, goal:500, needs:400, wants:260, hasData:true },
+      { month:"Feb", saved:495, goal:500, needs:390, wants:245, hasData:true },
+      { month:"Mar", saved:510, goal:500, needs:415, wants:270, hasData:true },
+      { month:"Apr", saved:505, goal:500, needs:410, wants:205, hasData:true },
+      { month:"May", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Jun", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Jul", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Aug", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Sep", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Oct", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
     ],
   },
 };
 
 const AVAILABLE_YEARS = [2024, 2025, 2026];
+
+function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white border border-[#e8f0e8] rounded-xl p-3 shadow-lg text-xs min-w-[110px]">
+      <div className="font-semibold text-[#1a4a1a] mb-1.5">{label}</div>
+      {payload.map(p => (
+        <div key={p.name} className="flex items-center justify-between gap-3">
+          <span style={{ color: p.color }}>{p.name}</span>
+          <span className="font-semibold text-[#1a4a1a] tabular-nums">{formatCurrency(p.value)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function SummaryDemo() {
   const [selectedYear, setSelectedYear] = useState(2026);
@@ -100,6 +128,23 @@ export default function SummaryDemo() {
   const totalGoal = d.months.filter(m => m.hasData).reduce((s, m) => s + m.goal, 0);
   const vsGoal = d.totalSaved - totalGoal;
   const quarterEarned = [d.q1, d.q2, d.q3, d.q4];
+
+  const activeMonths = d.months.filter(m => m.hasData);
+  const chartMonths = activeMonths.map(m => ({
+    month: m.month,
+    Saved: m.saved,
+    Goal: m.goal,
+    Needs: m.needs,
+    Wants: m.wants,
+  }));
+
+  // Insight: find best month for low wants spending
+  const lowestWantsMonth = activeMonths.length > 1
+    ? activeMonths.reduce((a, b) => b.wants < a.wants ? b : a)
+    : null;
+  const lowestNeedsMonth = activeMonths.length > 1
+    ? activeMonths.reduce((a, b) => b.needs < a.needs ? b : a)
+    : null;
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -116,9 +161,7 @@ export default function SummaryDemo() {
           {DEMO_NAV.map(n => (
             <Link key={n.to} to={n.to}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
-                n.to === "/summary-demo"
-                  ? "bg-[#e8f5e8] text-[#228B22]"
-                  : "text-[#5a7a5a] hover:bg-[#f0f8f0]"
+                n.to === "/summary-demo" ? "bg-[#e8f5e8] text-[#228B22]" : "text-[#5a7a5a] hover:bg-[#f0f8f0]"
               }`}
             >{n.label}</Link>
           ))}
@@ -129,20 +172,17 @@ export default function SummaryDemo() {
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 pb-12 space-y-5">
+
         {/* Year nav */}
         <div className="flex items-center justify-between">
           <button onClick={() => canPrev && setSelectedYear(AVAILABLE_YEARS[yearIdx - 1])} disabled={!canPrev}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30">
-            ←
-          </button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30">←</button>
           <div className="text-center">
             <h1 className="text-xl font-bold text-[#1a4a1a]">{selectedYear} {isCurrent ? "so far" : "in review"}</h1>
             <p className="text-xs text-[#7a9a7a] mt-0.5">{isCurrent ? `${12 - d.goalsMetCount} months remaining` : "Full year"}</p>
           </div>
           <button onClick={() => canNext && setSelectedYear(AVAILABLE_YEARS[yearIdx + 1])} disabled={!canNext}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30">
-            →
-          </button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30">→</button>
         </div>
 
         {/* Tree + headline */}
@@ -174,9 +214,9 @@ export default function SummaryDemo() {
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: "Total saved",   value: formatCurrency(d.totalSaved), sub: vsGoal >= 0 ? `+${formatCurrency(vsGoal)} above goal` : `${formatCurrency(Math.abs(vsGoal))} below goal`, positive: vsGoal >= 0 },
-            { label: "Best streak",   value: `${d.bestStreak} months`,     sub: d.currentStreak > 0 ? `Current: ${d.currentStreak}` : undefined, positive: true },
-            { label: "Goals smashed", value: `${d.goalsMetCount}/12`,       sub: d.goalsMetCount === 12 ? "Perfect year!" : `${12 - d.goalsMetCount} to go`, positive: d.goalsMetCount >= 6 },
+            { label: "Total saved",     value: formatCurrency(d.totalSaved), sub: vsGoal >= 0 ? `+${formatCurrency(vsGoal)} above goal` : `${formatCurrency(Math.abs(vsGoal))} below goal`, positive: vsGoal >= 0 },
+            { label: "Best streak",     value: `${d.bestStreak} months`,     sub: d.currentStreak > 0 ? `Current: ${d.currentStreak}` : undefined, positive: true },
+            { label: "Goals smashed",   value: `${d.goalsMetCount}/12`,       sub: d.goalsMetCount === 12 ? "Perfect year!" : `${12 - d.goalsMetCount} to go`, positive: d.goalsMetCount >= 6 },
             { label: "Quarterly coins", value: `${quarterEarned.filter(Boolean).length}/4`, sub: "Hit every month in a quarter", positive: quarterEarned.some(Boolean) },
           ].map((card, i) => (
             <motion.div key={card.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
@@ -189,8 +229,66 @@ export default function SummaryDemo() {
           ))}
         </div>
 
+        {/* Savings bar chart */}
+        {chartMonths.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
+            className="bg-white rounded-2xl border border-[#e8f0e8] p-5">
+            <h3 className="font-semibold text-[#1a4a1a] text-sm mb-1">Monthly savings</h3>
+            <p className="text-xs text-[#9ab89a] mb-4">How much you put away each month vs your goal</p>
+            <ResponsiveContainer width="100%" height={180}>
+              <BarChart data={chartMonths} barGap={2} barSize={chartMonths.length > 6 ? 14 : 22}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f4f0" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9ab89a" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "#9ab89a" }} axisLine={false} tickLine={false}
+                  tickFormatter={v => `£${v}`} width={38} />
+                <Tooltip content={<ChartTooltip />} />
+                <ReferenceLine y={500} stroke="#FFD700" strokeDasharray="4 3" strokeWidth={1.5}
+                  label={{ value: "Goal", position: "right", fontSize: 9, fill: "#b07800" }} />
+                <Bar dataKey="Saved" fill="#228B22" radius={[3, 3, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </motion.div>
+        )}
+
+        {/* Spending patterns line chart */}
+        {chartMonths.length > 1 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
+            className="bg-white rounded-2xl border border-[#e8f0e8] p-5">
+            <h3 className="font-semibold text-[#1a4a1a] text-sm mb-1">Spending patterns</h3>
+            <p className="text-xs text-[#9ab89a] mb-4">Needs and wants spending month by month</p>
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={chartMonths}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f4f0" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9ab89a" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "#9ab89a" }} axisLine={false} tickLine={false}
+                  tickFormatter={v => `£${v}`} width={38} />
+                <Tooltip content={<ChartTooltip />} />
+                <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                <Line dataKey="Needs" stroke="#5a8fc0" strokeWidth={2} dot={{ r: 3, fill: "#5a8fc0" }} activeDot={{ r: 4 }} />
+                <Line dataKey="Wants" stroke="#d4900a" strokeWidth={2} dot={{ r: 3, fill: "#d4900a" }} activeDot={{ r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
+
+            {/* Insights */}
+            {lowestWantsMonth && lowestNeedsMonth && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="bg-[#fffbf0] rounded-xl p-3 border border-[#f0e0a0]">
+                  <div className="text-[10px] text-[#9a7020] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
+                  <div className="text-sm font-bold text-[#b07800]">{lowestWantsMonth.month}</div>
+                  <div className="text-xs text-[#b08030]">{formatCurrency(lowestWantsMonth.wants)} spent</div>
+                </div>
+                <div className="bg-[#f0f6ff] rounded-xl p-3 border border-[#c0d8f0]">
+                  <div className="text-[10px] text-[#2a5080] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
+                  <div className="text-sm font-bold text-[#3a70b0]">{lowestNeedsMonth.month}</div>
+                  <div className="text-xs text-[#4a80c0]">{formatCurrency(lowestNeedsMonth.needs)} spent</div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+
         {/* Quarterly coins */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="bg-white rounded-2xl border border-[#e8f0e8] p-5">
           <h3 className="font-semibold text-[#1a4a1a] mb-4 text-sm">Quarterly coins</h3>
           <div className="flex justify-around">
@@ -214,7 +312,7 @@ export default function SummaryDemo() {
         </motion.div>
 
         {/* Monthly grid */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
           className="bg-white rounded-2xl border border-[#e8f0e8] p-5">
           <h3 className="font-semibold text-[#1a4a1a] mb-3 text-sm">{selectedYear} month by month</h3>
           <div className="grid grid-cols-4 gap-2">
@@ -222,7 +320,7 @@ export default function SummaryDemo() {
               const goalMet = m.hasData && m.saved >= m.goal;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + i * 0.025 }}
+                  transition={{ delay: 0.38 + i * 0.02 }}
                   className={`rounded-xl p-2.5 border-2 ${
                     goalMet ? "border-[#85BB65] bg-[#f0faf0]"
                     : m.hasData ? "border-[#e8f0e8] bg-white"
@@ -251,7 +349,7 @@ export default function SummaryDemo() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
           className="bg-gradient-to-r from-[#f0fbf0] to-[#e8f5e8] rounded-2xl border border-[#c8e8c8] p-5 text-center">
           <div className="text-sm font-semibold text-[#1a4a1a] mb-1">Track your own year in Money Tree</div>
           <div className="text-xs text-[#5a7a5a] mb-3">See your real savings, streaks, and tree grow month by month.</div>
@@ -259,6 +357,7 @@ export default function SummaryDemo() {
             Start for free →
           </Link>
         </motion.div>
+
       </div>
     </div>
   );

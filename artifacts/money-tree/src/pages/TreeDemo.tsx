@@ -77,7 +77,12 @@ export default function TreeDemo() {
           <span className="text-base font-bold text-[#1a4a1a]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
-          {[{ label:"Budget", to:"/demo" }, { label:"My Tree", to:"/tree-demo" }, { label:"Settings", to:"/settings" }].map(n => (
+          {[
+            { label:"Budget", to:"/demo" },
+            { label:"My Tree", to:"/tree-demo" },
+            { label:"Garden", to:"/garden-demo" },
+            { label:"Summary", to:"/summary-demo" },
+          ].map(n => (
             <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/tree-demo" ? "bg-[#e8f5e8] text-[#228B22]" : "text-[#5a7a5a] hover:bg-[#f0f8f0]"}`}>{n.label}</Link>
           ))}
         </nav>
