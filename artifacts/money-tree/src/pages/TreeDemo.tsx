@@ -112,38 +112,13 @@ export default function TreeDemo() {
           {/* Progress dots */}
           <div className="mt-3 pt-3 border-t border-[#f0f4f0] flex items-center justify-between">
             <p className="text-xs text-[#7a9a7a]">
-              Every month you hit your goal, a new £ note grows on your tree
+              Every month you hit your goal, notes will start to grow on your tree
             </p>
             <div className="flex gap-1 shrink-0 ml-3">
               {Array.from({ length: 12 }, (_, i) => (
                 <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#228B22]" : "bg-[#e0e8e0]"}`} />
               ))}
             </div>
-          </div>
-        </motion.div>
-
-        {/* How it works — simple explainer */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.04 }}
-          className="bg-[#f5fbf5] rounded-2xl border border-[#d8ecd8] p-5"
-        >
-          <h3 className="font-semibold text-[#1a4a1a] text-sm mb-3">How your tree grows</h3>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            {[
-              { stage: 0,  label: "Month 0",  desc: "A fresh sprout in the pot" },
-              { stage: 6,  label: "Month 6",  desc: "Growing fast — 6 £ notes" },
-              { stage: 12, label: "Month 12", desc: "Fully grown, sky-high canopy" },
-            ].map(({ stage, label, desc }) => (
-              <div key={stage} className="flex flex-col items-center gap-1">
-                <div className="w-full aspect-square flex items-center justify-center">
-                  <MoneyTreeSVG monthsGoalMet={stage} />
-                </div>
-                <span className="text-xs font-semibold text-[#228B22]">{label}</span>
-                <span className="text-[10px] text-[#7a9a7a] leading-tight">{desc}</span>
-              </div>
-            ))}
           </div>
         </motion.div>
 
@@ -253,55 +228,6 @@ export default function TreeDemo() {
           </motion.div>
         </div>
 
-        {/* Year progress grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.22 }}
-          className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-[#1a4a1a]">2026 at a glance</h3>
-            <span className="text-xs text-[#9ab89a]">{DEMO_MET.size} goals met</span>
-          </div>
-          <div className="grid grid-cols-4 gap-2">
-            {Array.from({ length: 12 }, (_, i) => {
-              const m = i + 1;
-              const goalMet = DEMO_MET.has(m);
-              const amount = DEMO_AMOUNTS[m] ?? null;
-              const hasData = amount !== null;
-              const isCurrent = m === currentMonth;
-              return (
-                <motion.div
-                  key={m}
-                  whileHover={{ scale: 1.04 }}
-                  className={`rounded-xl p-2.5 border-2 ${
-                    isCurrent    ? "border-[#FFD700] shadow-sm"
-                    : goalMet    ? "border-[#85BB65] bg-[#f0faf0]"
-                    : hasData    ? "border-[#e8f0e8] bg-white"
-                    : "border-dashed border-[#e8f0e8] bg-[#fafcfa]"
-                  }`}
-                >
-                  <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#228B22]" : "text-[#5a7a5a]"}`}>
-                    {MONTH_NAMES[i]}
-                  </div>
-                  {hasData ? (
-                    <>
-                      <div className={`text-sm font-bold ${goalMet ? "text-[#228B22]" : "text-[#1a4a1a]"}`}>
-                        {formatCurrency(amount)}
-                      </div>
-                      <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
-                        {goalMet ? "✓ Goal met" : `£${GOAL - amount} short`}
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-[10px] text-[#c8d8c8]">—</div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
 
       </div>
     </div>
