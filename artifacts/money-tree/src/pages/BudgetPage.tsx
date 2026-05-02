@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLocation, useParams } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -145,6 +146,9 @@ function BudgetContent() {
   const [newRowName, setNewRowName] = useState("");
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState("");
+  const [copying, setCopying] = useState(false);
+  const [copyDone, setCopyDone] = useState(false);
+  const [copyError, setCopyError] = useState("");
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
   const monthName = new Date(year, month - 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
@@ -250,6 +254,78 @@ function BudgetContent() {
     setEditingGoal(false);
   };
 
+  const copyFromPreviousMonth = useCallback(async () => {
+    if (!user || !monthData) return;
+    setCopying(true);
+    setCopyError("");
+
+    let prevM = month - 1, prevY = year;
+    if (prevM < 1) { prevM = 12; prevY--; }
+
+    const { data: prevMonthRecord } = await supabase
+      .from("months").select("id")
+      .eq("user_id", user.id).eq("year", prevY).eq("month", prevM)
+      .single();
+
+    if (!prevMonthRecord) {
+      setCopyError("No data found for last month.");
+      setCopying(false);
+      setTimeout(() => setCopyError(""), 3000);
+      return;
+    }
+
+    const { data: prevItems } = await supabase
+      .from("line_items").select("*").eq("month_id", prevMonthRecord.id);
+
+    if (!prevItems || prevItems.length === 0) {
+      setCopyError("Last month had no entries.");
+      setCopying(false);
+      setTimeout(() => setCopyError(""), 3000);
+      return;
+    }
+
+    const prevMap = new Map((prevItems as LineItem[]).map(i => [`${i.section}::${i.name}`, i]));
+    const currentKeys = new Set(lineItems.map(i => `${i.section}::${i.name}`));
+
+    // Update amounts on existing matching rows
+    const updatedItems = lineItems.map(item => {
+      const prev = prevMap.get(`${item.section}::${item.name}`);
+      return prev ? { ...item, amount: prev.amount } : item;
+    });
+    setLineItems(updatedItems);
+
+    // Persist each matched row
+    const matchedIds = updatedItems
+      .filter(item => prevMap.has(`${item.section}::${item.name}`))
+      .map(item => ({ id: item.id, amount: item.amount }));
+    await Promise.all(matchedIds.map(({ id, amount }) =>
+      supabase.from("line_items").update({ amount }).eq("id", id)
+    ));
+
+    // Insert custom rows from last month that don't exist yet
+    const newCustomRows = (prevItems as LineItem[]).filter(
+      i => i.is_custom && !currentKeys.has(`${i.section}::${i.name}`)
+    );
+    if (newCustomRows.length > 0) {
+      const { data: inserted } = await supabase
+        .from("line_items")
+        .insert(newCustomRows.map(row => ({
+          month_id: monthData.id,
+          section: row.section,
+          name: row.name,
+          amount: row.amount,
+          sort_order: row.sort_order,
+          is_custom: true,
+        })))
+        .select();
+      if (inserted) setLineItems(prev => [...prev, ...(inserted as LineItem[])]);
+    }
+
+    setCopying(false);
+    setCopyDone(true);
+    setTimeout(() => setCopyDone(false), 3000);
+  }, [user, monthData, month, year, lineItems]);
+
   const itemsFor = (s: Section) => lineItems.filter(i => i.section === s);
   const totalFor = (s: Section) => itemsFor(s).reduce((a, i) => a + i.amount, 0);
 
@@ -263,6 +339,13 @@ function BudgetContent() {
   const savingsGoal = monthData?.savings_goal ?? 500;
   const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
   const goalMet = saved >= savingsGoal;
+
+  const today = new Date();
+  const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const daysLeft = isCurrentMonth ? daysInMonth - today.getDate() : 0;
+  const isLateInMonth = today.getDate() >= 20;
+  const showNudge = !goalMet && isCurrentMonth && isLateInMonth && (income > 0 || saved > 0);
 
   const ytdTotal = ytdData.reduce((a, p) => a + p.saved, 0);
   const pieData = ALL_SECTIONS
@@ -332,11 +415,86 @@ function BudgetContent() {
         </div>
       )}
 
+      {/* ── GOAL STATUS BANNER ── */}
+      <AnimatePresence mode="wait">
+        {goalMet ? (
+          <motion.div
+            key="celebration"
+            initial={{ opacity: 0, y: -10, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ type: "spring", bounce: 0.3 }}
+            className="mb-5 bg-gradient-to-r from-[#e0f8e0] to-[#d0f2d0] border border-[#85BB65] rounded-xl px-5 py-3.5 flex items-center justify-between"
+          >
+            <div>
+              <div className="text-sm font-bold text-[#1a5a1a]">🎉 Goal smashed! Your tree grew this month.</div>
+              <div className="text-xs text-[#3a7a3a] mt-0.5">
+                You saved {formatCurrency(saved)} —{" "}
+                <span className="font-semibold">{formatCurrency(saved - savingsGoal)}</span> more than your {formatCurrency(savingsGoal)} goal
+              </div>
+            </div>
+            <motion.span
+              animate={{ rotate: [0, 12, -8, 0] }}
+              transition={{ duration: 0.9, delay: 0.4, repeat: 2 }}
+              className="text-3xl ml-3 shrink-0"
+            >
+              🌳
+            </motion.span>
+          </motion.div>
+        ) : showNudge ? (
+          <motion.div
+            key="nudge"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-5 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3.5 flex items-center justify-between"
+          >
+            <div>
+              <div className="text-sm font-semibold text-[#9a6020]">
+                ⏰ {daysLeft} day{daysLeft !== 1 ? "s" : ""} left — {formatCurrency(savingsGoal - saved)} short of your goal
+              </div>
+              <div className="text-xs text-[#b07830] mt-0.5">
+                Top up your savings this month to keep your tree growing
+              </div>
+            </div>
+            <span className="text-2xl ml-3 shrink-0">💪</span>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
       {/* ── MAIN 2-COLUMN LAYOUT ── */}
       <div className="flex gap-5 items-start">
 
         {/* LEFT: Budget table */}
         <div className="flex-1 min-w-0 space-y-3">
+
+          {/* Copy from last month */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Income &amp; Savings</span>
+            <div className="flex items-center gap-2">
+              {copyError && (
+                <span className="text-xs text-red-400">{copyError}</span>
+              )}
+              <button
+                onClick={copyFromPreviousMonth}
+                disabled={copying}
+                className={`flex items-center gap-1.5 text-xs border rounded-lg px-2.5 py-1.5 transition font-medium ${
+                  copyDone
+                    ? "border-[#85BB65] text-[#228B22] bg-[#f0fbf0]"
+                    : "border-[#d0e4d0] text-[#228B22] hover:border-[#228B22] hover:bg-[#f5fbf5] bg-white"
+                }`}
+              >
+                {copying ? (
+                  <div className="w-3 h-3 rounded-full border border-[#228B22] border-t-transparent animate-spin" />
+                ) : copyDone ? (
+                  <span>✓</span>
+                ) : (
+                  <span>↩</span>
+                )}
+                {copying ? "Copying…" : copyDone ? "Copied!" : "Copy from last month"}
+              </button>
+            </div>
+          </div>
 
           {/* Income + Savings side by side */}
           <div className="flex gap-3">
