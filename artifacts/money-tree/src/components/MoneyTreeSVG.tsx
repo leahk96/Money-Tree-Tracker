@@ -1,265 +1,228 @@
 import { motion } from "framer-motion";
 
 interface MoneyTreeSVGProps {
-  goalsMetThisYear: number;
+  /** Number of months this year where savings goal was met (0–12) */
+  monthsGoalMet: number;
 }
 
-interface LeafGroup {
-  cx: number;
-  cy: number;
-  rx: number;
-  ry: number;
-  fill: string;
+interface Leaf {
+  cx: number; cy: number; rx: number; ry: number;
+  rotate?: number; fill: string;
 }
 
-interface Coin {
-  x: number;
-  y: number;
-}
+// Each stage adds more leaves and grows the canopy
+const STAGES: Leaf[][] = [
+  // Stage 0 — pot only, tiny sprout rendered separately
+  [],
 
-const STAGES: { leaves: LeafGroup[]; coins: Coin[] }[] = [
-  // Stage 0 — just a pot, no foliage
-  { leaves: [], coins: [] },
+  // Stage 1 — seedling (1–2 months)
+  [
+    { cx: 180, cy: 192, rx: 16, ry: 12, fill: "#3da03d" },
+    { cx: 170, cy: 198, rx: 11, ry: 8, rotate: -25, fill: "#45b045" },
+    { cx: 190, cy: 196, rx: 11, ry: 8, rotate: 25, fill: "#45b045" },
+  ],
 
-  // Stage 1 — tiny seedling
-  {
-    leaves: [
-      { cx: 180, cy: 188, rx: 18, ry: 14, fill: "#3a9a3a" },
-      { cx: 168, cy: 196, rx: 12, ry: 10, fill: "#44aa44" },
-      { cx: 192, cy: 194, rx: 12, ry: 10, fill: "#44aa44" },
-    ],
-    coins: [{ x: 180, y: 178 }, { x: 170, y: 188 }],
-  },
+  // Stage 2 — small (3–4 months)
+  [
+    { cx: 180, cy: 178, rx: 28, ry: 20, fill: "#2d8a2d" },
+    { cx: 162, cy: 188, rx: 18, ry: 14, rotate: -15, fill: "#358a35" },
+    { cx: 198, cy: 186, rx: 18, ry: 14, rotate: 15, fill: "#358a35" },
+    { cx: 180, cy: 165, rx: 22, ry: 17, fill: "#3da03d" },
+    { cx: 168, cy: 197, rx: 14, ry: 10, fill: "#44aa44" },
+    { cx: 192, cy: 195, rx: 14, ry: 10, fill: "#44aa44" },
+  ],
 
-  // Stage 2 — small bush
-  {
-    leaves: [
-      { cx: 180, cy: 175, rx: 28, ry: 22, fill: "#2d7a2d" },
-      { cx: 160, cy: 185, rx: 20, ry: 16, fill: "#358a35" },
-      { cx: 200, cy: 183, rx: 20, ry: 16, fill: "#358a35" },
-      { cx: 180, cy: 162, rx: 22, ry: 18, fill: "#3da03d" },
-      { cx: 165, cy: 195, rx: 16, ry: 12, fill: "#45b045" },
-      { cx: 195, cy: 193, rx: 16, ry: 12, fill: "#45b045" },
-    ],
-    coins: [
-      { x: 162, y: 170 }, { x: 198, y: 173 },
-      { x: 180, y: 157 }, { x: 172, y: 182 }, { x: 188, y: 181 },
-    ],
-  },
+  // Stage 3 — medium (5–6 months)
+  [
+    { cx: 180, cy: 168, rx: 36, ry: 26, fill: "#267826" },
+    { cx: 153, cy: 180, rx: 24, ry: 18, rotate: -10, fill: "#2d8a2d" },
+    { cx: 207, cy: 178, rx: 24, ry: 18, rotate: 10, fill: "#2d8a2d" },
+    { cx: 180, cy: 150, rx: 28, ry: 22, fill: "#38a038" },
+    { cx: 160, cy: 160, rx: 18, ry: 14, fill: "#3da03d" },
+    { cx: 200, cy: 158, rx: 18, ry: 14, fill: "#3da03d" },
+    { cx: 138, cy: 184, rx: 18, ry: 13, rotate: -18, fill: "#267826" },
+    { cx: 222, cy: 182, rx: 18, ry: 13, rotate: 18, fill: "#267826" },
+    { cx: 180, cy: 202, rx: 28, ry: 13, fill: "#204a20" },
+  ],
 
-  // Stage 3 — medium tree
-  {
-    leaves: [
-      { cx: 180, cy: 165, rx: 36, ry: 28, fill: "#267026" },
-      { cx: 152, cy: 175, rx: 26, ry: 20, fill: "#2d7a2d" },
-      { cx: 208, cy: 173, rx: 26, ry: 20, fill: "#2d7a2d" },
-      { cx: 180, cy: 148, rx: 30, ry: 24, fill: "#38983a" },
-      { cx: 158, cy: 157, rx: 20, ry: 16, fill: "#3da03d" },
-      { cx: 202, cy: 155, rx: 20, ry: 16, fill: "#3da03d" },
-      { cx: 138, cy: 178, rx: 20, ry: 15, fill: "#2a722a" },
-      { cx: 222, cy: 176, rx: 20, ry: 15, fill: "#2a722a" },
-      { cx: 180, cy: 200, rx: 28, ry: 14, fill: "#235a23" },
-    ],
-    coins: [
-      { x: 155, y: 162 }, { x: 205, y: 160 }, { x: 180, y: 140 },
-      { x: 168, y: 153 }, { x: 192, y: 152 }, { x: 142, y: 172 },
-      { x: 218, y: 170 }, { x: 170, y: 195 }, { x: 190, y: 194 },
-    ],
-  },
+  // Stage 4 — large (7–8 months)
+  [
+    { cx: 180, cy: 153, rx: 46, ry: 34, fill: "#246024" },
+    { cx: 144, cy: 167, rx: 30, ry: 23, rotate: -8, fill: "#2a7a2a" },
+    { cx: 216, cy: 165, rx: 30, ry: 23, rotate: 8, fill: "#2a7a2a" },
+    { cx: 180, cy: 132, rx: 34, ry: 27, fill: "#3aa03a" },
+    { cx: 152, cy: 143, rx: 22, ry: 17, fill: "#3da03d" },
+    { cx: 208, cy: 141, rx: 22, ry: 17, fill: "#3da03d" },
+    { cx: 120, cy: 172, rx: 22, ry: 16, rotate: -20, fill: "#246024" },
+    { cx: 240, cy: 170, rx: 22, ry: 16, rotate: 20, fill: "#246024" },
+    { cx: 127, cy: 194, rx: 18, ry: 12, rotate: -25, fill: "#204a20" },
+    { cx: 233, cy: 192, rx: 18, ry: 12, rotate: 25, fill: "#204a20" },
+    { cx: 180, cy: 205, rx: 38, ry: 16, fill: "#1a4a1a" },
+    { cx: 155, cy: 200, rx: 22, ry: 12, fill: "#204a20" },
+    { cx: 205, cy: 200, rx: 22, ry: 12, fill: "#204a20" },
+  ],
 
-  // Stage 4 — large tree
-  {
-    leaves: [
-      { cx: 180, cy: 150, rx: 44, ry: 34, fill: "#246024" },
-      { cx: 144, cy: 162, rx: 30, ry: 24, fill: "#2a722a" },
-      { cx: 216, cy: 160, rx: 30, ry: 24, fill: "#2a722a" },
-      { cx: 180, cy: 130, rx: 36, ry: 28, fill: "#3aa03a" },
-      { cx: 152, cy: 140, rx: 24, ry: 19, fill: "#3da03d" },
-      { cx: 208, cy: 138, rx: 24, ry: 19, fill: "#3da03d" },
-      { cx: 122, cy: 168, rx: 24, ry: 18, fill: "#267026" },
-      { cx: 238, cy: 166, rx: 24, ry: 18, fill: "#267026" },
-      { cx: 130, cy: 190, rx: 22, ry: 14, fill: "#246024" },
-      { cx: 230, cy: 188, rx: 22, ry: 14, fill: "#246024" },
-      { cx: 180, cy: 200, rx: 36, ry: 16, fill: "#204a20" },
-    ],
-    coins: [
-      { x: 148, y: 147 }, { x: 212, y: 145 }, { x: 180, y: 122 },
-      { x: 158, y: 133 }, { x: 202, y: 131 }, { x: 126, y: 162 },
-      { x: 234, y: 160 }, { x: 133, y: 185 }, { x: 227, y: 183 },
-      { x: 165, y: 195 }, { x: 195, y: 195 }, { x: 180, y: 202 }, { x: 170, y: 138 },
-    ],
-  },
+  // Stage 5 — very large (9–10 months)
+  [
+    { cx: 180, cy: 138, rx: 54, ry: 40, fill: "#225822" },
+    { cx: 134, cy: 155, rx: 36, ry: 27, rotate: -6, fill: "#266826" },
+    { cx: 226, cy: 153, rx: 36, ry: 27, rotate: 6, fill: "#266826" },
+    { cx: 180, cy: 113, rx: 40, ry: 32, fill: "#3ea83e" },
+    { cx: 144, cy: 126, rx: 28, ry: 21, fill: "#38a038" },
+    { cx: 216, cy: 124, rx: 28, ry: 21, fill: "#38a038" },
+    { cx: 104, cy: 163, rx: 26, ry: 19, rotate: -22, fill: "#225822" },
+    { cx: 256, cy: 161, rx: 26, ry: 19, rotate: 22, fill: "#225822" },
+    { cx: 112, cy: 188, rx: 22, ry: 14, rotate: -28, fill: "#1e4a1e" },
+    { cx: 248, cy: 186, rx: 22, ry: 14, rotate: 28, fill: "#1e4a1e" },
+    { cx: 180, cy: 208, rx: 46, ry: 17, fill: "#183818" },
+    { cx: 148, cy: 202, rx: 26, ry: 13, fill: "#1a4a1a" },
+    { cx: 212, cy: 202, rx: 26, ry: 13, fill: "#1a4a1a" },
+    { cx: 116, cy: 200, rx: 18, ry: 10, fill: "#204a20" },
+    { cx: 244, cy: 198, rx: 18, ry: 10, fill: "#204a20" },
+  ],
 
-  // Stage 5 — very large
-  {
-    leaves: [
-      { cx: 180, cy: 135, rx: 52, ry: 40, fill: "#225822" },
-      { cx: 136, cy: 150, rx: 35, ry: 27, fill: "#267026" },
-      { cx: 224, cy: 148, rx: 35, ry: 27, fill: "#267026" },
-      { cx: 180, cy: 112, rx: 40, ry: 32, fill: "#3da03d" },
-      { cx: 146, cy: 124, rx: 28, ry: 22, fill: "#38983a" },
-      { cx: 214, cy: 122, rx: 28, ry: 22, fill: "#38983a" },
-      { cx: 108, cy: 158, rx: 26, ry: 20, fill: "#246024" },
-      { cx: 252, cy: 156, rx: 26, ry: 20, fill: "#246024" },
-      { cx: 116, cy: 182, rx: 24, ry: 16, fill: "#225822" },
-      { cx: 244, cy: 180, rx: 24, ry: 16, fill: "#225822" },
-      { cx: 180, cy: 205, rx: 44, ry: 18, fill: "#1a4a1a" },
-      { cx: 155, cy: 200, rx: 24, ry: 13, fill: "#204a20" },
-      { cx: 205, cy: 200, rx: 24, ry: 13, fill: "#204a20" },
-    ],
-    coins: [
-      { x: 140, y: 135 }, { x: 220, y: 133 }, { x: 180, y: 105 },
-      { x: 152, y: 117 }, { x: 208, y: 115 }, { x: 112, y: 152 },
-      { x: 248, y: 150 }, { x: 120, y: 176 }, { x: 240, y: 174 },
-      { x: 162, y: 196 }, { x: 198, y: 196 }, { x: 180, y: 140 },
-      { x: 166, y: 125 }, { x: 194, y: 124 }, { x: 180, y: 112 },
-      { x: 128, y: 165 }, { x: 232, y: 163 }, { x: 180, y: 200 },
-    ],
-  },
-
-  // Stage 6 — full money tree
-  {
-    leaves: [
-      { cx: 180, cy: 120, rx: 60, ry: 46, fill: "#204a20" },
-      { cx: 128, cy: 138, rx: 40, ry: 30, fill: "#246024" },
-      { cx: 232, cy: 136, rx: 40, ry: 30, fill: "#246024" },
-      { cx: 180, cy: 96, rx: 44, ry: 35, fill: "#42a842" },
-      { cx: 136, cy: 110, rx: 32, ry: 25, fill: "#3da03d" },
-      { cx: 224, cy: 108, rx: 32, ry: 25, fill: "#3da03d" },
-      { cx: 96, cy: 148, rx: 28, ry: 21, fill: "#225822" },
-      { cx: 264, cy: 146, rx: 28, ry: 21, fill: "#225822" },
-      { cx: 104, cy: 174, rx: 26, ry: 17, fill: "#204a20" },
-      { cx: 256, cy: 172, rx: 26, ry: 17, fill: "#204a20" },
-      { cx: 180, cy: 208, rx: 50, ry: 18, fill: "#183818" },
-      { cx: 150, cy: 202, rx: 28, ry: 14, fill: "#1a4a1a" },
-      { cx: 210, cy: 202, rx: 28, ry: 14, fill: "#1a4a1a" },
-      { cx: 112, cy: 196, rx: 20, ry: 12, fill: "#204a20" },
-      { cx: 248, cy: 194, rx: 20, ry: 12, fill: "#204a20" },
-    ],
-    coins: [
-      { x: 133, y: 122 }, { x: 227, y: 120 }, { x: 180, y: 88 },
-      { x: 144, y: 103 }, { x: 216, y: 101 }, { x: 100, y: 142 },
-      { x: 260, y: 140 }, { x: 108, y: 168 }, { x: 252, y: 166 },
-      { x: 156, y: 196 }, { x: 204, y: 196 }, { x: 180, y: 125 },
-      { x: 162, y: 108 }, { x: 198, y: 107 }, { x: 116, y: 186 },
-      { x: 244, y: 184 }, { x: 180, y: 100 }, { x: 148, y: 130 },
-      { x: 212, y: 128 }, { x: 164, y: 88 }, { x: 196, y: 87 }, { x: 180, y: 205 },
-    ],
-  },
+  // Stage 6 — full money tree (11–12 months)
+  [
+    { cx: 180, cy: 122, rx: 62, ry: 47, fill: "#1e5020" },
+    { cx: 124, cy: 142, rx: 42, ry: 32, rotate: -5, fill: "#246024" },
+    { cx: 236, cy: 140, rx: 42, ry: 32, rotate: 5, fill: "#246024" },
+    { cx: 180, cy: 95, rx: 46, ry: 36, fill: "#44b044" },
+    { cx: 136, cy: 110, rx: 32, ry: 25, fill: "#3aa03a" },
+    { cx: 224, cy: 108, rx: 32, ry: 25, fill: "#3aa03a" },
+    { cx: 90, cy: 152, rx: 28, ry: 21, rotate: -24, fill: "#1e5020" },
+    { cx: 270, cy: 150, rx: 28, ry: 21, rotate: 24, fill: "#1e5020" },
+    { cx: 98, cy: 180, rx: 24, ry: 15, rotate: -30, fill: "#183818" },
+    { cx: 262, cy: 178, rx: 24, ry: 15, rotate: 30, fill: "#183818" },
+    { cx: 180, cy: 210, rx: 54, ry: 18, fill: "#142814" },
+    { cx: 144, cy: 204, rx: 30, ry: 14, fill: "#183818" },
+    { cx: 216, cy: 204, rx: 30, ry: 14, fill: "#183818" },
+    { cx: 108, cy: 200, rx: 22, ry: 12, fill: "#1e4a1e" },
+    { cx: 252, cy: 198, rx: 22, ry: 12, fill: "#1e4a1e" },
+    { cx: 164, cy: 86, rx: 22, ry: 17, fill: "#50c050" },
+    { cx: 196, cy: 84, rx: 22, ry: 17, fill: "#50c050" },
+  ],
 ];
 
-export function MoneyTreeSVG({ goalsMetThisYear }: MoneyTreeSVGProps) {
-  const stage = Math.min(6,
-    goalsMetThisYear === 0 ? 0
-    : goalsMetThisYear <= 2 ? 1
-    : goalsMetThisYear <= 4 ? 2
-    : goalsMetThisYear <= 6 ? 3
-    : goalsMetThisYear <= 8 ? 4
-    : goalsMetThisYear <= 10 ? 5
-    : 6
+// Money leaf vein lines — decorative lines on leaves to make them look like currency notes
+function LeafVeins({ leaves }: { leaves: Leaf[] }) {
+  // Only draw on larger leaves
+  return (
+    <>
+      {leaves.filter(l => l.rx > 25).slice(0, 5).map((leaf, i) => (
+        <g key={i} transform={`translate(${leaf.cx},${leaf.cy}) rotate(${leaf.rotate ?? 0})`}>
+          <line x1={0} y1={-leaf.ry * 0.5} x2={0} y2={leaf.ry * 0.5} stroke="rgba(0,0,0,0.07)" strokeWidth={0.8} />
+          <line x1={-leaf.rx * 0.3} y1={0} x2={leaf.rx * 0.3} y2={0} stroke="rgba(0,0,0,0.07)" strokeWidth={0.6} />
+        </g>
+      ))}
+    </>
   );
+}
 
-  const { leaves, coins } = STAGES[stage];
+export function MoneyTreeSVG({ monthsGoalMet }: MoneyTreeSVGProps) {
+  const stage = monthsGoalMet === 0 ? 0
+    : monthsGoalMet <= 2 ? 1
+    : monthsGoalMet <= 4 ? 2
+    : monthsGoalMet <= 6 ? 3
+    : monthsGoalMet <= 8 ? 4
+    : monthsGoalMet <= 10 ? 5
+    : 6;
+
+  const leaves = STAGES[stage];
 
   return (
-    <svg viewBox="0 0 360 310" className="w-full max-w-xs mx-auto">
+    <svg viewBox="0 0 360 310" className="w-full max-w-xs mx-auto select-none">
       {/* Ground shadow */}
-      <ellipse cx={180} cy={298} rx={50} ry={8} fill="#c17d3c" opacity={0.2} />
+      <ellipse cx={180} cy={299} rx={52} ry={8} fill="#b06830" opacity={0.18} />
 
       {/* Pot */}
       <path d="M148 268 L158 296 Q180 304 202 296 L212 268 Z" fill="#c17d3c" />
       <rect x={142} y={263} width={76} height={11} rx={4} fill="#a0602a" />
+      {/* Pot highlight */}
+      <rect x={148} y={264} width={28} height={4} rx={2} fill="rgba(255,255,255,0.2)" />
       {/* Soil */}
       <ellipse cx={180} cy={269} rx={34} ry={5} fill="#6b4423" />
 
       {/* Trunk */}
-      <motion.path
-        d="M170 267 Q166 245 164 210 Q162 180 166 158 Q170 138 180 128 Q190 138 194 158 Q198 180 196 210 Q194 245 190 267 Z"
-        fill="#8B5E3C"
+      <motion.g
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        style={{ transformOrigin: "180px 267px" }}
-      />
-      {/* Trunk shading */}
-      {stage >= 1 && (
-        <>
-          <path d="M174 245 Q172 228 173 208" stroke="#6b4a2e" strokeWidth={1.5} fill="none" opacity={0.4} />
-          <path d="M186 245 Q188 228 187 208" stroke="#6b4a2e" strokeWidth={1.5} fill="none" opacity={0.4} />
-        </>
-      )}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        style={{ transformOrigin: "180px 268px" }}
+      >
+        <path d="M170 267 Q167 246 165 212 Q163 182 166 160 Q170 140 180 130 Q190 140 194 160 Q197 182 195 212 Q193 246 190 267 Z" fill="#8B5E3C" />
+        {/* Trunk highlight */}
+        <path d="M172 240 Q170 220 171 200 Q171 180 173 163" stroke="rgba(255,200,140,0.3)" strokeWidth={3} fill="none" strokeLinecap="round" />
+        {/* Trunk shading */}
+        <path d="M186 240 Q188 220 187 200" stroke="rgba(0,0,0,0.1)" strokeWidth={1.5} fill="none" />
+      </motion.g>
 
-      {/* Leaves — render all at once, fade in */}
+      {/* Leaves */}
       {leaves.map((leaf, i) => (
         <motion.ellipse
-          key={`${stage}-leaf-${i}`}
+          key={`s${stage}-l${i}`}
           cx={leaf.cx} cy={leaf.cy} rx={leaf.rx} ry={leaf.ry}
           fill={leaf.fill}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.1 + i * 0.04 }}
+          transform={leaf.rotate ? `rotate(${leaf.rotate} ${leaf.cx} ${leaf.cy})` : undefined}
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.05 + i * 0.04, ease: "easeOut" }}
+          style={{ transformOrigin: `${leaf.cx}px ${leaf.cy}px` }}
         />
       ))}
 
-      {/* Gentle sway overlay for top leaves using a subtle rotate */}
+      {/* Leaf veins for texture */}
+      {stage >= 2 && <LeafVeins leaves={leaves} />}
+
+      {/* Gentle sway animation on leaves */}
       {stage >= 1 && (
         <motion.g
-          animate={{ rotate: [0, 1.2, 0, -1.2, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ rotate: [0, 0.8, 0, -0.8, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformOrigin: "180px 265px" }}
         >
-          {/* This group is invisible — sway is purely cosmetic, applied via transform */}
+          {/* invisible — sway is applied to the overall tree via parent transform */}
         </motion.g>
       )}
 
-      {/* Gold coins */}
-      {coins.map((coin, i) => (
-        <motion.g
-          key={`${stage}-coin-${i}`}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.4 + i * 0.06, type: "spring", stiffness: 260, damping: 20 }}
-          style={{ transformOrigin: `${coin.x}px ${coin.y}px` }}
-        >
-          <circle cx={coin.x} cy={coin.y} r={9} fill="#FFD700" />
-          <circle cx={coin.x} cy={coin.y} r={7} fill="#FFA500" opacity={0.4} />
-          <text
-            x={coin.x} y={coin.y + 4}
-            textAnchor="middle"
-            fontSize={9}
-            fontWeight="bold"
-            fill="#7a4e00"
-            style={{ fontFamily: "serif" }}
-          >
-            £
-          </text>
-        </motion.g>
-      ))}
-
-      {/* Stage 0 sprout */}
+      {/* Stage 0 — small sprout */}
       {stage === 0 && (
-        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
+        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
           <motion.path
-            d="M180 240 Q180 228 180 218"
-            stroke="#3a9a3a" strokeWidth={3} fill="none" strokeLinecap="round"
+            d="M180 246 Q180 232 180 220"
+            stroke="#3a9a3a" strokeWidth={2.5} fill="none" strokeLinecap="round"
             initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           />
-          <motion.ellipse
-            cx={175} cy={215} rx={9} ry={6} fill="#3a9a3a"
-            transform="rotate(-30 175 215)"
-            initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.9 }}
-            style={{ transformOrigin: "175px 215px" }}
+          <motion.ellipse cx={174} cy={216} rx={9} ry={6} fill="#3a9a3a"
+            transform="rotate(-35 174 216)"
+            initial={{ scale: 0 }} animate={{ scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.8 }}
+            style={{ transformOrigin: "174px 216px" }}
           />
-          <motion.ellipse
-            cx={185} cy={212} rx={9} ry={6} fill="#44aa44"
-            transform="rotate(30 185 212)"
-            initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 1.1 }}
-            style={{ transformOrigin: "185px 212px" }}
+          <motion.ellipse cx={186} cy={213} rx={9} ry={6} fill="#44aa44"
+            transform="rotate(35 186 213)"
+            initial={{ scale: 0 }} animate={{ scale: 1 }}
+            transition={{ duration: 0.4, delay: 1.0 }}
+            style={{ transformOrigin: "186px 213px" }}
           />
         </motion.g>
+      )}
+
+      {/* "Full tree" sparkles */}
+      {stage === 6 && (
+        <>
+          {[{ x: 124, y: 100 }, { x: 236, y: 98 }, { x: 180, y: 78 }, { x: 100, y: 148 }, { x: 260, y: 146 }].map((s, i) => (
+            <motion.text
+              key={i} x={s.x} y={s.y}
+              textAnchor="middle" fontSize={11}
+              animate={{ opacity: [0, 1, 0], scale: [0.8, 1.2, 0.8] }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
+              style={{ transformOrigin: `${s.x}px ${s.y}px` }}
+            >
+              ✨
+            </motion.text>
+          ))}
+        </>
       )}
     </svg>
   );
