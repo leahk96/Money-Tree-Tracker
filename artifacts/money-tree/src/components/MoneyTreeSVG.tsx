@@ -20,13 +20,14 @@ function PotSVG() {
   );
 }
 
-// ── Trunk (height varies by stage 0–12) ──────────────────────────────────────
+// ── Trunk ─────────────────────────────────────────────────────────────────────
 const TRUNK_TOP: number[] = [271, 244, 236, 225, 214, 202, 191, 180, 168, 152, 134, 115, 96];
 
 function TrunkSVG({ stage }: { stage: number }) {
   const ty = TRUNK_TOP[stage] ?? 136;
   const hasLargeBranches = stage >= 6;
   const hasMidBranches   = stage >= 4;
+  const hasHighBranches  = stage >= 8;
 
   return (
     <motion.g
@@ -62,18 +63,23 @@ function TrunkSVG({ stage }: { stage: number }) {
           <path d="M186 210 Q202 192 216 182" stroke="#6a4828" strokeWidth={3.5} fill="none" strokeLinecap="round" />
         </>
       )}
+      {hasHighBranches && (
+        <>
+          <path d="M175 190 Q152 172 132 162" stroke="#6a4828" strokeWidth={3}   fill="none" strokeLinecap="round" />
+          <path d="M185 190 Q208 172 228 162" stroke="#6a4828" strokeWidth={3}   fill="none" strokeLinecap="round" />
+          <path d="M176 170 Q155 148 138 136" stroke="#5e4020" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+          <path d="M184 170 Q205 148 222 136" stroke="#5e4020" strokeWidth={2.5} fill="none" strokeLinecap="round" />
+        </>
+      )}
     </motion.g>
   );
 }
 
-// ── Canopy circle clusters — 13 distinct stages (0–12) ───────────────────────
+// ── Canopy clusters ───────────────────────────────────────────────────────────
 type C = { cx: number; cy: number; r: number; fill: string };
 
 const CANOPIES: C[][] = [
-  // 0 — no canopy (sprout only)
   [],
-
-  // 1 — first month: tiny seedling
   [
     { cx:180, cy:230, r:16, fill:"#206020" },
     { cx:171, cy:221, r:11, fill:"#2a8030" },
@@ -82,8 +88,6 @@ const CANOPIES: C[][] = [
     { cx:175, cy:216, r:8,  fill:"#46b446" },
     { cx:186, cy:215, r:8,  fill:"#46b446" },
   ],
-
-  // 2 — second month: slightly bigger, 1 note
   [
     { cx:180, cy:223, r:21, fill:"#1c5820" },
     { cx:166, cy:213, r:15, fill:"#226822" },
@@ -93,8 +97,6 @@ const CANOPIES: C[][] = [
     { cx:191, cy:207, r:11, fill:"#36a036" },
     { cx:180, cy:196, r:13, fill:"#42ae42" },
   ],
-
-  // 3 — third month
   [
     { cx:180, cy:214, r:27, fill:"#1a5020" },
     { cx:160, cy:202, r:18, fill:"#206820" },
@@ -106,8 +108,6 @@ const CANOPIES: C[][] = [
     { cx:169, cy:187, r:10, fill:"#48b248" },
     { cx:192, cy:186, r:10, fill:"#48b248" },
   ],
-
-  // 4 — fourth month
   [
     { cx:180, cy:205, r:33, fill:"#184818" },
     { cx:155, cy:191, r:22, fill:"#1e6020" },
@@ -120,8 +120,6 @@ const CANOPIES: C[][] = [
     { cx:196, cy:173, r:13, fill:"#42aa42" },
     { cx:180, cy:160, r:15, fill:"#4cb44c" },
   ],
-
-  // 5 — fifth month
   [
     { cx:180, cy:196, r:39, fill:"#163a18" },
     { cx:149, cy:181, r:27, fill:"#1c5620" },
@@ -136,8 +134,6 @@ const CANOPIES: C[][] = [
     { cx:128, cy:188, r:18, fill:"#163a18" },
     { cx:232, cy:188, r:18, fill:"#163a18" },
   ],
-
-  // 6 — sixth month
   [
     { cx:180, cy:187, r:45, fill:"#143218" },
     { cx:143, cy:169, r:31, fill:"#1a4e20" },
@@ -154,8 +150,6 @@ const CANOPIES: C[][] = [
     { cx:126, cy:200, r:15, fill:"#101e12" },
     { cx:234, cy:200, r:15, fill:"#101e12" },
   ],
-
-  // 7 — seventh month
   [
     { cx:180, cy:178, r:52, fill:"#122c14" },
     { cx:136, cy:158, r:36, fill:"#184820" },
@@ -172,8 +166,6 @@ const CANOPIES: C[][] = [
     { cx:118, cy:197, r:18, fill:"#0e1e10" },
     { cx:242, cy:197, r:18, fill:"#0e1e10" },
   ],
-
-  // 8 — eighth month
   [
     { cx:180, cy:168, r:58, fill:"#102614" },
     { cx:130, cy:147, r:40, fill:"#164020" },
@@ -192,8 +184,6 @@ const CANOPIES: C[][] = [
     { cx:152, cy:107, r:18, fill:"#46b046" },
     { cx:208, cy:105, r:18, fill:"#46b046" },
   ],
-
-  // 9 — ninth month (noticeably bigger spread than stage 8)
   [
     { cx:180, cy:150, r:75, fill:"#0e2012" },
     { cx:118, cy:126, r:53, fill:"#143a18" },
@@ -212,8 +202,6 @@ const CANOPIES: C[][] = [
     { cx:144, cy:73,  r:26, fill:"#44b044" },
     { cx:216, cy:71,  r:26, fill:"#44b044" },
   ],
-
-  // 10 — tenth month (significant jump in size and height)
   [
     { cx:180, cy:138, r:88, fill:"#0c1c10" },
     { cx:107, cy:111, r:63, fill:"#123212" },
@@ -232,8 +220,6 @@ const CANOPIES: C[][] = [
     { cx:136, cy:50,  r:30, fill:"#42b242" },
     { cx:224, cy:48,  r:30, fill:"#42b242" },
   ],
-
-  // 11 — eleventh month (tall, wide, near-complete canopy)
   [
     { cx:180, cy:126, r:100, fill:"#0a180c" },
     { cx:97,  cy:98,  r:72,  fill:"#102a14" },
@@ -253,8 +239,6 @@ const CANOPIES: C[][] = [
     { cx:230, cy:28,  r:36,  fill:"#40ae40" },
     { cx:180, cy:148, r:40,  fill:"#0a180c" },
   ],
-
-  // 12 — twelfth month: massive full canopy, fills the sky
   [
     { cx:180, cy:114, r:115, fill:"#081408" },
     { cx:86,  cy:86,  r:84,  fill:"#0e2210" },
@@ -276,28 +260,68 @@ const CANOPIES: C[][] = [
   ],
 ];
 
-// ── £ Banknotes — 12 positions, each within the canopy for the stage it appears ─
-// notes[i] first appears at stage i+2 (0-indexed, so ALL_NOTES[0] → stage 2)
-const ALL_NOTES: Array<{ x: number; y: number; rot: number }> = [
-  { x:180, y:207, rot:-4  },  // stage 2 — dead center of small canopy
-  { x:170, y:197, rot:-17 },  // stage 3
-  { x:193, y:195, rot: 15 },  // stage 4
-  { x:157, y:183, rot:-22 },  // stage 5
-  { x:204, y:181, rot: 19 },  // stage 6
-  { x:151, y:169, rot:-25 },  // stage 7
-  { x:209, y:167, rot: 21 },  // stage 8
-  { x:178, y:156, rot: -5 },  // stage 9  (centre)
-  { x:153, y:148, rot:-20 },  // stage 10
-  { x:207, y:145, rot: 17 },  // stage 11
-  { x:147, y:133, rot:-23 },  // stage 12 (extra 1)
-  { x:213, y:130, rot: 19 },  // stage 12 (extra 2)
+// ── £ Banknotes — spread wide throughout the canopy ──────────────────────────
+// Each note object has optional `scale` for size variety
+type NotePos = { x: number; y: number; rot: number; s?: number };
+
+const ALL_NOTES: NotePos[] = [
+  // Stage 2 — 1 note, centre of seedling
+  { x:180, y:207, rot: -4  },
+
+  // Stage 3 — spread slightly left
+  { x:167, y:198, rot:-18  },
+
+  // Stage 4 — right side
+  { x:195, y:192, rot: 16  },
+
+  // Stage 5 — outer left + outer right
+  { x:151, y:182, rot:-26  },
+  { x:209, y:178, rot: 22  },
+
+  // Stage 6 — reaching side clusters
+  { x:136, y:172, rot:-32, s:1.1 },
+  { x:224, y:167, rot: 28, s:1.1 },
+
+  // Stage 7 — into the outer arms
+  { x:122, y:178, rot:-15  },
+  { x:238, y:173, rot: 12  },
+
+  // Stage 8 — higher and wide
+  { x:154, y:149, rot: 34  },
+  { x:206, y:144, rot:-28  },
+
+  // Stage 9 — far side circles + top
+  { x:100, y:160, rot:-13  },
+  { x:260, y:155, rot: 10  },
+
+  // Stage 10 — extreme width + near apex
+  { x:115, y:125, rot: 24, s:1.15 },
+  { x:245, y:119, rot:-26, s:1.15 },
+  { x:180, y: 94, rot: -7  },
+
+  // Stage 11 — outer low arms + upper spread
+  { x: 80, y:145, rot:-16, s:1.2 },
+  { x:280, y:139, rot: 18, s:1.2 },
+  { x:145, y: 72, rot: 30  },
+  { x:215, y: 68, rot:-22  },
+
+  // Stage 12 — full outer canopy blowout
+  { x: 60, y:118, rot: 32, s:1.25 },
+  { x:300, y:112, rot:-27, s:1.25 },
+  { x:110, y: 52, rot:-10, s:1.1  },
+  { x:250, y: 48, rot: 14, s:1.1  },
+  { x:180, y: 30, rot: -3, s:1.2  },
+  { x: 78, y:172, rot: 20  },
+  { x:282, y:166, rot:-17  },
 ];
 
-// How many notes to show for each stage 0–12
-const NOTES_SHOWN = [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12];
+// How many notes to show per stage (0–12)
+const NOTES_SHOWN = [0, 0, 1, 2, 3, 5, 7, 9, 11, 13, 16, 20, 27];
 
-// ── £ Banknote component ──────────────────────────────────────────────────────
-function BankNote({ x, y, rot, delay }: { x: number; y: number; rot: number; delay: number }) {
+// ── £ Banknote ────────────────────────────────────────────────────────────────
+function BankNote({ x, y, rot, scale = 1, delay }: { x: number; y: number; rot: number; scale?: number; delay: number }) {
+  const w = 40 * scale;
+  const h = 22 * scale;
   return (
     <motion.g
       style={{ transformOrigin: `${x}px ${y}px` }}
@@ -306,25 +330,19 @@ function BankNote({ x, y, rot, delay }: { x: number; y: number; rot: number; del
       transition={{ duration: 0.38, delay, ease: [0.34, 1.56, 0.64, 1] }}
     >
       <g transform={`translate(${x},${y}) rotate(${rot})`}>
-        {/* Drop shadow */}
-        <rect x="-20" y="-10" width="40" height="22" rx="3.5" fill="rgba(0,0,0,0.28)" transform="translate(1.5,1.5)" />
-        {/* Body */}
-        <rect x="-20" y="-10" width="40" height="22" rx="3.5" fill="#1a6e1a" />
-        {/* Inner frame */}
-        <rect x="-16.5" y="-7"  width="33" height="16" rx="2"   fill="none" stroke="#44c044" strokeWidth="0.9" />
-        {/* Oval watermark motifs */}
-        <ellipse cx="-10" cy="1" rx="3.5" ry="4.5" fill="none" stroke="#44c044" strokeWidth="0.7" />
-        <ellipse cx=" 10" cy="1" rx="3.5" ry="4.5" fill="none" stroke="#44c044" strokeWidth="0.7" />
-        {/* £ */}
-        <text x="0" y="5" textAnchor="middle" fontSize="10" fill="#8ae88a" fontWeight="bold" fontFamily="Georgia, 'Times New Roman', serif">£</text>
-        {/* Sheen */}
-        <rect x="-20" y="-10" width="40" height="5" rx="3.5" fill="rgba(255,255,255,0.06)" />
+        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="rgba(0,0,0,0.28)" transform="translate(1.5,1.5)" />
+        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="#1a6e1a" />
+        <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#44c044" strokeWidth={0.9*scale} />
+        <ellipse cx={-w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
+        <ellipse cx={ w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
+        <text x="0" y={4*scale} textAnchor="middle" fontSize={10*scale} fill="#8ae88a" fontWeight="bold" fontFamily="Georgia, 'Times New Roman', serif">£</text>
+        <rect x={-w/2} y={-h/2} width={w} height={h*0.25} rx={3.5*scale} fill="rgba(255,255,255,0.06)" />
       </g>
     </motion.g>
   );
 }
 
-// ── Stage 0: sprout ───────────────────────────────────────────────────────────
+// ── Sprout ────────────────────────────────────────────────────────────────────
 function SproutSVG() {
   return (
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
@@ -352,16 +370,21 @@ function SproutSVG() {
   );
 }
 
-// ── Stage 12: sparkles ────────────────────────────────────────────────────────
+// ── Stage 12: sparkles spread across whole canopy ────────────────────────────
 function SparklesSVG() {
-  const pts = [{ x:124, y:92 }, { x:236, y:90 }, { x:180, y:72 }, { x:96, y:145 }, { x:264, y:142 }, { x:180, y:185 }];
+  const pts = [
+    { x:124, y: 78 }, { x:236, y: 74 }, { x:180, y: 52 },
+    { x: 74, y:122 }, { x:286, y:116 }, { x: 96, y:162 },
+    { x:264, y:156 }, { x:155, y: 44 }, { x:205, y: 40 },
+    { x:180, y:178 },
+  ];
   return (
     <>
       {pts.map((p, i) => (
         <motion.text
-          key={i} x={p.x} y={p.y} textAnchor="middle" fontSize={10}
-          animate={{ opacity: [0, 1, 0], scale: [0.7, 1.3, 0.7] }}
-          transition={{ duration: 2.2, repeat: Infinity, delay: i * 0.38, ease: "easeInOut" }}
+          key={i} x={p.x} y={p.y} textAnchor="middle" fontSize={i < 3 ? 13 : 10}
+          animate={{ opacity: [0, 1, 0], scale: [0.7, 1.4, 0.7] }}
+          transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.32, ease: "easeInOut" }}
           style={{ transformOrigin: `${p.x}px ${p.y}px` }}
         >✨</motion.text>
       ))}
@@ -369,26 +392,74 @@ function SparklesSVG() {
   );
 }
 
+// ── Floating coins (stage 8+) ─────────────────────────────────────────────────
+function FloatingCoins({ stage }: { stage: number }) {
+  if (stage < 8) return null;
+  const coins = [
+    { x:164, y:185, delay:0.0 }, { x:196, y:183, delay:0.5 },
+    { x:148, y:168, delay:1.1 }, { x:212, y:165, delay:0.8 },
+    { x:138, y:148, delay:1.6 }, { x:222, y:144, delay:0.3 },
+    { x:122, y:138, delay:1.3 }, { x:238, y:133, delay:0.9 },
+    { x:175, y:132, delay:0.6 }, { x:185, y:118, delay:1.8 },
+    { x:105, y:152, delay:0.4 }, { x:255, y:146, delay:1.2 },
+  ].slice(0, (stage - 7) * 2);
+
+  return (
+    <>
+      {coins.map((c, i) => (
+        <motion.g key={i}
+          animate={{ y: [-2, 2, -2] }}
+          transition={{ duration: 2.8 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: c.delay }}
+        >
+          <circle cx={c.x} cy={c.y} r={5} fill="#d4a800" opacity={0.85} />
+          <circle cx={c.x} cy={c.y} r={3.5} fill="none" stroke="#f0c800" strokeWidth={0.8} />
+          <text x={c.x} y={c.y + 2} textAnchor="middle" fontSize="4.5" fill="#f8e040" fontWeight="bold" fontFamily="serif">£</text>
+        </motion.g>
+      ))}
+    </>
+  );
+}
+
+// ── Per-stage viewBox — camera zooms out as tree grows ────────────────────────
+// Format: "x0 y0 width height"  (all 4 numbers, consistent spacing for interpolation)
+const STAGE_VIEWBOXES = [
+  "82 198 196 157",   // 0  — sprout in pot, tight crop
+  "76 186 208 164",   // 1  — seedling
+  "68 165 224 181",   // 2
+  "56 143 248 203",   // 3
+  "40 120 280 226",   // 4
+  "22 98  316 248",   // 5
+  "5  76  350 270",   // 6
+  "-8 55  376 292",   // 7
+  "-12 40 384 308",   // 8
+  "-18 0  396 350",   // 9
+  "-20 -25 400 375",  // 10
+  "-20 -52 400 402",  // 11
+  "-20 -70 400 420",  // 12
+];
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 export function MoneyTreeSVG({ monthsGoalMet }: MoneyTreeSVGProps) {
-  const stage  = Math.min(Math.max(Math.round(monthsGoalMet), 0), 12);
+  const stage   = Math.min(Math.max(Math.round(monthsGoalMet), 0), 12);
   const circles = CANOPIES[stage];
   const noteCount = NOTES_SHOWN[stage];
-  const notes = ALL_NOTES.slice(0, noteCount);
+  const notes   = ALL_NOTES.slice(0, noteCount);
 
   return (
     <motion.svg
-      viewBox="0 0 360 348"
-      className="w-full max-w-xs mx-auto select-none"
-      animate={stage >= 1 ? { rotate: [0, 0.6, 0, -0.6, 0] } : {}}
+      viewBox={STAGE_VIEWBOXES[stage]}
+      animate={stage >= 1
+        ? { rotate: [0, 0.7, 0, -0.7, 0], viewBox: STAGE_VIEWBOXES[stage] }
+        : { viewBox: STAGE_VIEWBOXES[stage] }
+      }
       transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      className="w-full max-w-sm mx-auto select-none"
       style={{ transformOrigin: "180px 270px" }}
     >
       <PotSVG />
 
       {stage > 0 && <TrunkSVG stage={stage} />}
 
-      {/* Canopy circles — rendered back to front */}
       {circles.map((c, i) => (
         <motion.circle
           key={`s${stage}-c${i}`}
@@ -400,12 +471,13 @@ export function MoneyTreeSVG({ monthsGoalMet }: MoneyTreeSVGProps) {
         />
       ))}
 
-      {/* £ banknotes */}
+      <FloatingCoins stage={stage} />
+
       {notes.map((n, i) => (
         <BankNote
           key={`s${stage}-n${i}`}
-          x={n.x} y={n.y} rot={n.rot}
-          delay={0.35 + i * 0.07}
+          x={n.x} y={n.y} rot={n.rot} scale={n.s ?? 1}
+          delay={0.35 + i * 0.06}
         />
       ))}
 
