@@ -32,11 +32,14 @@ CREATE TABLE IF NOT EXISTS line_items (
   section TEXT NOT NULL CHECK (section IN ('income','bills','needs','wants','savings','debt')),
   name TEXT NOT NULL,
   amount NUMERIC NOT NULL DEFAULT 0,
+  actual_amount NUMERIC DEFAULT NULL,
   sort_order INT NOT NULL DEFAULT 0,
   is_custom BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+-- If you already created the table, run this to add the column:
+-- ALTER TABLE line_items ADD COLUMN IF NOT EXISTS actual_amount NUMERIC DEFAULT NULL;
 
 -- 4. User default rows table
 CREATE TABLE IF NOT EXISTS user_default_rows (

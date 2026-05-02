@@ -20,6 +20,7 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
 };
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
+const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const ALL_SECTIONS: Section[] = ["income", "savings", "bills", "needs", "wants", "debt"];
 const PIE_COLORS: Record<Section, string> = {
   income: "#85BB65", savings: "#228B22", bills: "#c0516b",
@@ -228,6 +229,15 @@ function BudgetContent() {
     }, 500);
   };
 
+  const updateActual = (itemId: string, value: string) => {
+    const actual_amount = value === "" ? null : parseCurrency(value);
+    setLineItems(prev => prev.map(i => i.id === itemId ? { ...i, actual_amount } : i));
+    clearTimeout(saveTimers.current[`act_${itemId}`]);
+    saveTimers.current[`act_${itemId}`] = setTimeout(async () => {
+      await supabase.from("line_items").update({ actual_amount }).eq("id", itemId);
+    }, 500);
+  };
+
   const addRow = async (section: Section) => {
     if (!newRowName.trim() || !monthData) return;
     const existing = lineItems.filter(i => i.section === section);
@@ -328,17 +338,28 @@ function BudgetContent() {
 
   const itemsFor = (s: Section) => lineItems.filter(i => i.section === s);
   const totalFor = (s: Section) => itemsFor(s).reduce((a, i) => a + i.amount, 0);
+  // For needs/wants: use actual_amount if entered, else fall back to expected (amount)
+  const effectiveAmount = (item: LineItem) =>
+    DUAL_AMOUNT_SECTIONS.includes(item.section as Section) && item.actual_amount !== null && item.actual_amount !== undefined
+      ? item.actual_amount
+      : item.amount;
+  const effectiveTotalFor = (s: Section) => itemsFor(s).reduce((a, i) => a + effectiveAmount(i), 0);
 
   const income    = totalFor("income");
   const saved     = totalFor("savings");
-  const expenses  = EXPENSE_SECTIONS.reduce((a, s) => a + totalFor(s), 0);
+  const expenses  = ["bills","debt"].reduce((a, s) => a + totalFor(s as Section), 0)
+                  + effectiveTotalFor("needs") + effectiveTotalFor("wants");
   const allocated = saved + expenses;
   const leftover  = income - allocated;
-  const leftPct   = income > 0 ? Math.max(0, Math.min(100, (leftover / income) * 100)) : 0;
 
   const savingsGoal = monthData?.savings_goal ?? 500;
   const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
   const goalMet = saved >= savingsGoal;
+
+  // Amount left to spend = leftover minus any remaining savings gap
+  const savingsShortfall = Math.max(0, savingsGoal - saved);
+  const amountLeftToSpend = leftover - savingsShortfall;
+  const leftPct = income > 0 ? Math.max(0, Math.min(100, (amountLeftToSpend / income) * 100)) : 0;
 
   const today = new Date();
   const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
@@ -518,33 +539,72 @@ function BudgetContent() {
 
           {/* Expense table */}
           <div className="bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
-            <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-b border-[#e8f0e8]">
-              <div className="px-4 py-2 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Item</div>
-              <div className="px-2 py-2 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide text-right">Amount</div>
-              <div />
-            </div>
 
             {EXPENSE_SECTIONS.map(section => {
               const cfg = SECTION_CONFIG[section];
               const items = itemsFor(section);
-              const sTotal = totalFor(section);
+              const isDual = DUAL_AMOUNT_SECTIONS.includes(section);
               const isAdding = addingRow === section;
+              const expectedTotal = items.reduce((a, i) => a + i.amount, 0);
+              const actualTotal   = isDual ? items.reduce((a, i) => a + (i.actual_amount ?? i.amount), 0) : expectedTotal;
+              const hasActual     = isDual && items.some(i => i.actual_amount !== null && i.actual_amount !== undefined);
 
               return (
                 <div key={section}>
-                  <div className="grid grid-cols-[1fr_140px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
-                    <div className="px-4 py-2 flex items-center gap-1.5">
-                      <span className="text-sm">{cfg.emoji}</span>
-                      <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                  {isDual ? (
+                    /* ── DUAL header: Expected | Actual ── */
+                    <div className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
+                      <div className="px-4 py-2 flex items-center gap-1.5">
+                        <span className="text-sm">{cfg.emoji}</span>
+                        <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                      </div>
+                      <div className="py-1.5 pr-1 text-center">
+                        <div className="text-[9px] uppercase tracking-wide text-[#9ab89a] mb-0.5">Expected</div>
+                        <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
+                          {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                        </div>
+                      </div>
+                      <div className="py-1.5 pr-1 text-center">
+                        <div className="text-[9px] uppercase tracking-wide text-[#9ab89a] mb-0.5">Actual</div>
+                        <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
+                          {actualTotal > 0 ? formatCurrency(actualTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                        </div>
+                      </div>
+                      <div />
                     </div>
-                    <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
-                      {sTotal > 0 ? formatCurrency(sTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                  ) : (
+                    /* ── SINGLE header: Amount ── */
+                    <div className="grid grid-cols-[1fr_110px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
+                      <div className="px-4 py-2 flex items-center gap-1.5">
+                        <span className="text-sm">{cfg.emoji}</span>
+                        <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                      </div>
+                      <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
+                        {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                      </div>
+                      <div />
                     </div>
-                    <div />
-                  </div>
+                  )}
 
-                  {items.map(item => (
-                    <div key={item.id} className="grid grid-cols-[1fr_140px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
+                  {items.map(item => isDual ? (
+                    /* ── DUAL row ── */
+                    <div key={item.id} className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
+                      <div className="px-4 py-1.5 pl-9 flex items-center">
+                        <span className="text-sm text-[#2d4a2d] truncate">{item.name}</span>
+                      </div>
+                      <div className="px-0.5 py-1 flex items-center justify-end">
+                        <AmountInput value={item.amount} onChange={v => updateAmount(item.id, v)} />
+                      </div>
+                      <div className="px-0.5 py-1 flex items-center justify-end">
+                        <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(item.id, v)} />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <button onClick={() => deleteRow(item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#c0b0b0] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* ── SINGLE row ── */
+                    <div key={item.id} className="grid grid-cols-[1fr_110px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
                       <div className="px-4 py-2 pl-9 flex items-center">
                         <span className="text-sm text-[#2d4a2d] truncate">{item.name}</span>
                       </div>
@@ -579,20 +639,22 @@ function BudgetContent() {
             })}
 
             {/* Footer totals */}
-            <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
+            <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
               <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total income</div>
-              <div className="px-2 py-2.5 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
               <div />
             </div>
-            <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
+            <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
               <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total allocated</div>
-              <div className="px-2 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
               <div />
             </div>
-            <div className={`grid grid-cols-[1fr_140px_28px] border-t-2 ${leftover >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
-              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Left unallocated</div>
-              <div className={`px-2 py-2.5 text-sm font-bold text-right tabular-nums ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${amountLeftToSpend >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">
+                Amount left to spend{!goalMet && <span className="font-normal text-[#9ab89a] ml-1 text-xs">(if goal met)</span>}
+              </div>
+              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
               </div>
               <div />
             </div>
@@ -602,16 +664,21 @@ function BudgetContent() {
         {/* RIGHT: Charts column — sticky */}
         <div className="w-72 shrink-0 space-y-4 sticky top-20">
 
-          {/* Chart 1: Amount left to spend */}
+          {/* Chart 1: Amount left to spend (if goal met) */}
           <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
-            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-2">Amount left to spend</div>
-            <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-              {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">
+              Amount left to spend
+            </div>
+            <div className="text-[10px] text-[#9ab89a] mb-2">
+              {goalMet ? "✓ savings goal met" : `after ${formatCurrency(savingsGoal)} goal`}
+            </div>
+            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+              {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
             </div>
             <div className="text-xs text-[#9ab89a] mb-3">of {formatCurrency(income)} income</div>
             <div className="w-full bg-[#e8f0e8] rounded-full h-3 overflow-hidden">
               <div
-                className={`h-3 rounded-full transition-all duration-500 ${leftover >= 0 ? "bg-[#228B22]" : "bg-[#c0516b]"}`}
+                className={`h-3 rounded-full transition-all duration-500 ${amountLeftToSpend >= 0 ? "bg-[#228B22]" : "bg-[#c0516b]"}`}
                 style={{ width: `${leftPct}%` }}
               />
             </div>

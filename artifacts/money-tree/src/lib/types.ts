@@ -27,6 +27,7 @@ export interface LineItem {
   section: Section;
   name: string;
   amount: number;
+  actual_amount: number | null;
   sort_order: number;
   is_custom: boolean;
   created_at: string;
