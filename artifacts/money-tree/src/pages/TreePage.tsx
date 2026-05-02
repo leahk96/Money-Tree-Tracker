@@ -121,7 +121,7 @@ function TreeContent() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl border border-[#e8f0e8] p-6 flex flex-col items-center"
       >
-        <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} />
+        <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} celebrateOnChange />
 
         <p className="text-sm text-[#5a7a5a] mt-2 font-medium">
           Your tree — {goalsMetThisYear}/12 months on track 🌱

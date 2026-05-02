@@ -1,8 +1,11 @@
-import { motion } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface MoneyTreeSVGProps {
   /** Number of months this year where savings goal was met (0–12) */
   monthsGoalMet: number;
+  /** If true, plays a celebration animation whenever monthsGoalMet increases */
+  celebrateOnChange?: boolean;
 }
 
 // ── Pot & soil ────────────────────────────────────────────────────────────────
@@ -421,68 +424,209 @@ function FloatingCoins({ stage }: { stage: number }) {
 }
 
 // ── Per-stage viewBox — camera zooms out as tree grows ────────────────────────
-// Format: "x0 y0 width height"  (all 4 numbers, consistent spacing for interpolation)
 const STAGE_VIEWBOXES = [
-  "82 198 196 157",   // 0  — sprout in pot, tight crop
-  "76 186 208 164",   // 1  — seedling
-  "68 165 224 181",   // 2
-  "56 143 248 203",   // 3
-  "40 120 280 226",   // 4
-  "22 98  316 248",   // 5
-  "5  76  350 270",   // 6
-  "-8 55  376 292",   // 7
-  "-12 40 384 308",   // 8
-  "-18 0  396 350",   // 9
-  "-20 -25 400 375",  // 10
-  "-20 -52 400 402",  // 11
-  "-20 -70 400 420",  // 12
+  "82 198 196 157",
+  "76 186 208 164",
+  "68 165 224 181",
+  "56 143 248 203",
+  "40 120 280 226",
+  "22 98  316 248",
+  "5  76  350 270",
+  "-8 55  376 292",
+  "-12 40 384 308",
+  "-18 0  396 350",
+  "-20 -25 400 375",
+  "-20 -52 400 402",
+  "-20 -70 400 420",
 ];
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-export function MoneyTreeSVG({ monthsGoalMet }: MoneyTreeSVGProps) {
-  const stage   = Math.min(Math.max(Math.round(monthsGoalMet), 0), 12);
-  const circles = CANOPIES[stage];
-  const noteCount = NOTES_SHOWN[stage];
-  const notes   = ALL_NOTES.slice(0, noteCount);
+// ── Celebration particles (deterministic so no hydration issues) ──────────────
+type Particle = { emoji: string; angle: number; dist: number; rise: number; delay: number; size: number };
+const PARTICLES: Particle[] = [
+  { emoji: "🍃", angle:   0, dist:110, rise: 20, delay:0.00, size:20 },
+  { emoji: "🍃", angle:  45, dist: 95, rise: 30, delay:0.04, size:17 },
+  { emoji: "🍃", angle:  90, dist:105, rise: 15, delay:0.08, size:21 },
+  { emoji: "🍃", angle: 135, dist: 90, rise: 10, delay:0.02, size:16 },
+  { emoji: "🍃", angle: 180, dist:115, rise: 25, delay:0.06, size:20 },
+  { emoji: "🍃", angle: 225, dist: 95, rise: 20, delay:0.03, size:17 },
+  { emoji: "🍃", angle: 270, dist:100, rise: 18, delay:0.07, size:21 },
+  { emoji: "🍃", angle: 315, dist: 88, rise: 28, delay:0.05, size:16 },
+  { emoji: "💚",  angle:  22, dist: 70, rise: 55, delay:0.10, size:18 },
+  { emoji: "💚",  angle: 112, dist: 65, rise: 50, delay:0.14, size:18 },
+  { emoji: "💚",  angle: 202, dist: 72, rise: 60, delay:0.12, size:18 },
+  { emoji: "💚",  angle: 292, dist: 68, rise: 52, delay:0.16, size:18 },
+  { emoji: "✨", angle:  60, dist: 50, rise: 65, delay:0.00, size:22 },
+  { emoji: "✨", angle: 150, dist: 55, rise: 60, delay:0.18, size:20 },
+  { emoji: "✨", angle: 240, dist: 48, rise: 68, delay:0.09, size:22 },
+  { emoji: "✨", angle: 330, dist: 52, rise: 62, delay:0.06, size:20 },
+];
+
+function LevelUpCelebration({ stage, onDone }: { stage: number; onDone: () => void }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2600);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
+  const isMax = stage === 12;
 
   return (
-    <motion.svg
-      viewBox={STAGE_VIEWBOXES[stage]}
-      animate={stage >= 1
-        ? { rotate: [0, 0.7, 0, -0.7, 0], viewBox: STAGE_VIEWBOXES[stage] }
-        : { viewBox: STAGE_VIEWBOXES[stage] }
-      }
-      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-      className="w-full max-w-sm mx-auto select-none"
-      style={{ transformOrigin: "180px 270px" }}
-    >
-      <PotSVG />
+    <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
+      {/* Full-screen flash */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse at center, rgba(34,139,34,0.22) 0%, transparent 70%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ duration: 0.55, ease: "easeOut" }}
+      />
 
-      {stage > 0 && <TrunkSVG stage={stage} />}
+      {/* Expanding ring */}
+      <motion.div
+        className="absolute rounded-full border-[3px] border-[#85BB65]"
+        initial={{ width: 60, height: 60, opacity: 0.9 }}
+        animate={{ width: 320, height: 320, opacity: 0 }}
+        transition={{ duration: 0.75, ease: "easeOut" }}
+      />
+      <motion.div
+        className="absolute rounded-full border-[2px] border-[#44c044]"
+        initial={{ width: 60, height: 60, opacity: 0.7 }}
+        animate={{ width: 200, height: 200, opacity: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.08 }}
+      />
 
-      {circles.map((c, i) => (
-        <motion.circle
-          key={`s${stage}-c${i}`}
-          cx={c.cx} cy={c.cy} r={c.r} fill={c.fill}
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, delay: 0.08 + i * 0.03, ease: "easeOut" }}
-          style={{ transformOrigin: `${c.cx}px ${c.cy}px` }}
-        />
-      ))}
+      {/* Particles */}
+      {PARTICLES.map((p, i) => {
+        const rad = (p.angle * Math.PI) / 180;
+        const tx  = Math.cos(rad) * p.dist;
+        const ty  = Math.sin(rad) * p.dist - p.rise;
+        return (
+          <motion.span
+            key={i}
+            className="absolute select-none"
+            style={{ fontSize: p.size }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0, rotate: 0 }}
+            animate={{ x: tx, y: ty, opacity: 0, scale: 1.4, rotate: p.angle }}
+            transition={{ duration: 1.3, delay: p.delay, ease: [0.15, 0.85, 0.35, 1] }}
+          >
+            {p.emoji}
+          </motion.span>
+        );
+      })}
 
-      <FloatingCoins stage={stage} />
+      {/* Extra coin burst for stage 12 */}
+      {isMax && [0, 60, 120, 180, 240, 300].map((angle, i) => {
+        const rad = (angle * Math.PI) / 180;
+        return (
+          <motion.span
+            key={`gold-${i}`}
+            className="absolute select-none text-2xl"
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0 }}
+            animate={{ x: Math.cos(rad) * 130, y: Math.sin(rad) * 130 - 40, opacity: 0, scale: 1.6 }}
+            transition={{ duration: 1.5, delay: 0.2 + i * 0.07, ease: [0.1, 0.9, 0.3, 1] }}
+          >
+            💰
+          </motion.span>
+        );
+      })}
 
-      {notes.map((n, i) => (
-        <BankNote
-          key={`s${stage}-n${i}`}
-          x={n.x} y={n.y} rot={n.rot} scale={n.s ?? 1}
-          delay={0.35 + i * 0.06}
-        />
-      ))}
+      {/* Rising badge */}
+      <motion.div
+        className="absolute flex items-center gap-2 bg-[#228B22] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-green-900/30"
+        initial={{ y: 30, opacity: 0, scale: 0.6 }}
+        animate={{ y: [30, -10, -80], opacity: [0, 1, 1, 0], scale: [0.6, 1.1, 1, 0.9] }}
+        transition={{ duration: 2.0, ease: "easeOut", times: [0, 0.25, 0.7, 1] }}
+      >
+        {isMax ? "🏆 Perfect year!" : "🌱 +1 month!"}
+        <span className="bg-white/20 rounded-full px-2 py-0.5 text-xs">
+          {stage}/12
+        </span>
+      </motion.div>
 
-      {stage === 0 && <SproutSVG />}
-      {stage === 12 && <SparklesSVG />}
-    </motion.svg>
+      {/* Stage-12 extra trophy burst */}
+      {isMax && (
+        <motion.div
+          className="absolute text-6xl select-none"
+          initial={{ scale: 0, opacity: 0, rotate: -20 }}
+          animate={{ scale: [0, 1.4, 1.1], opacity: [0, 1, 1, 0], rotate: [-20, 15, 0] }}
+          transition={{ duration: 2.2, delay: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
+        >
+          🏆
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+export function MoneyTreeSVG({ monthsGoalMet, celebrateOnChange = false }: MoneyTreeSVGProps) {
+  const stage      = Math.min(Math.max(Math.round(monthsGoalMet), 0), 12);
+  const circles    = CANOPIES[stage];
+  const noteCount  = NOTES_SHOWN[stage];
+  const notes      = ALL_NOTES.slice(0, noteCount);
+
+  const prevStageRef  = useRef(stage);
+  const [celebrating, setCelebrating] = useState(false);
+  const svgControls   = useAnimationControls();
+
+  useEffect(() => {
+    if (celebrateOnChange && stage > prevStageRef.current) {
+      setCelebrating(true);
+      // Brief spring-bounce on the tree itself
+      svgControls.start({
+        scale: [1, 1.08, 0.96, 1.04, 1],
+        transition: { duration: 0.7, ease: "easeInOut" },
+      });
+    }
+    prevStageRef.current = stage;
+  }, [stage, celebrateOnChange, svgControls]);
+
+  const handleDone = useCallback(() => setCelebrating(false), []);
+
+  return (
+    <div className="relative w-full max-w-sm mx-auto">
+      <motion.svg
+        viewBox={STAGE_VIEWBOXES[stage]}
+        animate={stage >= 1
+          ? { rotate: [0, 0.7, 0, -0.7, 0] }
+          : {}
+        }
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        className="w-full select-none"
+        style={{ transformOrigin: "180px 270px" }}
+        // layered controls: celebration bounce plays over the sway loop
+      >
+        <motion.g animate={svgControls} style={{ transformOrigin: "180px 270px" }}>
+          <PotSVG />
+
+          {stage > 0 && <TrunkSVG stage={stage} />}
+
+          {circles.map((c, i) => (
+            <motion.circle
+              key={`s${stage}-c${i}`}
+              cx={c.cx} cy={c.cy} r={c.r} fill={c.fill}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.45, delay: 0.08 + i * 0.03, ease: "easeOut" }}
+              style={{ transformOrigin: `${c.cx}px ${c.cy}px` }}
+            />
+          ))}
+
+          <FloatingCoins stage={stage} />
+
+          {notes.map((n, i) => (
+            <BankNote
+              key={`s${stage}-n${i}`}
+              x={n.x} y={n.y} rot={n.rot} scale={n.s ?? 1}
+              delay={0.35 + i * 0.06}
+            />
+          ))}
+
+          {stage === 0 && <SproutSVG />}
+          {stage === 12 && <SparklesSVG />}
+        </motion.g>
+      </motion.svg>
+
+      {celebrating && <LevelUpCelebration stage={stage} onDone={handleDone} />}
+    </div>
   );
 }

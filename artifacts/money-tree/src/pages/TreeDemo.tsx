@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { formatCurrency } from "@/lib/currency";
 
@@ -60,6 +61,12 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
 }
 
 export default function TreeDemo() {
+  const [demoMonths, setDemoMonths] = useState(MONTHS_MET);
+
+  function triggerCelebration() {
+    setDemoMonths(n => Math.min(n + 1, 12));
+  }
+
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
       <div className="bg-[#228B22] text-white text-center text-sm py-2 px-4">
@@ -90,14 +97,14 @@ export default function TreeDemo() {
           <div className="flex items-center justify-between mb-1">
             <h2 className="font-bold text-[#1a4a1a] text-base">Your Money Tree</h2>
             <span className="text-xs font-semibold text-[#228B22] bg-[#e8f5e8] px-2.5 py-1 rounded-full">
-              {MONTHS_MET}/12 goals met
+              {demoMonths}/12 goals met
             </span>
           </div>
-          <p className="text-xs text-[#7a9a7a] mb-4">
+          <p className="text-xs text-[#7a9a7a] mb-3">
             Hit your monthly savings goal and your tree grows. Miss a month and it stays put — no shortcuts, no going backwards.
           </p>
 
-          <MoneyTreeSVG monthsGoalMet={MONTHS_MET} />
+          <MoneyTreeSVG monthsGoalMet={demoMonths} celebrateOnChange />
 
           {/* Progress dots */}
           <div className="mt-3 pt-3 border-t border-[#f0f4f0] flex items-center justify-between">
@@ -106,9 +113,21 @@ export default function TreeDemo() {
             </p>
             <div className="flex gap-1 shrink-0 ml-3">
               {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#228B22]" : "bg-[#e0e8e0]"}`} />
+                <div key={i} className={`w-2 h-2 rounded-full transition-colors duration-300 ${i < demoMonths ? "bg-[#228B22]" : "bg-[#e0e8e0]"}`} />
               ))}
             </div>
+          </div>
+
+          {/* Demo celebration trigger */}
+          <div className="mt-3 pt-3 border-t border-[#f0f4f0] flex items-center justify-between gap-3">
+            <p className="text-[10px] text-[#9ab89a] italic">Try the level-up animation:</p>
+            <button
+              onClick={triggerCelebration}
+              disabled={demoMonths >= 12}
+              className="text-xs font-semibold text-white bg-[#228B22] hover:bg-[#1a6b1a] disabled:opacity-40 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg transition active:scale-95"
+            >
+              🌱 Hit a goal!
+            </button>
           </div>
         </motion.div>
 
