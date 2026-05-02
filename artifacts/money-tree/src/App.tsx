@@ -11,6 +11,8 @@ import BudgetPage from "@/pages/BudgetPage";
 import TreePage from "@/pages/TreePage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import SettingsPage from "@/pages/SettingsPage";
+import SummaryPage from "@/pages/SummaryPage";
+import GardenPage from "@/pages/GardenPage";
 import BudgetDemo from "@/pages/BudgetDemo";
 import TreeDemo from "@/pages/TreeDemo";
 import NotFound from "@/pages/not-found";
@@ -40,6 +42,9 @@ function AppRoutes() {
       <Route path="/budget" component={BudgetPage} />
       <Route path="/budget/:year/:month" component={BudgetPage} />
       <Route path="/tree" component={TreePage} />
+      <Route path="/garden" component={GardenPage} />
+      <Route path="/summary" component={SummaryPage} />
+      <Route path="/summary/:year" component={SummaryPage} />
       <Route path="/analytics" component={AnalyticsPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route component={NotFound} />

@@ -122,9 +122,9 @@ export default function TreeDemo() {
           <h3 className="font-semibold text-[#1a4a1a] text-sm mb-3">How your tree grows</h3>
           <div className="grid grid-cols-3 gap-3 text-center">
             {[
-              { stage: 0, label: "Month 0", desc: "A fresh sprout in the pot" },
-              { stage: 3, label: "Month 3", desc: "Small tree, first notes appear" },
-              { stage: 8, label: "Month 8", desc: "Full branches, notes everywhere" },
+              { stage: 0,  label: "Month 0",  desc: "A fresh sprout in the pot" },
+              { stage: 6,  label: "Month 6",  desc: "Growing fast — 6 £ notes" },
+              { stage: 12, label: "Month 12", desc: "Fully grown, sky-high canopy" },
             ].map(({ stage, label, desc }) => (
               <div key={stage} className="flex flex-col items-center gap-1">
                 <div className="w-full aspect-square flex items-center justify-center">

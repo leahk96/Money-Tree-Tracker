@@ -10,8 +10,10 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { to: "/budget", label: "Budget", icon: "📋", match: ["/budget"] },
-  { to: "/tree",   label: "My Tree", icon: "🌳", match: ["/tree"]   },
+  { to: "/budget",   label: "Budget",   icon: "📋", match: ["/budget"]   },
+  { to: "/tree",     label: "My Tree",  icon: "🌳", match: ["/tree"]     },
+  { to: "/garden",   label: "Garden",   icon: "🌿", match: ["/garden"]   },
+  { to: "/summary",  label: "Summary",  icon: "📊", match: ["/summary"]  },
   { to: "/settings", label: "Settings", icon: "⚙️", match: ["/settings"] },
 ];
 
@@ -20,23 +22,23 @@ export function AppLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
 
   const isActive = (item: NavItem) =>
-    item.match.some(p => location.startsWith(p));
+    item.match.some(p => location === p || location.startsWith(p + "/"));
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
       {/* Top nav — desktop */}
-      <header className="hidden md:flex items-center justify-between px-6 py-4 bg-white border-b border-[#e8f0e8] sticky top-0 z-40">
+      <header className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-[#e8f0e8] sticky top-0 z-40">
         <Link to="/tree" className="flex items-center gap-2">
           <span className="text-2xl">🌳</span>
           <span className="text-lg font-bold text-[#1a4a1a]">Money Tree</span>
         </Link>
 
-        <nav className="flex items-center gap-1">
+        <nav className="flex items-center gap-0.5">
           {NAV.map(item => (
             <Link
               key={item.to}
               to={item.to}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
                 isActive(item)
                   ? "bg-[#e8f5e8] text-[#228B22]"
                   : "text-[#5a7a5a] hover:bg-[#f0f8f0] hover:text-[#2d5a2d]"
@@ -68,13 +70,13 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Link
               key={item.to}
               to={item.to}
-              className={`flex-1 flex flex-col items-center gap-0.5 py-3 text-xs font-medium transition ${
+              className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition ${
                 isActive(item)
                   ? "text-[#228B22]"
                   : "text-[#9ab89a] hover:text-[#5a7a5a]"
               }`}
             >
-              <span className="text-xl leading-none">{item.icon}</span>
+              <span className="text-lg leading-none">{item.icon}</span>
               {item.label}
             </Link>
           ))}
