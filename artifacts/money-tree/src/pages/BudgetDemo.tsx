@@ -148,7 +148,7 @@ export default function BudgetDemo() {
   const saved     = totalExpected("savings");
   const expenses  = ["bills","debt"].reduce((a, s) => a + totalExpected(s as Section), 0)
                   + totalActual("needs") + totalActual("wants");
-  const allocated = saved + expenses;
+  const allocated = expenses; // savings tracked separately via goal strip, not counted as "allocated"
   const leftover  = income - allocated;
 
   const savingsGoal = 500;
@@ -162,7 +162,7 @@ export default function BudgetDemo() {
   const ytdTotal = PRIOR_MONTHS.reduce((a, m) => a + m.saved, 0) + saved;
 
   const OUTGOING_SECTIONS: Section[] = ["savings", "bills", "needs", "wants", "debt"];
-  const remaining = income - allocated;
+  const remaining = income - (saved + allocated); // pie slices must sum to income; savings is its own slice
   const pieData = [
     ...OUTGOING_SECTIONS
       .map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s, color: PIE_COLORS[s] }))
@@ -358,7 +358,7 @@ export default function BudgetDemo() {
             {/* Budget summary widget */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
               <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Remaining amount</div>
-              <div className="text-[10px] text-[#9ab89a] mb-2">income minus allocated</div>
+              <div className="text-[10px] text-[#9ab89a] mb-2">income minus expenses</div>
               <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
                 {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
               </div>
