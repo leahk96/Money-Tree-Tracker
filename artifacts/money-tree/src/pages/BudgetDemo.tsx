@@ -14,11 +14,11 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
 };
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
+const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
   income: "#85BB65", savings: "#228B22", bills: "#c0516b",
   needs: "#5a8fc0", wants: "#d4900a", debt: "#8a9aaa",
 };
-
 const PRIOR_MONTHS = [
   { month: "Jan", saved: 220 },
   { month: "Feb", saved: 310 },
@@ -26,16 +26,16 @@ const PRIOR_MONTHS = [
   { month: "Apr", saved: 500 },
 ];
 
-interface Item { id: string; name: string; amount: number; }
+interface Item { id: string; name: string; amount: number; actual_amount: number | null; }
 type SectionData = Record<Section, Item[]>;
 
 const DEMO: SectionData = {
-  income:  [{ id:"i1", name:"Salary",         amount:2200 }, { id:"i2", name:"Side income",   amount:300  }],
-  savings: [{ id:"s1", name:"Emergency fund", amount:200  }, { id:"s2", name:"Investments",   amount:150  }],
-  bills:   [{ id:"b1", name:"Rent",            amount:950  }, { id:"b2", name:"Utilities",     amount:85   }, { id:"b3", name:"Subscriptions", amount:45 }],
-  needs:   [{ id:"n1", name:"Groceries",       amount:280  }, { id:"n2", name:"Transport",     amount:120  }],
-  wants:   [{ id:"w1", name:"Eating out",      amount:160  }, { id:"w2", name:"Entertainment", amount:60   }],
-  debt:    [{ id:"d1", name:"Credit card",     amount:100  }],
+  income:  [{ id:"i1", name:"Salary",         amount:2200, actual_amount:null }, { id:"i2", name:"Side income",   amount:300,  actual_amount:null }],
+  savings: [{ id:"s1", name:"Emergency fund", amount:200,  actual_amount:null }, { id:"s2", name:"Investments",   amount:150,  actual_amount:null }],
+  bills:   [{ id:"b1", name:"Rent",            amount:950,  actual_amount:null }, { id:"b2", name:"Utilities",     amount:85,   actual_amount:null }, { id:"b3", name:"Subscriptions", amount:45, actual_amount:null }],
+  needs:   [{ id:"n1", name:"Groceries",       amount:280,  actual_amount:312  }, { id:"n2", name:"Transport",     amount:120,  actual_amount:98   }],
+  wants:   [{ id:"w1", name:"Eating out",      amount:160,  actual_amount:null }, { id:"w2", name:"Entertainment", amount:60,   actual_amount:45   }],
+  debt:    [{ id:"d1", name:"Credit card",     amount:100,  actual_amount:null }],
 };
 
 function AmountInput({ value, onChange }: { value: number; onChange: (v: string) => void }) {
@@ -66,7 +66,6 @@ const ChartTooltip = ({ active, payload }: any) => {
   );
 };
 
-// A mini section card used for Income and Savings (side by side)
 function SideBySideSection({
   section, items, addingRow, newRowName,
   onUpdate, onDelete, onAddStart, onAddConfirm, onAddCancel, onNewRowNameChange,
@@ -82,10 +81,8 @@ function SideBySideSection({
   const cfg = SECTION_CONFIG[section];
   const total = items.reduce((a, i) => a + i.amount, 0);
   const isAdding = addingRow === section;
-
   return (
     <div className="flex-1 min-w-0 bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
-      {/* Section header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
         <div className="flex items-center gap-1.5">
           <span className="text-sm">{cfg.emoji}</span>
@@ -95,30 +92,19 @@ function SideBySideSection({
           {total > 0 ? formatCurrency(total) : <span className="text-[#c8d8c8] font-normal">—</span>}
         </span>
       </div>
-
-      {/* Items */}
       {items.map(item => (
         <div key={item.id} className="flex items-center border-b border-[#f0f4f0] hover:bg-[#fafcfa] group px-3 py-1.5">
           <span className="text-xs text-[#2d4a2d] flex-1 truncate pr-2">{item.name}</span>
           <AmountInput value={item.amount} onChange={v => onUpdate(section, item.id, v)} />
-          <button
-            onClick={() => onDelete(section, item.id)}
-            className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#c0b0b0] hover:text-red-500 transition text-xs flex items-center justify-center"
-          >×</button>
+          <button onClick={() => onDelete(section, item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#c0b0b0] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
         </div>
       ))}
-
-      {/* Add row */}
       <div className="px-3 py-1.5">
         {isAdding ? (
           <div className="flex gap-1">
-            <input
-              autoFocus value={newRowName}
-              onChange={e => onNewRowNameChange(e.target.value)}
+            <input autoFocus value={newRowName} onChange={e => onNewRowNameChange(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") onAddConfirm(section); if (e.key === "Escape") onAddCancel(); }}
-              placeholder="Item name…"
-              className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#d0e4d0] focus:outline-none focus:ring-1 focus:ring-[#228B22]"
-            />
+              placeholder="Item name…" className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#d0e4d0] focus:outline-none focus:ring-1 focus:ring-[#228B22]" />
             <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#228B22] text-white text-xs rounded">Add</button>
             <button onClick={onAddCancel} className="px-1.5 py-0.5 text-[#9ab89a] text-xs rounded hover:bg-[#f0f8f0]">✕</button>
           </div>
@@ -135,34 +121,48 @@ export default function BudgetDemo() {
   const [addingRow, setAddingRow] = useState<Section | null>(null);
   const [newRowName, setNewRowName] = useState("");
 
-  const update = (section: Section, id: string, val: string) => {
+  const updateExpected = (section: Section, id: string, val: string) => {
     const amount = parseCurrency(val);
     setSections(p => ({ ...p, [section]: p[section].map(i => i.id === id ? { ...i, amount } : i) }));
   };
+  const updateActual = (section: Section, id: string, val: string) => {
+    const actual_amount = val === "" ? null : parseCurrency(val);
+    setSections(p => ({ ...p, [section]: p[section].map(i => i.id === id ? { ...i, actual_amount } : i) }));
+  };
   const addRow = (section: Section) => {
     if (!newRowName.trim()) return;
-    setSections(p => ({ ...p, [section]: [...p[section], { id: `r-${Date.now()}`, name: newRowName.trim(), amount: 0 }] }));
+    setSections(p => ({ ...p, [section]: [...p[section], { id: `r-${Date.now()}`, name: newRowName.trim(), amount: 0, actual_amount: null }] }));
     setNewRowName(""); setAddingRow(null);
   };
   const deleteRow = (section: Section, id: string) =>
     setSections(p => ({ ...p, [section]: p[section].filter(i => i.id !== id) }));
 
-  const total = (s: Section) => sections[s].reduce((a, i) => a + i.amount, 0);
-  const income    = total("income");
-  const saved     = total("savings");
-  const expenses  = EXPENSE_SECTIONS.reduce((a, s) => a + total(s), 0);
+  const effectiveAmount = (item: Item, section: Section) =>
+    DUAL_AMOUNT_SECTIONS.includes(section) && item.actual_amount !== null && item.actual_amount !== undefined
+      ? item.actual_amount : item.amount;
+
+  const totalExpected = (s: Section) => sections[s].reduce((a, i) => a + i.amount, 0);
+  const totalActual   = (s: Section) => sections[s].reduce((a, i) => a + effectiveAmount(i, s), 0);
+
+  const income    = totalExpected("income");
+  const saved     = totalExpected("savings");
+  const expenses  = ["bills","debt"].reduce((a, s) => a + totalExpected(s as Section), 0)
+                  + totalActual("needs") + totalActual("wants");
   const allocated = saved + expenses;
   const leftover  = income - allocated;
-  const leftPct   = income > 0 ? Math.max(0, Math.min(100, (leftover / income) * 100)) : 0;
+
   const savingsGoal = 500;
   const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
   const goalMet = saved >= savingsGoal;
+  const savingsShortfall = Math.max(0, savingsGoal - saved);
+  const amountLeftToSpend = leftover - savingsShortfall;
+  const leftPct = income > 0 ? Math.max(0, Math.min(100, (amountLeftToSpend / income) * 100)) : 0;
 
   const ytdData = [...PRIOR_MONTHS, { month: "May", saved }];
   const ytdTotal = PRIOR_MONTHS.reduce((a, m) => a + m.saved, 0) + saved;
 
   const ALL_SECTIONS: Section[] = ["income", "savings", "bills", "needs", "wants", "debt"];
-  const pieData = ALL_SECTIONS.map(s => ({ name: SECTION_CONFIG[s].label, value: total(s), key: s })).filter(d => d.value > 0);
+  const pieData = ALL_SECTIONS.map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s })).filter(d => d.value > 0);
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -176,15 +176,19 @@ export default function BudgetDemo() {
           <span className="text-base font-bold text-[#1a4a1a]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
-          {[{label:"Budget",to:"/demo"},{label:"My Tree",to:"/tree-demo"},{label:"Settings",to:"/settings"}].map(n => (
-            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/demo" ? "bg-[#e8f5e8] text-[#228B22]" : "text-[#5a7a5a] hover:bg-[#f0f8f0]"}`}>{n.label}</Link>
+          {[
+            { label: "Budget",  to: "/demo" },
+            { label: "My Tree", to: "/tree-demo" },
+            { label: "Garden",  to: "/garden-demo" },
+            { label: "Summary", to: "/summary-demo" },
+          ].map(n => (
+            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to === "/demo" ? "bg-[#e8f5e8] text-[#228B22]" : "text-[#5a7a5a] hover:bg-[#f0f8f0]"}`}>{n.label}</Link>
           ))}
         </nav>
         <Link to="/signup" className="text-sm bg-[#228B22] text-white px-4 py-2 rounded-lg hover:bg-[#1a6b1a] transition font-medium">Get started</Link>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-5 pb-10">
-        {/* Month nav + goal strip */}
         <div className="flex items-center justify-between mb-4">
           <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition">←</button>
           <h2 className="text-base font-semibold text-[#1a4a1a]">May 2026</h2>
@@ -209,7 +213,6 @@ export default function BudgetDemo() {
           <button className="text-white/70 hover:text-white text-xs underline shrink-0">Edit goal</button>
         </div>
 
-        {/* ── MAIN 2-COLUMN LAYOUT ── */}
         <div className="flex gap-5 items-start">
 
           {/* LEFT: Budget table */}
@@ -217,58 +220,87 @@ export default function BudgetDemo() {
 
             {/* Income + Savings side by side */}
             <div className="flex gap-3">
-              <SideBySideSection
-                section="income" items={sections.income}
-                addingRow={addingRow} newRowName={newRowName}
-                onUpdate={update} onDelete={deleteRow}
+              <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
+                onUpdate={updateExpected} onDelete={deleteRow}
                 onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
                 onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName}
-              />
-              <SideBySideSection
-                section="savings" items={sections.savings}
-                addingRow={addingRow} newRowName={newRowName}
-                onUpdate={update} onDelete={deleteRow}
+                onNewRowNameChange={setNewRowName} />
+              <SideBySideSection section="savings" items={sections.savings} addingRow={addingRow} newRowName={newRowName}
+                onUpdate={updateExpected} onDelete={deleteRow}
                 onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
                 onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName}
-              />
+                onNewRowNameChange={setNewRowName} />
             </div>
 
-            {/* Expense sections as table */}
+            {/* Expense table */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
-              <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-b border-[#e8f0e8]">
-                <div className="px-4 py-2 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Item</div>
-                <div className="px-2 py-2 text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide text-right">Amount</div>
-                <div />
-              </div>
 
               {EXPENSE_SECTIONS.map(section => {
                 const cfg = SECTION_CONFIG[section];
                 const items = sections[section];
-                const sTotal = total(section);
+                const isDual = DUAL_AMOUNT_SECTIONS.includes(section);
                 const isAdding = addingRow === section;
+                const expectedTotal = items.reduce((a, i) => a + i.amount, 0);
+                const actualTotal   = isDual ? items.reduce((a, i) => a + (i.actual_amount ?? i.amount), 0) : expectedTotal;
+                const hasActual     = isDual && items.some(i => i.actual_amount !== null && i.actual_amount !== undefined);
 
                 return (
                   <div key={section}>
-                    <div className="grid grid-cols-[1fr_140px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
-                      <div className="px-4 py-2 flex items-center gap-1.5">
-                        <span className="text-sm">{cfg.emoji}</span>
-                        <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                    {isDual ? (
+                      <div className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
+                        <div className="px-4 py-2 flex items-center gap-1.5">
+                          <span className="text-sm">{cfg.emoji}</span>
+                          <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                        </div>
+                        <div className="py-1.5 pr-1 text-center">
+                          <div className="text-[9px] uppercase tracking-wide text-[#9ab89a] mb-0.5">Expected</div>
+                          <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
+                            {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                          </div>
+                        </div>
+                        <div className="py-1.5 pr-1 text-center">
+                          <div className="text-[9px] uppercase tracking-wide text-[#9ab89a] mb-0.5">Actual</div>
+                          <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
+                            {actualTotal > 0 ? formatCurrency(actualTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                          </div>
+                        </div>
+                        <div />
                       </div>
-                      <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
-                        {sTotal > 0 ? formatCurrency(sTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                    ) : (
+                      <div className="grid grid-cols-[1fr_110px_28px] border-b border-[#e8f0e8]" style={{ backgroundColor: cfg.rowBg }}>
+                        <div className="px-4 py-2 flex items-center gap-1.5">
+                          <span className="text-sm">{cfg.emoji}</span>
+                          <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                        </div>
+                        <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
+                          {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#c8d8c8] font-normal">—</span>}
+                        </div>
+                        <div />
                       </div>
-                      <div />
-                    </div>
+                    )}
 
-                    {items.map(item => (
-                      <div key={item.id} className="grid grid-cols-[1fr_140px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
+                    {items.map(item => isDual ? (
+                      <div key={item.id} className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
+                        <div className="px-4 py-1.5 pl-9 flex items-center">
+                          <span className="text-sm text-[#2d4a2d] truncate">{item.name}</span>
+                        </div>
+                        <div className="px-0.5 py-1 flex items-center justify-end">
+                          <AmountInput value={item.amount} onChange={v => updateExpected(section, item.id, v)} />
+                        </div>
+                        <div className="px-0.5 py-1 flex items-center justify-end">
+                          <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(section, item.id, v)} />
+                        </div>
+                        <div className="flex items-center justify-center">
+                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#c0b0b0] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={item.id} className="grid grid-cols-[1fr_110px_28px] border-b border-[#f0f4f0] hover:bg-[#fafcfa] group">
                         <div className="px-4 py-2 pl-9 flex items-center">
                           <span className="text-sm text-[#2d4a2d] truncate">{item.name}</span>
                         </div>
                         <div className="px-1 py-1 flex items-center justify-end">
-                          <AmountInput value={item.amount} onChange={v => update(section, item.id, v)} />
+                          <AmountInput value={item.amount} onChange={v => updateExpected(section, item.id, v)} />
                         </div>
                         <div className="flex items-center justify-center">
                           <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#c0b0b0] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
@@ -279,13 +311,9 @@ export default function BudgetDemo() {
                     <div className="border-b border-[#f0f4f0]">
                       {isAdding ? (
                         <div className="flex gap-2 pl-9 pr-3 py-2">
-                          <input
-                            autoFocus value={newRowName}
-                            onChange={e => setNewRowName(e.target.value)}
+                          <input autoFocus value={newRowName} onChange={e => setNewRowName(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
-                            placeholder="Item name…"
-                            className="flex-1 px-2 py-1 text-sm rounded border border-[#d0e4d0] focus:outline-none focus:ring-1 focus:ring-[#228B22]"
-                          />
+                            placeholder="Item name…" className="flex-1 px-2 py-1 text-sm rounded border border-[#d0e4d0] focus:outline-none focus:ring-1 focus:ring-[#228B22]" />
                           <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#228B22] text-white text-xs rounded hover:bg-[#1a6b1a]">Add</button>
                           <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9ab89a] text-xs rounded hover:bg-[#f0f8f0]">Cancel</button>
                         </div>
@@ -298,20 +326,22 @@ export default function BudgetDemo() {
               })}
 
               {/* Footer totals */}
-              <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
+              <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t-2 border-[#d0e8d0]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total income</div>
-                <div className="px-2 py-2.5 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#228B22]">{formatCurrency(income)}</div>
                 <div />
               </div>
-              <div className="grid grid-cols-[1fr_140px_28px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
+              <div className="grid grid-cols-[1fr_auto_28px] bg-[#f5f8f5] border-t border-[#e8f0e8]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Total allocated</div>
-                <div className="px-2 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
                 <div />
               </div>
-              <div className={`grid grid-cols-[1fr_140px_28px] border-t-2 ${leftover >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
-                <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Left unallocated</div>
-                <div className={`px-2 py-2.5 text-sm font-bold text-right tabular-nums ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                  {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${amountLeftToSpend >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+                <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">
+                  Amount left to spend{!goalMet && <span className="font-normal text-[#9ab89a] ml-1 text-xs">(if goal met)</span>}
+                </div>
+                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                  {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
                 </div>
                 <div />
               </div>
@@ -321,18 +351,18 @@ export default function BudgetDemo() {
           {/* RIGHT: Charts column */}
           <div className="w-72 shrink-0 space-y-4 sticky top-20">
 
-            {/* Chart 1: Amount left to spend */}
+            {/* Amount left to spend widget */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
-              <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-2">Amount left to spend</div>
-              <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+              <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Amount left to spend</div>
+              <div className="text-[10px] text-[#9ab89a] mb-2">
+                {goalMet ? "✓ savings goal met" : `after ${formatCurrency(savingsGoal)} goal`}
+              </div>
+              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
               </div>
               <div className="text-xs text-[#9ab89a] mb-3">of {formatCurrency(income)} income</div>
               <div className="w-full bg-[#e8f0e8] rounded-full h-3 overflow-hidden">
-                <div
-                  className={`h-3 rounded-full transition-all duration-500 ${leftover >= 0 ? "bg-[#228B22]" : "bg-[#c0516b]"}`}
-                  style={{ width: `${leftPct}%` }}
-                />
+                <div className={`h-3 rounded-full transition-all duration-500 ${amountLeftToSpend >= 0 ? "bg-[#228B22]" : "bg-[#c0516b]"}`} style={{ width: `${leftPct}%` }} />
               </div>
               <div className="flex justify-between text-[10px] text-[#b0c4b0] mt-1.5">
                 <span>Allocated: {formatCurrency(allocated)}</span>
@@ -340,7 +370,7 @@ export default function BudgetDemo() {
               </div>
             </div>
 
-            {/* Chart 2: YTD savings */}
+            {/* YTD savings */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
               <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-1">Saved year to date</div>
               <div className="text-2xl font-bold text-[#228B22] tabular-nums mb-3">{formatCurrency(ytdTotal)}</div>
@@ -359,7 +389,7 @@ export default function BudgetDemo() {
               </ResponsiveContainer>
             </div>
 
-            {/* Chart 3: Breakdown pie */}
+            {/* Breakdown pie */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
               <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-3">Breakdown</div>
               <div className="flex justify-center mb-3">
