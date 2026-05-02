@@ -71,74 +71,46 @@
   --button-outline: rgba(0,0,0, .10);
   --badge-outline: rgba(0,0,0, .05);
 
-  /* Automatic computation of border around primary / danger buttons */
-  --opaque-button-border-intensity: -8; /* In terms of percentages */
+  --opaque-button-border-intensity: -8;
 
-  /* Backgrounds applied on top of other backgrounds when hovered/active */
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: red; /*replace with H S L */
-
-  --foreground: red; /*replace with H S L */
-
-  --border: red; /*replace with H S L */
-
-  --card: red; /*replace with H S L */
-
-  --card-foreground: red; /*replace with H S L */
-
-  --card-border: red; /*replace with H S L */
-
-  --sidebar: red; /*replace with H S L */
-
-  --sidebar-foreground: red; /*replace with H S L */
-
-  --sidebar-border: red; /*replace with H S L */
-
-  --sidebar-primary: red; /*replace with H S L */
-
-  --sidebar-primary-foreground: red; /*replace with H S L */
-
-  --sidebar-accent: red; /*replace with H S L */
-
-  --sidebar-accent-foreground: red; /*replace with H S L */
-
-  --sidebar-ring: red; /*replace with H S L */
-
-  --popover: red; /*replace with H S L */
-
-  --popover-foreground: red; /*replace with H S L */
-
-  --popover-border: red; /*replace with H S L */
-
-  --primary: red; /*replace with H S L */
-
-  --primary-foreground: red; /*replace with H S L */
-
-  --secondary: red; /*replace with H S L */
-
-  --secondary-foreground: red; /*replace with H S L */
-
-  --muted: red; /*replace with H S L */
-
-  --muted-foreground: red; /*replace with H S L */
-
-  --accent: red; /*replace with H S L */
-
-  --accent-foreground: red; /*replace with H S L */
-
-  --destructive: red; /*replace with H S L */
-
-  --destructive-foreground: red; /*replace with H S L */
-
-  --input: red; /*replace with H S L */
-  --ring: red; /*replace with H S L */
-  --chart-1: red; /*replace with H S L */
-  --chart-2: red; /*replace with H S L */
-  --chart-3: red; /*replace with H S L */
-  --chart-4: red; /*replace with H S L */
-  --chart-5: red; /*replace with H S L */
+  /* Money Tree green palette */
+  --background: 46 60% 97%;       /* #FDFBF7 warm off-white */
+  --foreground: 120 44% 18%;      /* #1a4a1a dark forest green */
+  --border: 120 28% 86%;          /* #d0e4d0 light green border */
+  --card: 0 0% 100%;              /* white */
+  --card-foreground: 120 44% 18%;
+  --card-border: 120 28% 86%;
+  --sidebar: 0 0% 100%;
+  --sidebar-foreground: 120 44% 18%;
+  --sidebar-border: 120 28% 86%;
+  --sidebar-primary: 120 59% 34%; /* #228B22 forest green */
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 120 28% 96%;
+  --sidebar-accent-foreground: 120 44% 18%;
+  --sidebar-ring: 120 59% 34%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 120 44% 18%;
+  --popover-border: 120 28% 86%;
+  --primary: 120 59% 34%;         /* #228B22 */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 120 28% 96%;
+  --secondary-foreground: 120 44% 18%;
+  --muted: 120 20% 95%;
+  --muted-foreground: 120 20% 50%;
+  --accent: 120 28% 93%;
+  --accent-foreground: 120 44% 18%;
+  --destructive: 350 70% 55%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 120 28% 86%;
+  --ring: 120 59% 34%;
+  --chart-1: 120 59% 34%;   /* savings green */
+  --chart-2: 348 55% 73%;   /* bills coral */
+  --chart-3: 207 46% 64%;   /* needs blue */
+  --chart-4: 39 88% 61%;    /* wants amber */
+  --chart-5: 210 14% 55%;   /* debt gray */
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
