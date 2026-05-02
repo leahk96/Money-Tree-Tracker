@@ -161,8 +161,14 @@ export default function BudgetDemo() {
   const ytdData = [...PRIOR_MONTHS, { month: "May", saved }];
   const ytdTotal = PRIOR_MONTHS.reduce((a, m) => a + m.saved, 0) + saved;
 
-  const ALL_SECTIONS: Section[] = ["income", "savings", "bills", "needs", "wants", "debt"];
-  const pieData = ALL_SECTIONS.map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s })).filter(d => d.value > 0);
+  const OUTGOING_SECTIONS: Section[] = ["savings", "bills", "needs", "wants", "debt"];
+  const remaining = income - allocated;
+  const pieData = [
+    ...OUTGOING_SECTIONS
+      .map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s, color: PIE_COLORS[s] }))
+      .filter(d => d.value > 0),
+    ...(remaining > 0 ? [{ name: "Remaining", value: remaining, key: "remaining", color: "#d4e8d4" }] : []),
+  ];
 
   return (
     <div className="min-h-screen bg-[#FDFBF7]">
@@ -401,20 +407,27 @@ export default function BudgetDemo() {
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
               <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-3">Breakdown</div>
               <div className="flex justify-center mb-3">
-                <PieChart width={120} height={120}>
-                  <Pie data={pieData} cx={56} cy={56} innerRadius={32} outerRadius={54} paddingAngle={2} dataKey="value" stroke="none">
-                    {pieData.map((entry, i) => (
-                      <Cell key={i} fill={PIE_COLORS[entry.key as Section]} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<ChartTooltip />} />
-                </PieChart>
+                <div className="relative w-[120px] h-[120px]">
+                  <PieChart width={120} height={120}>
+                    <Pie data={pieData} cx={56} cy={56} innerRadius={32} outerRadius={54} paddingAngle={2} dataKey="value" stroke="none">
+                      {pieData.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<ChartTooltip />} />
+                  </PieChart>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <span className="text-[9px] text-[#9ab89a] leading-none">total</span>
+                    <span className="text-[11px] font-bold text-[#1a4a1a] leading-tight tabular-nums">{formatCurrency(income)}</span>
+                  </div>
+                </div>
               </div>
               <div className="space-y-1.5">
                 {pieData.map(entry => (
                   <div key={entry.name} className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[entry.key as Section] }} />
+                    <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                     <span className="text-xs text-[#5a7a5a] flex-1">{entry.name}</span>
+                    <span className="text-[10px] text-[#9ab89a] tabular-nums mr-1">{Math.round((entry.value / income) * 100)}%</span>
                     <span className="text-xs font-semibold text-[#1a4a1a] tabular-nums">{formatCurrency(entry.value)}</span>
                   </div>
                 ))}
