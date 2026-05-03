@@ -13,7 +13,6 @@ const NAV: NavItem[] = [
   { to: "/budget",   label: "Budget",   icon: "📋", match: ["/budget"]   },
   { to: "/tree",     label: "My Tree",  icon: "🌳", match: ["/tree"]     },
   { to: "/garden",   label: "Garden",   icon: "🌿", match: ["/garden"]   },
-  { to: "/vault",    label: "Vault",    icon: "🥇", match: ["/vault"]    },
   { to: "/summary",  label: "Summary",  icon: "📊", match: ["/summary"]  },
   { to: "/settings", label: "Settings", icon: "⚙️", match: ["/settings"] },
 ];
