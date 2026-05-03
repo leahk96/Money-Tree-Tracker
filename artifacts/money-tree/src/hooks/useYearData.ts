@@ -11,6 +11,8 @@ export interface MonthDetail {
   hasData: boolean;
   needsTotal: number;
   wantsTotal: number;
+  savingsExpected: number;
+  savingsActual: number;
 }
 
 export interface YearData {
@@ -62,7 +64,7 @@ export function useYearData(targetYear: number) {
     const currentYear = new Date().getFullYear();
     const empty: MonthDetail[] = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1, totalSaved: 0, savingsGoal: 500, goalMet: false, hasData: false,
-      needsTotal: 0, wantsTotal: 0,
+      needsTotal: 0, wantsTotal: 0, savingsExpected: 0, savingsActual: 0,
     }));
 
     const { data: months } = await supabase
@@ -100,8 +102,10 @@ export function useYearData(targetYear: number) {
       const income     = monthItems.filter(it => it.section === "income").reduce((s, it) => s + it.amount, 0);
       const bills      = monthItems.filter(it => it.section === "bills").reduce((s, it) => s + it.amount, 0);
       const debt       = monthItems.filter(it => it.section === "debt").reduce((s, it) => s + it.amount, 0);
-      const needsTotal = monthItems.filter(it => it.section === "needs").reduce((s, it) => s + effectiveAmount(it), 0);
-      const wantsTotal = monthItems.filter(it => it.section === "wants").reduce((s, it) => s + effectiveAmount(it), 0);
+      const needsTotal      = monthItems.filter(it => it.section === "needs").reduce((s, it) => s + effectiveAmount(it), 0);
+      const wantsTotal      = monthItems.filter(it => it.section === "wants").reduce((s, it) => s + effectiveAmount(it), 0);
+      const savingsExpected = monthItems.filter(it => it.section === "savings").reduce((s, it) => s + it.amount, 0);
+      const savingsActual   = monthItems.filter(it => it.section === "savings").reduce((s, it) => s + (it.actual_amount ?? it.amount), 0);
       const expenses   = bills + debt + needsTotal + wantsTotal;
       const saved      = income - expenses;
       const hasData    = monthItems.length > 0;
@@ -114,6 +118,8 @@ export function useYearData(targetYear: number) {
         hasData,
         needsTotal,
         wantsTotal,
+        savingsExpected,
+        savingsActual,
       };
     });
 

@@ -30,6 +30,8 @@ interface MonthData {
   goal: number;
   needs: number;
   wants: number;
+  savingsExpected: number;
+  savingsActual: number;
   hasData: boolean;
 }
 
@@ -48,54 +50,54 @@ const SCENARIOS: Record<number, YearScenario> = {
     year: 2024, goalsMetCount: 9, totalSaved: 4800, bestStreak: 5, currentStreak: 0,
     q1: true, q2: false, q3: true, q4: false,
     months: [
-      { month:"Jan", saved:520, goal:500, needs:410, wants:280, hasData:true },
-      { month:"Feb", saved:510, goal:500, needs:390, wants:260, hasData:true },
-      { month:"Mar", saved:505, goal:500, needs:420, wants:290, hasData:true },
-      { month:"Apr", saved:380, goal:500, needs:480, wants:380, hasData:true },
-      { month:"May", saved:500, goal:500, needs:415, wants:310, hasData:true },
-      { month:"Jun", saved:490, goal:500, needs:440, wants:340, hasData:true },
-      { month:"Jul", saved:510, goal:500, needs:395, wants:255, hasData:true },
-      { month:"Aug", saved:520, goal:500, needs:380, wants:240, hasData:true },
-      { month:"Sep", saved:515, goal:500, needs:405, wants:270, hasData:true },
-      { month:"Oct", saved:350, goal:500, needs:460, wants:360, hasData:true },
-      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Jan", saved:520, goal:500, needs:410, wants:280, savingsExpected:350, savingsActual:340, hasData:true },
+      { month:"Feb", saved:510, goal:500, needs:390, wants:260, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Mar", saved:505, goal:500, needs:420, wants:290, savingsExpected:350, savingsActual:300, hasData:true },
+      { month:"Apr", saved:380, goal:500, needs:480, wants:380, savingsExpected:350, savingsActual:200, hasData:true },
+      { month:"May", saved:500, goal:500, needs:415, wants:310, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Jun", saved:490, goal:500, needs:440, wants:340, savingsExpected:350, savingsActual:280, hasData:true },
+      { month:"Jul", saved:510, goal:500, needs:395, wants:255, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Aug", saved:520, goal:500, needs:380, wants:240, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Sep", saved:515, goal:500, needs:405, wants:270, savingsExpected:350, savingsActual:330, hasData:true },
+      { month:"Oct", saved:350, goal:500, needs:460, wants:360, savingsExpected:350, savingsActual:150, hasData:true },
+      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
     ],
   },
   2025: {
     year: 2025, goalsMetCount: 11, totalSaved: 6200, bestStreak: 8, currentStreak: 0,
     q1: true, q2: true, q3: true, q4: false,
     months: [
-      { month:"Jan", saved:550, goal:500, needs:395, wants:240, hasData:true },
-      { month:"Feb", saved:520, goal:500, needs:380, wants:210, hasData:true },
-      { month:"Mar", saved:530, goal:500, needs:410, wants:250, hasData:true },
-      { month:"Apr", saved:510, goal:500, needs:400, wants:265, hasData:true },
-      { month:"May", saved:540, goal:500, needs:385, wants:230, hasData:true },
-      { month:"Jun", saved:505, goal:500, needs:415, wants:255, hasData:true },
-      { month:"Jul", saved:560, goal:500, needs:370, wants:200, hasData:true },
-      { month:"Aug", saved:520, goal:500, needs:390, wants:225, hasData:true },
-      { month:"Sep", saved:515, goal:500, needs:405, wants:245, hasData:true },
-      { month:"Oct", saved:480, goal:500, needs:430, wants:295, hasData:true },
-      { month:"Nov", saved:490, goal:500, needs:420, wants:280, hasData:true },
-      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Jan", saved:550, goal:500, needs:395, wants:240, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Feb", saved:520, goal:500, needs:380, wants:210, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Mar", saved:530, goal:500, needs:410, wants:250, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Apr", saved:510, goal:500, needs:400, wants:265, savingsExpected:350, savingsActual:320, hasData:true },
+      { month:"May", saved:540, goal:500, needs:385, wants:230, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Jun", saved:505, goal:500, needs:415, wants:255, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Jul", saved:560, goal:500, needs:370, wants:200, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Aug", saved:520, goal:500, needs:390, wants:225, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Sep", saved:515, goal:500, needs:405, wants:245, savingsExpected:350, savingsActual:330, hasData:true },
+      { month:"Oct", saved:480, goal:500, needs:430, wants:295, savingsExpected:350, savingsActual:300, hasData:true },
+      { month:"Nov", saved:490, goal:500, needs:420, wants:280, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
     ],
   },
   2026: {
     year: 2026, goalsMetCount: 4, totalSaved: 2030, bestStreak: 4, currentStreak: 4,
     q1: true, q2: false, q3: false, q4: false,
     months: [
-      { month:"Jan", saved:520, goal:500, needs:400, wants:260, hasData:true },
-      { month:"Feb", saved:495, goal:500, needs:390, wants:245, hasData:true },
-      { month:"Mar", saved:510, goal:500, needs:415, wants:270, hasData:true },
-      { month:"Apr", saved:505, goal:500, needs:410, wants:205, hasData:true },
-      { month:"May", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Jun", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Jul", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Aug", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Sep", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Oct", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
-      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   hasData:false },
+      { month:"Jan", saved:520, goal:500, needs:400, wants:260, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Feb", saved:495, goal:500, needs:390, wants:245, savingsExpected:350, savingsActual:300, hasData:true },
+      { month:"Mar", saved:510, goal:500, needs:415, wants:270, savingsExpected:350, savingsActual:350, hasData:true },
+      { month:"Apr", saved:505, goal:500, needs:410, wants:205, savingsExpected:350, savingsActual:280, hasData:true },
+      { month:"May", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Jun", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Jul", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Aug", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Sep", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Oct", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Nov", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
+      { month:"Dec", saved:0,   goal:500, needs:0,   wants:0,   savingsExpected:0,   savingsActual:0,   hasData:false },
     ],
   },
 };
@@ -139,6 +141,8 @@ export default function SummaryDemo() {
     Needs: m.needs,
     Wants: m.wants,
     Surplus: m.saved - m.goal,
+    SavingsExpected: m.savingsExpected,
+    SavingsActual: m.savingsActual,
   }));
 
   // Insight: find best month for low wants spending
@@ -324,6 +328,34 @@ export default function SummaryDemo() {
                 <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
                   {chartMonths.map((entry, i) => (
                     <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#B80000"} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </motion.div>
+        )}
+
+        {/* Chart 4: Savings Allocations — Expected vs Actual */}
+        {chartMonths.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.34 }}
+            className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
+            <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Savings allocations</h3>
+            <p className="text-xs text-[#9E9E9E] mb-4">How much you planned to save vs what you actually moved each month</p>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#81C784]" /><span className="text-[10px] text-[#9E9E9E]">Expected</span></div>
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
+            </div>
+            <ResponsiveContainer width="100%" height={190}>
+              <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                  tickFormatter={v => fmt(v)} width={52} />
+                <Tooltip content={<ChartTooltip />} />
+                <Bar dataKey="SavingsExpected" name="Expected" fill="#81C784" radius={[3, 3, 0, 0]} opacity={0.75} />
+                <Bar dataKey="SavingsActual" name="Actual" radius={[3, 3, 0, 0]}>
+                  {chartMonths.map((entry, i) => (
+                    <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#2E7D32" : "#B80000"} />
                   ))}
                 </Bar>
               </BarChart>

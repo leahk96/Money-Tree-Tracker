@@ -81,7 +81,10 @@ function SummaryContent() {
     Needs: d.needsTotal,
     Wants: d.wantsTotal,
     Surplus: d.totalSaved - d.savingsGoal,
+    SavingsExpected: d.savingsExpected,
+    SavingsActual: d.savingsActual,
   }));
+  const hasSavingsAllocations = activeMonths.some(d => d.savingsExpected > 0);
 
   // Spending insights
   const lowestWantsMonth = activeMonths.length > 1 ? activeMonths.reduce((a, b) => b.wantsTotal < a.wantsTotal ? b : a) : null;
@@ -276,6 +279,38 @@ function SummaryContent() {
               <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
                   <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#B80000"} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </motion.div>
+      )}
+
+      {/* Chart 4: Savings Allocations — Expected vs Actual */}
+      {chartMonths.length > 0 && hasSavingsAllocations && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.34 }}
+          className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
+        >
+          <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Savings allocations</h3>
+          <p className="text-xs text-[#9E9E9E] mb-4">How much you planned to save vs what you actually moved each month</p>
+          <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#81C784]" /><span className="text-[10px] text-[#9E9E9E]">Expected</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
+          </div>
+          <ResponsiveContainer width="100%" height={190}>
+            <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                tickFormatter={v => fmt(v)} width={52} />
+              <Tooltip content={<ChartTooltip />} />
+              <Bar dataKey="SavingsExpected" name="Expected" fill="#81C784" radius={[3, 3, 0, 0]} opacity={0.75} />
+              <Bar dataKey="SavingsActual" name="Actual" radius={[3, 3, 0, 0]}>
+                {chartMonths.map((entry, i) => (
+                  <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#2E7D32" : "#B80000"} />
                 ))}
               </Bar>
             </BarChart>
