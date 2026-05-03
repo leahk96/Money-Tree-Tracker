@@ -116,24 +116,38 @@ function TreeContent() {
   const streakBadge = (data?.currentStreak ?? 0) >= 12 ? "🔥" : (data?.currentStreak ?? 0) >= 6 ? "🔥" : (data?.currentStreak ?? 0) >= 3 ? "🔥" : null;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+    <div className="max-w-2xl mx-auto px-4 py-6 space-y-5 pb-10">
       {/* Tree hero */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl border border-[#E8E8E8] p-6 flex flex-col items-center"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} celebrateOnChange />
-
-        <p className="text-sm text-[#546E7A] mt-2 font-medium">
-          Your tree — {goalsMetThisYear}/12 months on track 🌱
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="font-bold text-[#1B5E20] text-base">Your Money Tree</h2>
+          <span className="text-xs font-semibold text-[#2E7D32] bg-[#E8F5E9] px-2.5 py-1 rounded-full">
+            {goalsMetThisYear}/12 goals met
+          </span>
+        </div>
+        <p className="text-xs text-[#607D8B] mb-3">
+          Hit your monthly savings goal and your tree grows. Miss a month and it stays put — no shortcuts, no going backwards.
         </p>
 
-        {goalsMetThisYear === 0 && (
-          <p className="text-xs text-[#9E9E9E] mt-1 text-center max-w-xs">
-            Hit your savings goal this month and watch your tree grow its first leaves!
+        <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} celebrateOnChange />
+
+        {/* Progress dots */}
+        <div className="mt-3 pt-3 border-t border-[#F5F5F5] flex items-center justify-between">
+          <p className="text-xs text-[#607D8B]">
+            {goalsMetThisYear === 0
+              ? "Hit your savings goal this month to grow your first leaves!"
+              : "Every month you hit your goal, notes grow on your tree"}
           </p>
-        )}
+          <div className="flex gap-1 shrink-0 ml-3">
+            {Array.from({ length: 12 }, (_, i) => (
+              <div key={i} className={`w-2 h-2 rounded-full ${i < goalsMetThisYear ? "bg-[#2E7D32]" : "bg-[#E0E0E0]"}`} />
+            ))}
+          </div>
+        </div>
       </motion.div>
 
       {/* Streak */}
@@ -187,7 +201,15 @@ function TreeContent() {
         transition={{ delay: 0.15 }}
         className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#1B5E20] mb-4">Quarterly coins</h3>
+        <div className="flex items-start justify-between mb-1">
+          <h3 className="font-bold text-[#1B5E20]">Quarterly coins</h3>
+          <span className="text-xs text-[#9E9E9E]">
+            {[data?.q1Earned, data?.q2Earned, data?.q3Earned, data?.q4Earned].filter(Boolean).length}/4 earned
+          </span>
+        </div>
+        <p className="text-xs text-[#607D8B] mb-5">
+          Hit your goal every month in a quarter and earn a coin. Collect all 4 and they melt into a gold bullion at year end.
+        </p>
         <div className="flex justify-around">
           {QUARTERS.map((q, i) => (
             <CoinSlot
@@ -206,9 +228,9 @@ function TreeContent() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className={`rounded-2xl border p-5 text-center transition-all duration-700 ${
+        className={`rounded-2xl border p-5 transition-all duration-700 ${
           data?.bullionUnlocked
-            ? "border-[#FFD700] bg-gradient-to-r from-yellow-50 to-amber-50"
+            ? "border-[#FFD700] bg-gradient-to-r from-yellow-50 to-amber-50 text-center"
             : "border-[#E8E8E8] bg-white"
         }`}
       >
@@ -223,13 +245,34 @@ function TreeContent() {
               🏆
             </motion.div>
             <div className="font-bold text-[#D4AF37] text-lg">Gold bullion unlocked!</div>
-            <div className="text-sm text-[#BF360C]">You hit your goal every month this year. Incredible!</div>
+            <div className="text-sm text-[#BF360C]">You hit your goal every single month. Extraordinary!</div>
           </div>
         ) : (
-          <div className="space-y-1">
-            <div className="text-3xl opacity-30">🏅</div>
-            <div className="text-sm font-medium text-[#9E9E9E]">Gold bullion</div>
-            <div className="text-xs text-[#9E9E9E]">Earn all 4 quarterly coins to unlock</div>
+          <div className="flex items-center gap-4 text-left">
+            <div className="shrink-0">
+              <svg width="52" height="34" viewBox="0 0 52 34" className="opacity-30">
+                <rect x="4" y="8" width="44" height="22" rx="4" fill="#C8960C" />
+                <rect x="2" y="6" width="48" height="22" rx="4" fill="#FFD700" />
+                <rect x="6" y="10" width="40" height="14" rx="2" fill="none" stroke="#C8960C" strokeWidth="1.2" />
+                <rect x="2" y="6" width="48" height="6" rx="4" fill="rgba(255,255,255,0.18)" />
+                <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#8a6200" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
+              </svg>
+            </div>
+            <div>
+              <div className="font-semibold text-[#9E9E9E]">Gold bullion</div>
+              <div className="text-xs text-[#9E9E9E] mt-0.5">
+                Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bar.
+              </div>
+              {(() => {
+                const coinsEarned = [data?.q1Earned, data?.q2Earned, data?.q3Earned, data?.q4Earned].filter(Boolean).length;
+                const remaining = 4 - coinsEarned;
+                return (
+                  <div className="text-xs text-[#c8a000] mt-1.5 font-medium">
+                    {coinsEarned}/4 coins — {remaining} more quarter{remaining !== 1 ? "s" : ""} to go
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         )}
       </motion.div>
