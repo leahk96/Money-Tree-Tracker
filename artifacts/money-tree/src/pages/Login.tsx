@@ -25,16 +25,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🌳</div>
-          <h1 className="text-3xl font-bold text-[#1a4a1a]">Money Tree</h1>
-          <p className="text-[#5a7a5a] mt-1">Your savings, growing</p>
+          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree</h1>
+          <p className="text-[#546E7A] mt-1">Your savings, growing</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-[#e8f0e8] p-8">
-          <h2 className="text-xl font-semibold text-[#1a4a1a] mb-6">Welcome back</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-[#E8E8E8] p-8">
+          <h2 className="text-xl font-semibold text-[#1B5E20] mb-6">Welcome back</h2>
 
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -44,29 +44,29 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#2d5a2d] mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl border border-[#d0e4d0] bg-[#f8fbf8] focus:outline-none focus:ring-2 focus:ring-[#228B22] focus:border-transparent text-[#1a4a1a] placeholder-[#9ab89a] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#2d5a2d] mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-[#d0e4d0] bg-[#f8fbf8] focus:outline-none focus:ring-2 focus:ring-[#228B22] focus:border-transparent text-[#1a4a1a] placeholder-[#9ab89a] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-[#228B22] hover:underline">
+              <Link to="/forgot-password" className="text-sm text-[#2E7D32] hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -74,15 +74,15 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#228B22] hover:bg-[#1a6b1a] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </form>
 
-          <p className="text-center text-sm text-[#5a7a5a] mt-6">
+          <p className="text-center text-sm text-[#546E7A] mt-6">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-[#228B22] font-medium hover:underline">
+            <Link to="/signup" className="text-[#2E7D32] font-medium hover:underline">
               Sign up free
             </Link>
           </p>

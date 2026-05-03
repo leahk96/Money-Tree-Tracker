@@ -41,13 +41,13 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
             </motion.span>
           </motion.div>
         ) : (
-          <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#c8d8c8] bg-[#f5f8f5] flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#BDBDBD] bg-[#F5F5F5] flex items-center justify-center">
             <span className="text-2xl opacity-25">🪙</span>
           </div>
         )}
       </div>
-      <span className={`text-xs font-semibold ${earned ? "text-[#b07800]" : "text-[#9ab89a]"}`}>{label}</span>
-      <span className="text-[10px] text-[#9ab89a]">{months}</span>
+      <span className={`text-xs font-semibold ${earned ? "text-[#D4AF37]" : "text-[#9E9E9E]"}`}>{label}</span>
+      <span className="text-[10px] text-[#9E9E9E]">{months}</span>
     </motion.div>
   );
 }
@@ -68,19 +68,19 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
         isCurrent
           ? "border-[#FFD700] shadow-sm"
           : goalMet
-            ? "border-[#85BB65] bg-[#f0faf0]"
-            : "border-[#e8f0e8] bg-white"
+            ? "border-[#4CAF50] bg-[#f0faf0]"
+            : "border-[#E8E8E8] bg-white"
       }`}
     >
-      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#228B22]" : "text-[#5a7a5a]"}`}>
+      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
         {name}
       </div>
       {hasData ? (
         <>
-          <div className={`text-sm font-bold ${goalMet ? "text-[#228B22]" : "text-[#1a4a1a]"}`}>
+          <div className={`text-sm font-bold ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
             {formatCurrency(totalSaved)}
           </div>
-          <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#9ab89a]"}`}>
+          <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#9E9E9E]"}`}>
             {goalMet ? "✓ Goal met" : `${formatCurrency((summary?.savingsGoal ?? 0) - totalSaved)} to go`}
           </div>
         </>
@@ -102,7 +102,7 @@ function TreeContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#228B22] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -119,16 +119,16 @@ function TreeContent() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-6 flex flex-col items-center"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-6 flex flex-col items-center"
       >
         <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} celebrateOnChange />
 
-        <p className="text-sm text-[#5a7a5a] mt-2 font-medium">
+        <p className="text-sm text-[#546E7A] mt-2 font-medium">
           Your tree — {goalsMetThisYear}/12 months on track 🌱
         </p>
 
         {goalsMetThisYear === 0 && (
-          <p className="text-xs text-[#9ab89a] mt-1 text-center max-w-xs">
+          <p className="text-xs text-[#9E9E9E] mt-1 text-center max-w-xs">
             Hit your savings goal this month and watch your tree grow its first leaves!
           </p>
         )}
@@ -145,7 +145,7 @@ function TreeContent() {
             <div className="text-lg font-bold text-[#c05a00]">
               {streakBadge} {data?.currentStreak} month streak!
             </div>
-            <div className="text-xs text-[#9a6020] mt-0.5">
+            <div className="text-xs text-[#BF360C] mt-0.5">
               Best ever: {data?.bestStreak} months
             </div>
           </div>
@@ -158,19 +158,19 @@ function TreeContent() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl border border-[#e8f0e8] overflow-hidden"
+          className="bg-white rounded-2xl border border-[#E8E8E8] overflow-hidden"
         >
           {profile.goal_photo_url && (
             <img src={profile.goal_photo_url} alt={profile.goal_name} className="w-full h-32 object-cover" />
           )}
           <div className="p-4">
-            <div className="text-xs text-[#5a7a5a] mb-1">You're saving for</div>
-            <div className="text-lg font-bold text-[#1a4a1a]">{profile.goal_name}</div>
+            <div className="text-xs text-[#546E7A] mb-1">You're saving for</div>
+            <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
             {data && (
-              <div className="text-sm text-[#5a7a5a] mt-1">
-                Total saved this year: <span className="font-semibold text-[#228B22]">{formatCurrency(data.totalSavedThisYear)}</span>
+              <div className="text-sm text-[#546E7A] mt-1">
+                Total saved this year: <span className="font-semibold text-[#2E7D32]">{formatCurrency(data.totalSavedThisYear)}</span>
                 {profile.yearly_target && (
-                  <span className="text-[#9ab89a]"> / {formatCurrency(profile.yearly_target)}</span>
+                  <span className="text-[#9E9E9E]"> / {formatCurrency(profile.yearly_target)}</span>
                 )}
               </div>
             )}
@@ -183,9 +183,9 @@ function TreeContent() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#1a4a1a] mb-4">Quarterly coins</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-4">Quarterly coins</h3>
         <div className="flex justify-around">
           {QUARTERS.map((q, i) => (
             <CoinSlot
@@ -207,7 +207,7 @@ function TreeContent() {
         className={`rounded-2xl border p-5 text-center transition-all duration-700 ${
           data?.bullionUnlocked
             ? "border-[#FFD700] bg-gradient-to-r from-yellow-50 to-amber-50"
-            : "border-[#e8f0e8] bg-white"
+            : "border-[#E8E8E8] bg-white"
         }`}
       >
         {data?.bullionUnlocked ? (
@@ -220,14 +220,14 @@ function TreeContent() {
             >
               🏆
             </motion.div>
-            <div className="font-bold text-[#b07800] text-lg">Gold bullion unlocked!</div>
-            <div className="text-sm text-[#9a6020]">You hit your goal every month this year. Incredible!</div>
+            <div className="font-bold text-[#D4AF37] text-lg">Gold bullion unlocked!</div>
+            <div className="text-sm text-[#BF360C]">You hit your goal every month this year. Incredible!</div>
           </div>
         ) : (
           <div className="space-y-1">
             <div className="text-3xl opacity-30">🏅</div>
-            <div className="text-sm font-medium text-[#9ab89a]">Gold bullion</div>
-            <div className="text-xs text-[#b0c4b0]">Earn all 4 quarterly coins to unlock</div>
+            <div className="text-sm font-medium text-[#9E9E9E]">Gold bullion</div>
+            <div className="text-xs text-[#9E9E9E]">Earn all 4 quarterly coins to unlock</div>
           </div>
         )}
       </motion.div>
@@ -237,9 +237,9 @@ function TreeContent() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.25 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#1a4a1a] mb-3">{currentYear} progress</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-3">{currentYear} progress</h3>
         <div className="grid grid-cols-4 gap-2">
           {Array.from({ length: 12 }, (_, i) => {
             const m = i + 1;

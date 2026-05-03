@@ -35,7 +35,7 @@ function SummaryContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#228B22] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -58,22 +58,22 @@ function SummaryContent() {
         <button
           onClick={() => canPrev && setSelectedYear(years[yearIdx - 1])}
           disabled={!canPrev}
-          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30"
+          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30"
         >
           ←
         </button>
         <div className="text-center">
-          <h1 className="text-xl font-bold text-[#1a4a1a]">
+          <h1 className="text-xl font-bold text-[#1B5E20]">
             {selectedYear} {isCurrent ? "so far" : "in review"}
           </h1>
-          <p className="text-xs text-[#7a9a7a] mt-0.5">
+          <p className="text-xs text-[#607D8B] mt-0.5">
             {isCurrent ? `${12 - goalsMetCount} months remaining` : "Full year"}
           </p>
         </div>
         <button
           onClick={() => canNext && setSelectedYear(years[yearIdx + 1])}
           disabled={!canNext}
-          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#e8f0e8] text-[#2d5a2d] transition disabled:opacity-30"
+          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30"
         >
           →
         </button>
@@ -83,7 +83,7 @@ function SummaryContent() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
         <div className="flex items-center gap-4">
           <div className="w-36 shrink-0">
@@ -91,20 +91,20 @@ function SummaryContent() {
           </div>
           <div className="flex-1 space-y-2">
             <div>
-              <div className="text-xs text-[#7a9a7a] mb-0.5">Goals hit</div>
-              <div className="text-3xl font-bold text-[#228B22]">
-                {goalsMetCount}<span className="text-lg text-[#9ab89a] font-normal">/12</span>
+              <div className="text-xs text-[#607D8B] mb-0.5">Goals hit</div>
+              <div className="text-3xl font-bold text-[#2E7D32]">
+                {goalsMetCount}<span className="text-lg text-[#9E9E9E] font-normal">/12</span>
               </div>
             </div>
-            <div className="w-full bg-[#e8f0e8] rounded-full h-2">
+            <div className="w-full bg-[#E8E8E8] rounded-full h-2">
               <motion.div
-                className="bg-[#228B22] h-2 rounded-full"
+                className="bg-[#2E7D32] h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${(goalsMetCount / 12) * 100}%` }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               />
             </div>
-            <div className="text-xs text-[#5a7a5a]">
+            <div className="text-xs text-[#546E7A]">
               {goalsMetCount === 12 ? "🏆 Perfect year!" : goalsMetCount >= 9 ? "🔥 Outstanding" : goalsMetCount >= 6 ? "⭐ Good progress" : goalsMetCount >= 3 ? "🌱 Getting started" : "🌱 Early days"}
             </div>
           </div>
@@ -124,11 +124,11 @@ function SummaryContent() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.06 + i * 0.05 }}
-            className="bg-white rounded-xl border border-[#e8f0e8] p-4"
+            className="bg-white rounded-xl border border-[#E8E8E8] p-4"
           >
-            <div className="text-xs text-[#7a9a7a] mb-1">{card.label}</div>
-            <div className={`text-xl font-bold ${card.positive ? "text-[#228B22]" : "text-[#c05a00]"}`}>{card.value}</div>
-            {card.sub && <div className="text-xs text-[#9ab89a] mt-0.5">{card.sub}</div>}
+            <div className="text-xs text-[#607D8B] mb-1">{card.label}</div>
+            <div className={`text-xl font-bold ${card.positive ? "text-[#2E7D32]" : "text-[#c05a00]"}`}>{card.value}</div>
+            {card.sub && <div className="text-xs text-[#9E9E9E] mt-0.5">{card.sub}</div>}
           </motion.div>
         ))}
       </div>
@@ -138,9 +138,9 @@ function SummaryContent() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#1a4a1a] mb-4 text-sm">Quarterly coins</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-4 text-sm">Quarterly coins</h3>
         <div className="flex justify-around">
           {QUARTERS.map((q, i) => {
             const earned = data?.[q.q] ?? false;
@@ -161,9 +161,9 @@ function SummaryContent() {
                     style={{ background: "linear-gradient(135deg,#FFD700,#FFA500)" }}
                   >🪙</motion.div>
                 ) : (
-                  <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#d0e0d0] bg-[#f8fbf8] flex items-center justify-center text-2xl opacity-25">🪙</div>
+                  <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#d0e0d0] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
                 )}
-                <span className={`text-xs font-semibold ${earned ? "text-[#b07800]" : "text-[#9ab89a]"}`}>{q.label}</span>
+                <span className={`text-xs font-semibold ${earned ? "text-[#D4AF37]" : "text-[#9E9E9E]"}`}>{q.label}</span>
                 <span className="text-[10px] text-[#b0c0b0]">{q.months}</span>
               </motion.div>
             );
@@ -176,9 +176,9 @@ function SummaryContent() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.28 }}
-        className="bg-white rounded-2xl border border-[#e8f0e8] p-5"
+        className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#1a4a1a] mb-3 text-sm">{selectedYear} month by month</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-3 text-sm">{selectedYear} month by month</h3>
         <div className="grid grid-cols-4 gap-2">
           {monthDetails.map((d, i) => {
             const isCurrentMonth = isCurrent && d.month === new Date().getMonth() + 1;
@@ -192,17 +192,17 @@ function SummaryContent() {
                 transition={{ delay: 0.3 + i * 0.025 }}
                 className={`rounded-xl p-2.5 text-left border-2 transition ${
                   isCurrentMonth ? "border-[#FFD700] shadow-sm bg-white"
-                  : d.goalMet ? "border-[#85BB65] bg-[#f0faf0]"
-                  : d.hasData ? "border-[#e8f0e8] bg-white"
-                  : "border-dashed border-[#e8f0e8] bg-[#fafcfa]"
+                  : d.goalMet ? "border-[#4CAF50] bg-[#f0faf0]"
+                  : d.hasData ? "border-[#E8E8E8] bg-white"
+                  : "border-dashed border-[#E8E8E8] bg-[#FAFAFA]"
                 }`}
               >
-                <div className={`text-xs font-semibold mb-1 ${d.goalMet ? "text-[#228B22]" : "text-[#5a7a5a]"}`}>
+                <div className={`text-xs font-semibold mb-1 ${d.goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
                   {MONTH_NAMES[i]}
                 </div>
                 {d.hasData ? (
                   <>
-                    <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#228B22]" : "text-[#1a4a1a]"}`}>
+                    <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
                       {formatCurrency(d.totalSaved)}
                     </div>
                     <div className={`text-[10px] mt-0.5 ${d.goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
@@ -210,7 +210,7 @@ function SummaryContent() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-[10px] text-[#c8d8c8]">—</div>
+                  <div className="text-[10px] text-[#BDBDBD]">—</div>
                 )}
               </motion.button>
             );
@@ -224,7 +224,7 @@ function SummaryContent() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.45 }}
         onClick={() => navigate("/garden")}
-        className="w-full py-3 bg-[#f0f8f0] border border-[#c8e4c8] rounded-xl text-sm font-medium text-[#228B22] hover:bg-[#e4f5e4] transition"
+        className="w-full py-3 bg-[#F5F5F5] border border-[#c8e4c8] rounded-xl text-sm font-medium text-[#2E7D32] hover:bg-[#e4f5e4] transition"
       >
         🌳 View your garden →
       </motion.button>

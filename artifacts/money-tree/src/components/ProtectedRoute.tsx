@@ -14,10 +14,10 @@ export function ProtectedRoute({ children, requireOnboarding = true }: Protected
 
   if (authLoading || profileLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border-4 border-[#228B22] border-t-transparent animate-spin" />
-          <p className="text-[#228B22] font-medium">Loading...</p>
+          <div className="w-12 h-12 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+          <p className="text-[#2E7D32] font-medium">Loading...</p>
         </div>
       </div>
     );

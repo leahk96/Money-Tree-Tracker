@@ -25,12 +25,12 @@ export function AppLayout({ children }: { children: ReactNode }) {
     item.match.some(p => location === p || location.startsWith(p + "/"));
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex flex-col">
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col">
       {/* Top nav — desktop */}
-      <header className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-[#e8f0e8] sticky top-0 z-40">
+      <header className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <Link to="/tree" className="flex items-center gap-2">
           <span className="text-2xl">🌳</span>
-          <span className="text-lg font-bold text-[#1a4a1a]">Money Tree</span>
+          <span className="text-lg font-bold text-[#1B5E20]">Money Tree</span>
         </Link>
 
         <nav className="flex items-center gap-0.5">
@@ -40,8 +40,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
                 isActive(item)
-                  ? "bg-[#e8f5e8] text-[#228B22]"
-                  : "text-[#5a7a5a] hover:bg-[#f0f8f0] hover:text-[#2d5a2d]"
+                  ? "bg-[#E8F5E9] text-[#2E7D32]"
+                  : "text-[#546E7A] hover:bg-[#F5F5F5] hover:text-[#2E7D32]"
               }`}
             >
               <span>{item.icon}</span>
@@ -52,7 +52,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={signOut}
-          className="text-sm text-[#5a7a5a] hover:text-[#1a4a1a] transition px-3 py-2 rounded-lg hover:bg-[#f0f8f0]"
+          className="text-sm text-[#546E7A] hover:text-[#1B5E20] transition px-3 py-2 rounded-lg hover:bg-[#F5F5F5]"
         >
           Sign out
         </button>
@@ -64,7 +64,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Bottom nav — mobile */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[#e8f0e8] z-40">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white border-t border-[#E8E8E8] z-40">
         <div className="flex">
           {NAV.map(item => (
             <Link
@@ -72,8 +72,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition ${
                 isActive(item)
-                  ? "text-[#228B22]"
-                  : "text-[#9ab89a] hover:text-[#5a7a5a]"
+                  ? "text-[#2E7D32]"
+                  : "text-[#9E9E9E] hover:text-[#546E7A]"
               }`}
             >
               <span className="text-lg leading-none">{item.icon}</span>

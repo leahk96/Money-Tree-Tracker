@@ -77,53 +77,53 @@
   --elevate-2: rgba(0,0,0, .08);
 
   /* Money Tree green palette */
-  --background: 46 60% 97%;       /* #FDFBF7 warm off-white */
-  --foreground: 120 44% 18%;      /* #1a4a1a dark forest green */
-  --border: 120 28% 86%;          /* #d0e4d0 light green border */
+  --background: 0 0% 98%;         /* #FAFAFA clean neutral white */
+  --foreground: 122 47% 23%;      /* #1B5E20 dark forest green */
+  --border: 0 0% 88%;             /* #E0E0E0 neutral light border */
   --card: 0 0% 100%;              /* white */
-  --card-foreground: 120 44% 18%;
-  --card-border: 120 28% 86%;
+  --card-foreground: 122 47% 23%;
+  --card-border: 0 0% 88%;
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 120 44% 18%;
-  --sidebar-border: 120 28% 86%;
-  --sidebar-primary: 120 59% 34%; /* #228B22 forest green */
+  --sidebar-foreground: 122 47% 23%;
+  --sidebar-border: 0 0% 88%;
+  --sidebar-primary: 122 47% 33%; /* #2E7D32 material green 800 */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 120 28% 96%;
-  --sidebar-accent-foreground: 120 44% 18%;
-  --sidebar-ring: 120 59% 34%;
+  --sidebar-accent: 122 39% 95%;
+  --sidebar-accent-foreground: 122 47% 23%;
+  --sidebar-ring: 122 47% 33%;
   --popover: 0 0% 100%;
-  --popover-foreground: 120 44% 18%;
-  --popover-border: 120 28% 86%;
-  --primary: 120 59% 34%;         /* #228B22 */
+  --popover-foreground: 122 47% 23%;
+  --popover-border: 0 0% 88%;
+  --primary: 122 47% 33%;         /* #2E7D32 */
   --primary-foreground: 0 0% 100%;
-  --secondary: 120 28% 96%;
-  --secondary-foreground: 120 44% 18%;
-  --muted: 120 20% 95%;
-  --muted-foreground: 120 20% 50%;
-  --accent: 120 28% 93%;
-  --accent-foreground: 120 44% 18%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 122 47% 23%;
+  --muted: 0 0% 95%;
+  --muted-foreground: 200 12% 45%;
+  --accent: 122 39% 95%;
+  --accent-foreground: 122 47% 23%;
   --destructive: 350 70% 55%;
   --destructive-foreground: 0 0% 100%;
-  --input: 120 28% 86%;
-  --ring: 120 59% 34%;
-  --chart-1: 120 59% 34%;   /* savings green */
-  --chart-2: 348 55% 73%;   /* bills coral */
-  --chart-3: 207 46% 64%;   /* needs blue */
-  --chart-4: 39 88% 61%;    /* wants amber */
-  --chart-5: 210 14% 55%;   /* debt gray */
+  --input: 0 0% 88%;
+  --ring: 122 47% 33%;
+  --chart-1: 122 47% 33%;   /* savings green #2E7D32 */
+  --chart-2: 0 71% 47%;     /* bills muted red #C62828 */
+  --chart-3: 213 77% 36%;   /* needs blue #1565C0 */
+  --chart-4: 16 100% 45%;   /* wants deep amber #E65100 */
+  --chart-5: 200 18% 46%;   /* debt blue-grey #607D8B */
 
   --app-font-sans: 'Inter', sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem; /* 8px */
-  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
-  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
-  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-2xs: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-xs:  0 1px 3px 0 rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.06);
+  --shadow-sm:  0 1px 3px 0 rgba(0,0,0,0.08), 0 1px 2px -1px rgba(0,0,0,0.06);
+  --shadow:     0 2px 6px -1px rgba(0,0,0,0.08), 0 1px 3px -1px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 8px -2px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --shadow-lg:  0 8px 16px -4px rgba(0,0,0,0.09), 0 4px 6px -4px rgba(0,0,0,0.05);
+  --shadow-xl:  0 16px 24px -6px rgba(0,0,0,0.10), 0 8px 10px -6px rgba(0,0,0,0.06);
+  --shadow-2xl: 0 24px 40px -8px rgba(0,0,0,0.12);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 

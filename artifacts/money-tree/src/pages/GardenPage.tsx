@@ -99,8 +99,8 @@ function EmptyPlot({ year }: { year: number }) {
         </svg>
       </div>
       <div className="text-center">
-        <div className="text-xs font-semibold text-[#9ab89a]">{year}</div>
-        <div className="text-[10px] text-[#c8d8c8] mt-0.5">Not started</div>
+        <div className="text-xs font-semibold text-[#9E9E9E]">{year}</div>
+        <div className="text-[10px] text-[#BDBDBD] mt-0.5">Not started</div>
       </div>
     </div>
   );
@@ -120,7 +120,7 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition w-full ${
         d.isCurrent
           ? "bg-white border-2 border-[#FFD700] shadow-md"
-          : "bg-white border border-[#e8f0e8] hover:border-[#85BB65]"
+          : "bg-white border border-[#E8E8E8] hover:border-[#4CAF50]"
       }`}
     >
       {d.isCurrent && (
@@ -133,23 +133,23 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       </div>
       <div className="text-center w-full">
         <div className="flex items-center justify-center gap-1">
-          <span className="text-sm font-bold text-[#1a4a1a]">{d.year}</span>
+          <span className="text-sm font-bold text-[#1B5E20]">{d.year}</span>
           {badge && <span className="text-sm">{badge}</span>}
         </div>
         {d.hasData ? (
           <>
-            <div className="text-[11px] text-[#228B22] font-semibold mt-0.5">
+            <div className="text-[11px] text-[#2E7D32] font-semibold mt-0.5">
               {d.goalsMetCount}/12 goals
             </div>
-            <div className="text-[10px] text-[#7a9a7a]">
+            <div className="text-[10px] text-[#607D8B]">
               {formatCurrency(d.totalSaved)} saved
             </div>
           </>
         ) : (
-          <div className="text-[10px] text-[#9ab89a] mt-0.5">Tap to start</div>
+          <div className="text-[10px] text-[#9E9E9E] mt-0.5">Tap to start</div>
         )}
         {isFullYear && (
-          <div className="text-[9px] text-[#b0c4b0] mt-0.5 uppercase tracking-wide">
+          <div className="text-[9px] text-[#9E9E9E] mt-0.5 uppercase tracking-wide">
             Year complete
           </div>
         )}
@@ -171,7 +171,7 @@ function GardenContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#228B22] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -185,8 +185,8 @@ function GardenContent() {
     <div className="max-w-2xl mx-auto px-4 py-6 pb-16 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-[#1a4a1a]">My Garden</h1>
-        <p className="text-xs text-[#7a9a7a] mt-0.5">
+        <h1 className="text-xl font-bold text-[#1B5E20]">My Garden</h1>
+        <p className="text-xs text-[#607D8B] mt-0.5">
           Every year you use Money Tree, a new tree grows in your garden.
         </p>
       </div>
@@ -203,9 +203,9 @@ function GardenContent() {
             { label: "Goals hit", value: `${totalGoalsAllTime}` },
             { label: "All-time saved", value: formatCurrency(totalSavedAllTime) },
           ].map(s => (
-            <div key={s.label} className="bg-white rounded-xl border border-[#e8f0e8] p-3 text-center">
-              <div className="text-base font-bold text-[#228B22]">{s.value}</div>
-              <div className="text-[10px] text-[#7a9a7a] mt-0.5">{s.label}</div>
+            <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
+              <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>
+              <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}
         </motion.div>
@@ -216,7 +216,7 @@ function GardenContent() {
         {/* Current year — prominent */}
         {currentData && (
           <div className="mb-4">
-            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wider mb-2">
+            <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wider mb-2">
               This year
             </div>
             <div className="max-w-[200px]">
@@ -228,7 +228,7 @@ function GardenContent() {
         {/* Past years */}
         {completedYears.length > 0 && (
           <div className="mb-4">
-            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wider mb-2">
+            <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wider mb-2">
               Past years
             </div>
             <div className="grid grid-cols-3 gap-3">
@@ -245,7 +245,7 @@ function GardenContent() {
 
         {/* Future spots */}
         <div>
-          <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wider mb-2">
+          <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wider mb-2">
             Future plots
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -254,7 +254,7 @@ function GardenContent() {
             ))}
             <div className="flex flex-col items-center gap-2 opacity-20">
               <div className="w-full aspect-square flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#9ab89a] flex items-center justify-center text-2xl text-[#9ab89a]">
+                <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#9E9E9E] flex items-center justify-center text-2xl text-[#9E9E9E]">
                   +
                 </div>
               </div>
@@ -269,11 +269,11 @@ function GardenContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="bg-gradient-to-r from-[#f0fbf0] to-[#e8f5e8] rounded-2xl border border-[#c8e8c8] p-5 text-center"
+        className="bg-gradient-to-r from-[#f0fbf0] to-[#E8F5E9] rounded-2xl border border-[#c8e8c8] p-5 text-center"
       >
         <div className="text-2xl mb-2">🌳</div>
-        <div className="text-sm font-semibold text-[#1a4a1a]">Keep coming back year after year</div>
-        <div className="text-xs text-[#5a7a5a] mt-1">
+        <div className="text-sm font-semibold text-[#1B5E20]">Keep coming back year after year</div>
+        <div className="text-xs text-[#546E7A] mt-1">
           Each year you save, a new tree joins your garden. Build a forest over time.
         </div>
       </motion.div>
