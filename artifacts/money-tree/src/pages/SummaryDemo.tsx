@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, ReferenceLine, CartesianGrid, Legend,
+  ResponsiveContainer, ReferenceLine, CartesianGrid, Legend, Cell,
 } from "recharts";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { useCurrency } from "@/contexts/CurrencyContext";
@@ -138,6 +138,7 @@ export default function SummaryDemo() {
     Goal: m.goal,
     Needs: m.needs,
     Wants: m.wants,
+    Surplus: m.saved - m.goal,
   }));
 
   // Insight: find best month for low wants spending
@@ -231,47 +232,64 @@ export default function SummaryDemo() {
           ))}
         </div>
 
-        {/* Savings bar chart */}
+        {/* Chart 1: Monthly savings — grouped bars Goal vs Actual */}
         {chartMonths.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
             <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Monthly savings</h3>
-            <p className="text-xs text-[#9E9E9E] mb-4">How much you put away each month vs your goal</p>
-            <ResponsiveContainer width="100%" height={180}>
-              <BarChart data={chartMonths} barGap={2} barSize={chartMonths.length > 6 ? 14 : 22}>
+            <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved — side by side each month</p>
+            <div className="flex items-center gap-4 mb-3">
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#D4AF37]" /><span className="text-[10px] text-[#9E9E9E]">Goal</span></div>
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
+            </div>
+            <ResponsiveContainer width="100%" height={190}>
+              <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
                 <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
-                  tickFormatter={v => `£${v}`} width={38} />
+                  tickFormatter={v => fmt(v)} width={52} />
                 <Tooltip content={<ChartTooltip />} />
-                <ReferenceLine y={500} stroke="#FFD700" strokeDasharray="4 3" strokeWidth={1.5}
-                  label={{ value: "Goal", position: "right", fontSize: 9, fill: "#D4AF37" }} />
-                <Bar dataKey="Saved" fill="#2E7D32" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="Goal" fill="#D4AF37" radius={[3, 3, 0, 0]} opacity={0.75} />
+                <Bar dataKey="Saved" radius={[3, 3, 0, 0]}>
+                  {chartMonths.map((entry, i) => (
+                    <Cell key={i} fill={entry.Saved >= entry.Goal ? "#2E7D32" : "#E65100"} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
         )}
 
-        {/* Spending patterns line chart */}
-        {chartMonths.length > 1 && (
+        {/* Chart 2: Spending patterns — Needs vs Wants */}
+        {chartMonths.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
             <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Spending patterns</h3>
-            <p className="text-xs text-[#9E9E9E] mb-4">Needs and wants spending month by month</p>
-            <ResponsiveContainer width="100%" height={180}>
-              <LineChart data={chartMonths}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
-                  tickFormatter={v => `£${v}`} width={38} />
-                <Tooltip content={<ChartTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Line dataKey="Needs" stroke="#1565C0" strokeWidth={2} dot={{ r: 3, fill: "#1565C0" }} activeDot={{ r: 4 }} />
-                <Line dataKey="Wants" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: "#E65100" }} activeDot={{ r: 4 }} />
-              </LineChart>
+            <p className="text-xs text-[#9E9E9E] mb-4">Needs and wants month by month</p>
+            <ResponsiveContainer width="100%" height={190}>
+              {chartMonths.length > 1 ? (
+                <LineChart data={chartMonths}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                    tickFormatter={v => fmt(v)} width={52} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+                  <Line dataKey="Needs" stroke="#1565C0" strokeWidth={2} dot={{ r: 3, fill: "#1565C0" }} activeDot={{ r: 4 }} />
+                  <Line dataKey="Wants" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: "#E65100" }} activeDot={{ r: 4 }} />
+                </LineChart>
+              ) : (
+                <BarChart data={chartMonths} barCategoryGap="40%" barGap={4}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                    tickFormatter={v => fmt(v)} width={52} />
+                  <Tooltip content={<ChartTooltip />} />
+                  <Bar dataKey="Needs" fill="#1565C0" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="Wants" fill="#E65100" radius={[3, 3, 0, 0]} />
+                </BarChart>
+              )}
             </ResponsiveContainer>
-
-            {/* Insights */}
             {lowestWantsMonth && lowestNeedsMonth && (
               <div className="mt-4 grid grid-cols-2 gap-2">
                 <div className="bg-[#FFF3E0] rounded-xl p-3 border border-[#f0e0a0]">
@@ -286,6 +304,30 @@ export default function SummaryDemo() {
                 </div>
               </div>
             )}
+          </motion.div>
+        )}
+
+        {/* Chart 3: Surplus — money left after savings goal */}
+        {chartMonths.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
+            <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Money left to spend</h3>
+            <p className="text-xs text-[#9E9E9E] mb-4">Remaining after hitting your savings goal — green = surplus, orange = shortfall</p>
+            <ResponsiveContainer width="100%" height={160}>
+              <BarChart data={chartMonths} barCategoryGap="30%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                  tickFormatter={v => fmt(Math.abs(v))} width={52} />
+                <Tooltip content={<ChartTooltip />} />
+                <ReferenceLine y={0} stroke="#E0E0E0" strokeWidth={1.5} />
+                <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
+                  {chartMonths.map((entry, i) => (
+                    <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#E65100"} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </motion.div>
         )}
 
