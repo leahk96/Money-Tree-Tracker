@@ -1,7 +1,6 @@
 -- ============================================================
--- Money Tree — Supabase Setup
--- Run this entire file in your Supabase dashboard:
---   SQL Editor → New Query → Paste → Run
+-- Money Tree — Supabase Setup  (safe to re-run)
+-- Run this in: SQL Editor → New Query → Run
 -- ============================================================
 
 -- ── TABLES ──────────────────────────────────────────────────
@@ -47,19 +46,45 @@ alter table public.profiles  enable row level security;
 alter table public.months     enable row level security;
 alter table public.line_items enable row level security;
 
--- Profiles
-create policy "profiles: select own"  on public.profiles for select using (auth.uid() = user_id);
-create policy "profiles: insert own"  on public.profiles for insert with check (auth.uid() = user_id);
-create policy "profiles: update own"  on public.profiles for update using (auth.uid() = user_id);
-create policy "profiles: delete own"  on public.profiles for delete using (auth.uid() = user_id);
+-- Drop existing policies (so this script is safe to re-run)
+drop policy if exists "Users can view own profile"    on public.profiles;
+drop policy if exists "Users can insert own profile"  on public.profiles;
+drop policy if exists "Users can update own profile"  on public.profiles;
+drop policy if exists "Users can delete own profile"  on public.profiles;
+drop policy if exists "profiles: select own"          on public.profiles;
+drop policy if exists "profiles: insert own"          on public.profiles;
+drop policy if exists "profiles: update own"          on public.profiles;
+drop policy if exists "profiles: delete own"          on public.profiles;
 
--- Months
-create policy "months: select own"    on public.months for select using (auth.uid() = user_id);
-create policy "months: insert own"    on public.months for insert with check (auth.uid() = user_id);
-create policy "months: update own"    on public.months for update using (auth.uid() = user_id);
-create policy "months: delete own"    on public.months for delete using (auth.uid() = user_id);
+drop policy if exists "Users can view own months"     on public.months;
+drop policy if exists "Users can insert own months"   on public.months;
+drop policy if exists "Users can update own months"   on public.months;
+drop policy if exists "Users can delete own months"   on public.months;
+drop policy if exists "months: select own"            on public.months;
+drop policy if exists "months: insert own"            on public.months;
+drop policy if exists "months: update own"            on public.months;
+drop policy if exists "months: delete own"            on public.months;
 
--- Line items (access via month ownership)
+drop policy if exists "Users can view own line_items"   on public.line_items;
+drop policy if exists "Users can insert own line_items" on public.line_items;
+drop policy if exists "Users can update own line_items" on public.line_items;
+drop policy if exists "Users can delete own line_items" on public.line_items;
+drop policy if exists "line_items: select own"          on public.line_items;
+drop policy if exists "line_items: insert own"          on public.line_items;
+drop policy if exists "line_items: update own"          on public.line_items;
+drop policy if exists "line_items: delete own"          on public.line_items;
+
+-- Create policies
+create policy "profiles: select own" on public.profiles for select using (auth.uid() = user_id);
+create policy "profiles: insert own" on public.profiles for insert with check (auth.uid() = user_id);
+create policy "profiles: update own" on public.profiles for update using (auth.uid() = user_id);
+create policy "profiles: delete own" on public.profiles for delete using (auth.uid() = user_id);
+
+create policy "months: select own" on public.months for select using (auth.uid() = user_id);
+create policy "months: insert own" on public.months for insert with check (auth.uid() = user_id);
+create policy "months: update own" on public.months for update using (auth.uid() = user_id);
+create policy "months: delete own" on public.months for delete using (auth.uid() = user_id);
+
 create policy "line_items: select own" on public.line_items for select using (
   exists (select 1 from public.months where months.id = line_items.month_id and months.user_id = auth.uid())
 );
