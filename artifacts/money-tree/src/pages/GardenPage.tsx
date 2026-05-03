@@ -160,6 +160,7 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
 }
 
 function GardenContent() {
+  const { fmt } = useCurrency();
   const [, navigate] = useLocation();
   const { yearData, loading } = useGardenData();
   const currentYear = new Date().getFullYear();

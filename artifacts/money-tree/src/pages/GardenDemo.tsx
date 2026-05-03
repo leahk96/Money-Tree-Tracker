@@ -78,6 +78,7 @@ function EmptyPlot({ year }: { year: number }) {
 }
 
 export default function GardenDemo() {
+  const { fmt } = useCurrency();
   const [, navigate] = useLocation();
   const totalSaved = DEMO_YEARS.reduce((s, d) => s + d.totalSaved, 0);
   const totalGoals = DEMO_YEARS.reduce((s, d) => s + d.goalsMetCount, 0);
