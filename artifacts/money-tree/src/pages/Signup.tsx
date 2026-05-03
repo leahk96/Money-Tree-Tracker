@@ -45,15 +45,15 @@ export default function Signup() {
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] px-4">
         <div className="w-full max-w-md text-center">
           <div className="text-6xl mb-4">📬</div>
-          <h2 className="text-2xl font-bold text-[#1B5E20]">Check your email</h2>
+          <h2 className="text-2xl font-bold text-[#104911]">Check your email</h2>
           <p className="text-[#546E7A] mt-3 text-base leading-relaxed">
             We've sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back here to sign in.
           </p>
-          <div className="mt-6 p-4 bg-[#F5F5F5] border border-[#c8e4c8] rounded-xl text-sm text-[#2E7D32] text-left space-y-1">
+          <div className="mt-6 p-4 bg-[#F5F5F5] border border-[#d4e8b8] rounded-xl text-sm text-[#265a27] text-left space-y-1">
             <p className="font-semibold mb-2">💡 Tip: skip email confirmation</p>
             <p>If you control this Supabase project, go to <strong>Authentication → Settings</strong> and turn off <strong>Enable email confirmations</strong> for instant sign-up.</p>
           </div>
-          <Link to="/login" className="mt-6 inline-block text-[#2E7D32] font-medium hover:underline text-sm">
+          <Link to="/login" className="mt-6 inline-block text-[#265a27] font-medium hover:underline text-sm">
             Back to sign in →
           </Link>
         </div>
@@ -66,12 +66,12 @@ export default function Signup() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🌳</div>
-          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree</h1>
+          <h1 className="text-3xl font-bold text-[#104911]">Money Tree</h1>
           <p className="text-[#546E7A] mt-1">Start growing your savings today</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8E8E8] p-8">
-          <h2 className="text-xl font-semibold text-[#1B5E20] mb-6">Create your account</h2>
+          <h2 className="text-xl font-semibold text-[#104911] mb-6">Create your account</h2>
 
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -81,42 +81,42 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-[#265a27] mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#265a27] focus:border-transparent text-[#104911] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-[#265a27] mb-1.5">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#265a27] focus:border-transparent text-[#104911] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Confirm password</label>
+              <label className="block text-sm font-medium text-[#265a27] mb-1.5">Confirm password</label>
               <input
                 type="password"
                 value={confirm}
                 onChange={e => setConfirm(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#265a27] focus:border-transparent text-[#104911] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed mt-2"
+              className="w-full py-3 bg-[#265a27] hover:bg-[#104911] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed mt-2"
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
@@ -124,7 +124,7 @@ export default function Signup() {
 
           <p className="text-center text-sm text-[#546E7A] mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="text-[#2E7D32] font-medium hover:underline">
+            <Link to="/login" className="text-[#265a27] font-medium hover:underline">
               Sign in
             </Link>
           </p>

@@ -31,7 +31,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <Link to="/tree" className="flex items-center gap-2">
           <span className="text-2xl">🌳</span>
-          <span className="text-lg font-bold text-[#1B5E20]">Money Tree</span>
+          <span className="text-lg font-bold text-[#104911]">Money Tree</span>
         </Link>
 
         <nav className="flex items-center gap-0.5">
@@ -41,8 +41,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
                 isActive(item)
-                  ? "bg-[#E8F5E9] text-[#2E7D32]"
-                  : "text-[#546E7A] hover:bg-[#F5F5F5] hover:text-[#2E7D32]"
+                  ? "bg-[#ebf5df] text-[#265a27]"
+                  : "text-[#546E7A] hover:bg-[#F5F5F5] hover:text-[#265a27]"
               }`}
             >
               <span>{item.icon}</span>
@@ -53,7 +53,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
         <button
           onClick={signOut}
-          className="text-sm text-[#546E7A] hover:text-[#1B5E20] transition px-3 py-2 rounded-lg hover:bg-[#F5F5F5]"
+          className="text-sm text-[#546E7A] hover:text-[#104911] transition px-3 py-2 rounded-lg hover:bg-[#F5F5F5]"
         >
           Sign out
         </button>
@@ -73,7 +73,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition ${
                 isActive(item)
-                  ? "text-[#2E7D32]"
+                  ? "text-[#265a27]"
                   : "text-[#9E9E9E] hover:text-[#546E7A]"
               }`}
             >

@@ -120,12 +120,12 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       animate={{ opacity: 1, y: 0 }}
       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition w-full ${
         d.isCurrent
-          ? "bg-white border-2 border-[#FFD700] shadow-md"
-          : "bg-white border border-[#E8E8E8] hover:border-[#4CAF50]"
+          ? "bg-white border-2 border-[#ffd449] shadow-md"
+          : "bg-white border border-[#E8E8E8] hover:border-[#548c2f]"
       }`}
     >
       {d.isCurrent && (
-        <span className="text-[10px] font-bold text-[#c09000] bg-[#fff8e0] border border-[#FFD700] rounded-full px-2 py-0.5 -mb-1">
+        <span className="text-[10px] font-bold text-[#d4880a] bg-[#fff5c0] border border-[#ffd449] rounded-full px-2 py-0.5 -mb-1">
           GROWING NOW
         </span>
       )}
@@ -134,12 +134,12 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       </div>
       <div className="text-center w-full">
         <div className="flex items-center justify-center gap-1">
-          <span className="text-sm font-bold text-[#1B5E20]">{d.year}</span>
+          <span className="text-sm font-bold text-[#104911]">{d.year}</span>
           {badge && <span className="text-sm">{badge}</span>}
         </div>
         {d.hasData ? (
           <>
-            <div className="text-[11px] text-[#2E7D32] font-semibold mt-0.5">
+            <div className="text-[11px] text-[#265a27] font-semibold mt-0.5">
               {d.goalsMetCount}/12 goals
             </div>
             <div className="text-[10px] text-[#607D8B]">
@@ -173,7 +173,7 @@ function GardenContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#265a27] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -187,7 +187,7 @@ function GardenContent() {
     <div className="max-w-2xl mx-auto px-4 py-6 pb-16 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-[#1B5E20]">My Garden</h1>
+        <h1 className="text-xl font-bold text-[#104911]">My Garden</h1>
         <p className="text-xs text-[#607D8B] mt-0.5">
           Every year you use Money Tree, a new tree grows in your garden.
         </p>
@@ -206,7 +206,7 @@ function GardenContent() {
             { label: "All-time saved", value: fmt(totalSavedAllTime) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-              <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>
+              <div className="text-base font-bold text-[#265a27]">{s.value}</div>
               <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}
@@ -260,7 +260,7 @@ function GardenContent() {
                   +
                 </div>
               </div>
-              <div className="text-[10px] text-[#c0d0c0] text-center">And more…</div>
+              <div className="text-[10px] text-[#c8d8a0] text-center">And more…</div>
             </div>
           </div>
         </div>
@@ -271,10 +271,10 @@ function GardenContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="bg-gradient-to-r from-[#f0fbf0] to-[#E8F5E9] rounded-2xl border border-[#c8e8c8] p-5 text-center"
+        className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center"
       >
         <div className="text-2xl mb-2">🌳</div>
-        <div className="text-sm font-semibold text-[#1B5E20]">Keep coming back year after year</div>
+        <div className="text-sm font-semibold text-[#104911]">Keep coming back year after year</div>
         <div className="text-xs text-[#546E7A] mt-1">
           Each year you save, a new tree joins your garden. Build a forest over time.
         </div>
