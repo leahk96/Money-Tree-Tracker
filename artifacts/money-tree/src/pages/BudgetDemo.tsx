@@ -355,7 +355,7 @@ export default function BudgetDemo() {
 
             {/* Budget summary widget */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
-              <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Remaining amount</div>
+              <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
               <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
               <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
                 {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
@@ -363,10 +363,7 @@ export default function BudgetDemo() {
               <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
                 <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#4CAF50]" : "bg-[#C62828]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
               </div>
-              <div className="flex justify-between text-[10px] text-[#9E9E9E] mb-4">
-                <span>Expenses: {formatCurrency(allocated)}</span>
-                <span>{Math.round(goalPct)}% of goal met</span>
-              </div>
+              <div className="mb-3" />
 
               <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
                 <div className="flex items-start justify-between">
