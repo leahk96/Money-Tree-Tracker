@@ -29,8 +29,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Top nav — desktop */}
       <header className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <Link to="/tree" className="flex items-center gap-2">
-          <span className="text-2xl">🌳</span>
-          <span className="text-lg font-bold text-[#1B5E20]">Money Tree</span>
+          <img src="/logo.png" className="h-8 w-8 object-contain" alt="Money Tree Tracker" />
+          <span className="text-lg font-bold text-[#1B5E20]">Money Tree Tracker</span>
         </Link>
 
         <nav className="flex items-center gap-0.5">

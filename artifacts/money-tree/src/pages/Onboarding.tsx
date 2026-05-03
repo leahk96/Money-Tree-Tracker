@@ -77,8 +77,8 @@ export default function Onboarding() {
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🌳</div>
-          <h1 className="text-2xl font-bold text-[#1B5E20]">Let's set up your Money Tree</h1>
+          <img src="/logo.png" className="h-20 w-20 object-contain mx-auto mb-3" alt="Money Tree Tracker" />
+          <h1 className="text-2xl font-bold text-[#1B5E20]">Let's set up your Money Tree Tracker</h1>
         </div>
 
         {/* Step indicator */}

@@ -65,8 +65,8 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🌳</div>
-          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree</h1>
+          <img src="/logo.png" className="h-20 w-20 object-contain mx-auto mb-3" alt="Money Tree Tracker" />
+          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree Tracker</h1>
           <p className="text-[#546E7A] mt-1">Start growing your savings today</p>
         </div>
 

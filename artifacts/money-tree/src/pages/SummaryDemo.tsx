@@ -161,8 +161,8 @@ export default function SummaryDemo() {
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🌳</span>
-          <span className="text-base font-bold text-[#1B5E20]">Money Tree</span>
+          <img src="/logo.png" className="h-7 w-7 object-contain" alt="Money Tree Tracker" />
+          <span className="text-base font-bold text-[#1B5E20]">Money Tree Tracker</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {DEMO_NAV.map(n => (

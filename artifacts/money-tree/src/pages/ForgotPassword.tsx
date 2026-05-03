@@ -22,8 +22,8 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="text-5xl mb-3">🌳</div>
-          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree</h1>
+          <img src="/logo.png" className="h-20 w-20 object-contain mx-auto mb-3" alt="Money Tree Tracker" />
+          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree Tracker</h1>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8E8E8] p-8">
