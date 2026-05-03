@@ -12,19 +12,19 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { Section, Month, LineItem } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
-  income:  { label: "Income",  emoji: "💰", color: "#548c2f", textColor: "#104911", rowBg: "#F5F5F5" },
-  savings: { label: "Savings", emoji: "🌱", color: "#265a27", textColor: "#104911", rowBg: "#ebf5df" },
+  income:  { label: "Income",  emoji: "💰", color: "#4CAF50", textColor: "#1B5E20", rowBg: "#F5F5F5" },
+  savings: { label: "Savings", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
   bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
-  needs:   { label: "Needs",   emoji: "🛒", color: "#2a7a9e", textColor: "#1a5f7a", rowBg: "#ddeef5" },
-  wants:   { label: "Wants",   emoji: "✨", color: "#f9a620", textColor: "#d4880a", rowBg: "#fef6e0" },
+  needs:   { label: "Needs",   emoji: "🛒", color: "#1565C0", textColor: "#0D47A1", rowBg: "#E3F2FD" },
+  wants:   { label: "Wants",   emoji: "✨", color: "#E65100", textColor: "#BF360C", rowBg: "#FFF3E0" },
   debt:    { label: "Debt",    emoji: "💳", color: "#607D8B", textColor: "#37474F", rowBg: "#ECEFF1" },
 };
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
-  income: "#548c2f", savings: "#265a27", bills: "#C62828",
-  needs: "#2a7a9e", wants: "#f9a620", debt: "#607D8B",
+  income: "#4CAF50", savings: "#2E7D32", bills: "#C62828",
+  needs: "#1565C0", wants: "#E65100", debt: "#607D8B",
 };
 const SHORT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -43,7 +43,7 @@ const ChartTooltip = ({ active, payload }: any) => {
   const { fmt } = useCurrency();
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-[#E8E8E8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#104911]">
+    <div className="bg-white border border-[#E8E8E8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#1B5E20]">
       {fmt(payload[0].value)}
     </div>
   );
@@ -59,7 +59,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
   }, [value, focused]);
 
   return (
-    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#265a27] bg-white ring-1 ring-[#265a27]/20" : "border-transparent"}`}>
+    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#2E7D32] bg-white ring-1 ring-[#2E7D32]/20" : "border-transparent"}`}>
       <span className="text-xs text-[#9E9E9E] pl-1.5">{symbol}</span>
       <input
         type="number" min="0" step="0.01"
@@ -68,7 +68,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
         onFocus={() => { setFocused(true); setLocal(value === 0 ? "" : String(value)); }}
         onBlur={() => setFocused(false)}
         placeholder="—"
-        className="w-20 py-1 pr-1.5 text-sm text-right bg-transparent focus:outline-none text-[#104911] font-medium tabular-nums"
+        className="w-20 py-1 pr-1.5 text-sm text-right bg-transparent focus:outline-none text-[#1B5E20] font-medium tabular-nums"
       />
     </div>
   );
@@ -119,13 +119,13 @@ function SideBySideSection({
               onChange={e => onNewRowNameChange(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") onAddConfirm(section); if (e.key === "Escape") onAddCancel(); }}
               placeholder="Item name…"
-              className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#265a27]"
+              className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
             />
-            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#265a27] text-white text-xs rounded">Add</button>
+            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#2E7D32] text-white text-xs rounded">Add</button>
             <button onClick={onAddCancel} className="px-1.5 py-0.5 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">✕</button>
           </div>
         ) : (
-          <button onClick={() => onAddStart(section)} className="text-xs text-[#265a27] hover:text-[#104911] font-medium">+ Add row</button>
+          <button onClick={() => onAddStart(section)} className="text-xs text-[#2E7D32] hover:text-[#1B5E20] font-medium">+ Add row</button>
         )}
       </div>
     </div>
@@ -133,7 +133,7 @@ function SideBySideSection({
 }
 
 // ── Confetti burst ────────────────────────────────────────────────────────────
-const CONFETTI_COLORS = ["#ffd449","#548c2f","#f9a620","#265a27","#f9a620","#548c2f","#f9a620","#a8d5e2","#ffd449","#7ab85e"];
+const CONFETTI_COLORS = ["#FFD700","#4CAF50","#FF6B35","#2E7D32","#FFC107","#66BB6A","#FF8C00","#A5D6A7","#FFEB3B","#81C784"];
 const CONFETTI_COUNT = 48;
 
 function ConfettiBurst({ show }: { show: boolean }) {
@@ -178,7 +178,7 @@ function ConfettiBurst({ show }: { show: boolean }) {
         initial={{ scale: 0, opacity: 1 }}
         animate={{ scale: 3.5, opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        style={{ position: "absolute", width: 40, height: 40, borderRadius: "50%", backgroundColor: "#ffd449", opacity: 0.5 }}
+        style={{ position: "absolute", width: 40, height: 40, borderRadius: "50%", backgroundColor: "#FFD700", opacity: 0.5 }}
       />
     </div>
   );
@@ -448,13 +448,13 @@ function BudgetContent() {
     ...OUTGOING_SECTIONS
       .map(s => ({ name: SECTION_CONFIG[s].label, value: totalFor(s), key: s, color: PIE_COLORS[s] }))
       .filter(d => d.value > 0),
-    ...(saved > 0 ? [{ name: "Savings", value: saved, key: "savings", color: "#548c2f" }] : []),
+    ...(saved > 0 ? [{ name: "Savings", value: saved, key: "savings", color: "#4CAF50" }] : []),
   ];
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#265a27] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -464,13 +464,13 @@ function BudgetContent() {
       <ConfettiBurst show={showConfetti} />
       {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
-        <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition">←</button>
-        <h2 className="text-base font-semibold text-[#104911]">{monthName}</h2>
-        <button onClick={() => navigateMonth(1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition">→</button>
+        <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">←</button>
+        <h2 className="text-base font-semibold text-[#1B5E20]">{monthName}</h2>
+        <button onClick={() => navigateMonth(1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">→</button>
       </div>
 
       {/* Savings goal strip */}
-      <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#265a27]" : "bg-[#f9a620]"}`}>
+      <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#2E7D32]" : "bg-[#E65100]"}`}>
         <div>
           <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
           <div className="text-white font-bold text-xl tabular-nums">
@@ -497,19 +497,19 @@ function BudgetContent() {
       {editingGoal && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="font-semibold text-[#104911] mb-4">Update savings goal</h3>
+            <h3 className="font-semibold text-[#1B5E20] mb-4">Update savings goal</h3>
             <div className="relative mb-4">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#265a27] font-semibold">{symbol}</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7D32] font-semibold">{symbol}</span>
               <input
                 type="number" value={goalInput}
                 onChange={e => setGoalInput(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#265a27] text-[#104911] text-lg font-semibold"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] text-[#1B5E20] text-lg font-semibold"
                 autoFocus
               />
             </div>
             <div className="flex gap-3">
               <button onClick={() => setEditingGoal(false)} className="flex-1 py-2.5 border border-[#D0D0D0] text-[#546E7A] rounded-xl hover:bg-[#F5F5F5] transition">Cancel</button>
-              <button onClick={updateGoal} className="flex-1 py-2.5 bg-[#265a27] text-white font-semibold rounded-xl hover:bg-[#104911] transition">Save</button>
+              <button onClick={updateGoal} className="flex-1 py-2.5 bg-[#2E7D32] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition">Save</button>
             </div>
           </div>
         </div>
@@ -524,10 +524,10 @@ function BudgetContent() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: "spring", bounce: 0.3 }}
-            className="mb-5 bg-gradient-to-r from-[#ebf5df] to-[#d4edf3] border border-[#548c2f] rounded-xl px-5 py-3.5 flex items-center justify-between"
+            className="mb-5 bg-gradient-to-r from-[#E8F5E9] to-[#C8E6C9] border border-[#4CAF50] rounded-xl px-5 py-3.5 flex items-center justify-between"
           >
             <div>
-              <div className="text-sm font-bold text-[#104911]">🎉 Goal smashed! Your tree grew this month.</div>
+              <div className="text-sm font-bold text-[#1B5E20]">🎉 Goal smashed! Your tree grew this month.</div>
               <div className="text-xs text-[#388E3C] mt-0.5">
                 You saved {fmt(saved)} —{" "}
                 <span className="font-semibold">{fmt(saved - savingsGoal)}</span> more than your {fmt(savingsGoal)} goal
@@ -550,10 +550,10 @@ function BudgetContent() {
             className="mb-5 bg-amber-50 border border-amber-200 rounded-xl px-5 py-3.5 flex items-center justify-between"
           >
             <div>
-              <div className="text-sm font-semibold text-[#d4880a]">
+              <div className="text-sm font-semibold text-[#BF360C]">
                 ⏰ {daysLeft} day{daysLeft !== 1 ? "s" : ""} left — {fmt(savingsGoal - saved)} short of your goal
               </div>
-              <div className="text-xs text-[#f9a620] mt-0.5">
+              <div className="text-xs text-[#E65100] mt-0.5">
                 Try reducing expenses this month to hit your savings goal
               </div>
             </div>
@@ -580,12 +580,12 @@ function BudgetContent() {
                 disabled={copying}
                 className={`flex items-center gap-1.5 text-xs border rounded-lg px-2.5 py-1.5 transition font-medium ${
                   copyDone
-                    ? "border-[#548c2f] text-[#265a27] bg-[#f0f7e8]"
-                    : "border-[#D0D0D0] text-[#265a27] hover:border-[#265a27] hover:bg-[#F5F5F5] bg-white"
+                    ? "border-[#4CAF50] text-[#2E7D32] bg-[#f0fbf0]"
+                    : "border-[#D0D0D0] text-[#2E7D32] hover:border-[#2E7D32] hover:bg-[#F5F5F5] bg-white"
                 }`}
               >
                 {copying ? (
-                  <div className="w-3 h-3 rounded-full border border-[#265a27] border-t-transparent animate-spin" />
+                  <div className="w-3 h-3 rounded-full border border-[#2E7D32] border-t-transparent animate-spin" />
                 ) : copyDone ? (
                   <span>✓</span>
                 ) : (
@@ -704,13 +704,13 @@ function BudgetContent() {
                           onChange={e => setNewRowName(e.target.value)}
                           onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
                           placeholder="Item name…"
-                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#265a27]"
+                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
                         />
-                        <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#265a27] text-white text-xs rounded hover:bg-[#104911]">Add</button>
+                        <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
                         <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                       </div>
                     ) : (
-                      <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#265a27] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                      <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                     )}
                   </div>
                 </div>
@@ -719,18 +719,18 @@ function BudgetContent() {
 
             {/* Footer totals */}
             <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t-2 border-[#E0E0E0]">
-              <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Total income</div>
-              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#265a27]">{fmt(income)}</div>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total income</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#2E7D32]">{fmt(income)}</div>
               <div />
             </div>
             <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
-              <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Total allocated</div>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total allocated</div>
               <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{fmt(allocated)}</div>
               <div />
             </div>
-            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#265a27] bg-[#ebf5df]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
-              <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Remaining balance</div>
-              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#2E7D32] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Remaining balance</div>
+              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
                 {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
               </div>
               <div />
@@ -745,12 +745,12 @@ function BudgetContent() {
           <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
             <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
             <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
-            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
               {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
             </div>
             <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
               <div
-                className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#548c2f]" : "bg-[#C62828]"}`}
+                className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#4CAF50]" : "bg-[#C62828]"}`}
                 style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }}
               />
             </div>
@@ -759,13 +759,13 @@ function BudgetContent() {
             <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
               <div className="flex items-start justify-between">
                 <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
-                <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+                <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
                   {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </span>
               </div>
               <div className="flex items-center justify-between pt-2 border-t border-[#F5F5F5]">
                 <span className="text-xs text-[#607D8B]">Savings target</span>
-                <span className="text-sm font-semibold tabular-nums text-[#104911]">{fmt(savingsGoal)}</span>
+                <span className="text-sm font-semibold tabular-nums text-[#1B5E20]">{fmt(savingsGoal)}</span>
               </div>
             </div>
           </div>
@@ -773,7 +773,7 @@ function BudgetContent() {
           {/* Chart 2: YTD savings */}
           <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
             <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-1">Saved year to date</div>
-            <div className="text-2xl font-bold text-[#265a27] tabular-nums mb-3">{fmt(ytdTotal)}</div>
+            <div className="text-2xl font-bold text-[#2E7D32] tabular-nums mb-3">{fmt(ytdTotal)}</div>
             {ytdData.length > 0 ? (
               <ResponsiveContainer width="100%" height={90}>
                 <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
@@ -783,7 +783,7 @@ function BudgetContent() {
                   <Tooltip content={<ChartTooltip />} cursor={{ fill: "#F5F5F5" }} />
                   <Bar dataKey="saved" radius={[3,3,0,0]}>
                     {ytdData.map((p, i) => (
-                      <Cell key={i} fill={p.isCurrent ? "#265a27" : "#548c2f"} />
+                      <Cell key={i} fill={p.isCurrent ? "#2E7D32" : "#4CAF50"} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -810,7 +810,7 @@ function BudgetContent() {
                     </PieChart>
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                       <span className="text-[9px] text-[#9E9E9E] leading-none">total</span>
-                      <span className="text-[11px] font-bold text-[#104911] leading-tight tabular-nums">{fmt(income)}</span>
+                      <span className="text-[11px] font-bold text-[#1B5E20] leading-tight tabular-nums">{fmt(income)}</span>
                     </div>
                   </div>
                 </div>
@@ -820,7 +820,7 @@ function BudgetContent() {
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                       <span className="text-xs text-[#546E7A] flex-1">{entry.name}</span>
                       <span className="text-[10px] text-[#9E9E9E] tabular-nums mr-1">{Math.round((entry.value / income) * 100)}%</span>
-                      <span className="text-xs font-semibold text-[#104911] tabular-nums">{fmt(entry.value)}</span>
+                      <span className="text-xs font-semibold text-[#1B5E20] tabular-nums">{fmt(entry.value)}</span>
                     </div>
                   ))}
                 </div>

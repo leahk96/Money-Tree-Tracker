@@ -31,7 +31,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
             animate={{ scale: 1 }}
             transition={{ type: "spring", bounce: 0.5 }}
             className="w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md"
-            style={{ background: "linear-gradient(135deg, #ffd449 0%, #f9a620 50%, #ffd449 100%)" }}
+            style={{ background: "linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFD700 100%)" }}
           >
             <motion.span
               animate={{ scale: [1, 1.08, 1] }}
@@ -46,7 +46,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
           </div>
         )}
       </div>
-      <span className={`text-xs font-semibold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{label}</span>
+      <span className={`text-xs font-semibold ${earned ? "text-[#D4AF37]" : "text-[#9E9E9E]"}`}>{label}</span>
       <span className="text-[10px] text-[#9E9E9E]">{months}</span>
     </motion.div>
   );
@@ -67,26 +67,26 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
       whileTap={{ scale: 0.97 }}
       className={`rounded-xl p-2.5 text-left transition border-2 ${
         isCurrent
-          ? "border-[#ffd449] shadow-sm"
+          ? "border-[#FFD700] shadow-sm"
           : goalMet
-            ? "border-[#548c2f] bg-[#f0f7e8]"
+            ? "border-[#4CAF50] bg-[#f0faf0]"
             : "border-[#E8E8E8] bg-white"
       }`}
     >
-      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#265a27]" : "text-[#546E7A]"}`}>
+      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
         {name}
       </div>
       {hasData ? (
         <>
-          <div className={`text-sm font-bold ${goalMet ? "text-[#265a27]" : "text-[#104911]"}`}>
+          <div className={`text-sm font-bold ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
             {fmt(totalSaved)}
           </div>
-          <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#548c2f]" : "text-[#9E9E9E]"}`}>
+          <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#9E9E9E]"}`}>
             {goalMet ? "✓ Goal met" : `${fmt((summary?.savingsGoal ?? 0) - totalSaved)} to go`}
           </div>
         </>
       ) : (
-        <div className="text-[10px] text-[#c8d8a0]">No data</div>
+        <div className="text-[10px] text-[#c0d0c0]">No data</div>
       )}
     </motion.button>
   );
@@ -104,7 +104,7 @@ function TreeContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#265a27] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -144,10 +144,10 @@ function TreeContent() {
           className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-amber-200 p-4 flex items-center justify-between"
         >
           <div>
-            <div className="text-lg font-bold text-[#d4880a]">
+            <div className="text-lg font-bold text-[#c05a00]">
               {streakBadge} {data?.currentStreak} month streak!
             </div>
-            <div className="text-xs text-[#d4880a] mt-0.5">
+            <div className="text-xs text-[#BF360C] mt-0.5">
               Best ever: {data?.bestStreak} months
             </div>
           </div>
@@ -167,10 +167,10 @@ function TreeContent() {
           )}
           <div className="p-4">
             <div className="text-xs text-[#546E7A] mb-1">You're saving for</div>
-            <div className="text-lg font-bold text-[#104911]">{profile.goal_name}</div>
+            <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
             {data && (
               <div className="text-sm text-[#546E7A] mt-1">
-                Total saved this year: <span className="font-semibold text-[#265a27]">{fmt(data.totalSavedThisYear)}</span>
+                Total saved this year: <span className="font-semibold text-[#2E7D32]">{fmt(data.totalSavedThisYear)}</span>
                 {profile.yearly_target && (
                   <span className="text-[#9E9E9E]"> / {fmt(profile.yearly_target)}</span>
                 )}
@@ -187,7 +187,7 @@ function TreeContent() {
         transition={{ delay: 0.15 }}
         className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#104911] mb-4">Quarterly coins</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-4">Quarterly coins</h3>
         <div className="flex justify-around">
           {QUARTERS.map((q, i) => (
             <CoinSlot
@@ -208,7 +208,7 @@ function TreeContent() {
         transition={{ delay: 0.2 }}
         className={`rounded-2xl border p-5 text-center transition-all duration-700 ${
           data?.bullionUnlocked
-            ? "border-[#ffd449] bg-gradient-to-r from-yellow-50 to-amber-50"
+            ? "border-[#FFD700] bg-gradient-to-r from-yellow-50 to-amber-50"
             : "border-[#E8E8E8] bg-white"
         }`}
       >
@@ -222,8 +222,8 @@ function TreeContent() {
             >
               🏆
             </motion.div>
-            <div className="font-bold text-[#ffd449] text-lg">Gold bullion unlocked!</div>
-            <div className="text-sm text-[#d4880a]">You hit your goal every month this year. Incredible!</div>
+            <div className="font-bold text-[#D4AF37] text-lg">Gold bullion unlocked!</div>
+            <div className="text-sm text-[#BF360C]">You hit your goal every month this year. Incredible!</div>
           </div>
         ) : (
           <div className="space-y-1">
@@ -241,7 +241,7 @@ function TreeContent() {
         transition={{ delay: 0.25 }}
         className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
-        <h3 className="font-semibold text-[#104911] mb-3">{currentYear} progress</h3>
+        <h3 className="font-semibold text-[#1B5E20] mb-3">{currentYear} progress</h3>
         <div className="grid grid-cols-4 gap-2">
           {Array.from({ length: 12 }, (_, i) => {
             const m = i + 1;

@@ -96,11 +96,11 @@ function useVaultData() {
 function GoldIngot({ tier, index = 0 }: { tier: Tier; index?: number }) {
   const uid = `gi-${tier}-${index}`;
 
-  const TOP_LIGHT  = tier === "legendary" ? "#fffbea" : tier === "premium" ? "#fff5c0" : "#ffd449";
+  const TOP_LIGHT  = tier === "legendary" ? "#fffef5" : tier === "premium" ? "#fff8cc" : "#ffe566";
   const TOP_DARK   = tier === "legendary" ? "#f5d020" : tier === "premium" ? "#e8b800" : "#c8920a";
-  const FRONT_TOP  = tier === "legendary" ? "#f9a620" : tier === "premium" ? "#c89000" : "#b87800";
-  const FRONT_BOT  = tier === "legendary" ? "#8b6000" : tier === "premium" ? "#104911" : "#6b4400";
-  const SIDE       = tier === "legendary" ? "#104911" : tier === "premium" ? "#6b4400" : "#5a3800";
+  const FRONT_TOP  = tier === "legendary" ? "#daa520" : tier === "premium" ? "#c89000" : "#b87800";
+  const FRONT_BOT  = tier === "legendary" ? "#8b6000" : tier === "premium" ? "#7a5200" : "#6b4400";
+  const SIDE       = tier === "legendary" ? "#7a5200" : tier === "premium" ? "#6b4400" : "#5a3800";
   const STAMP      = tier === "legendary" ? "#5a3800" : "#4a2c00";
 
   return (
@@ -185,9 +185,9 @@ function GoldIngot({ tier, index = 0 }: { tier: Tier; index?: number }) {
       {/* Legendary sparkles */}
       {tier === "legendary" && (
         <>
-          <circle cx="18" cy="20" r="1.5" fill="#fffbea" opacity="0.8" />
-          <circle cx="126" cy="26" r="1" fill="#fffbea" opacity="0.6" />
-          <circle cx="110" cy="62" r="1.2" fill="#fffbea" opacity="0.5" />
+          <circle cx="18" cy="20" r="1.5" fill="#fffef5" opacity="0.8" />
+          <circle cx="126" cy="26" r="1" fill="#fffef5" opacity="0.6" />
+          <circle cx="110" cy="62" r="1.2" fill="#fffef5" opacity="0.5" />
         </>
       )}
       {/* Premium shimmer stripe */}
@@ -205,10 +205,10 @@ function GoldIngot({ tier, index = 0 }: { tier: Tier; index?: number }) {
 // ── Tier badge ─────────────────────────────────────────────────────────────
 function TierBadge({ tier }: { tier: Tier }) {
   if (tier === "legendary") return (
-    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#104911] text-[#ffd449] border border-[#f9a620]">LEGENDARY</span>
+    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#7a5200] text-[#ffe566] border border-[#daa520]">LEGENDARY</span>
   );
   if (tier === "premium") return (
-    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#ebf5df] text-[#265a27] border border-[#548c2f]">PREMIUM</span>
+    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#e8f5e9] text-[#2e7d32] border border-[#4caf50]">PREMIUM</span>
   );
   return null;
 }
@@ -230,7 +230,7 @@ function EmptyVault() {
         {(["standard","premium","legendary"] as Tier[]).map(t => (
           <div key={t} className="flex flex-col items-center gap-1">
             <div className="w-full aspect-[14/9]"><GoldIngot tier={t} /></div>
-            <div className="text-[9px] text-[#265a27] capitalize">{t}</div>
+            <div className="text-[9px] text-[#9a7520] capitalize">{t}</div>
           </div>
         ))}
       </div>
@@ -247,7 +247,7 @@ function GoldVaultContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#f9a620] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#DAA520] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -265,43 +265,43 @@ function GoldVaultContent() {
           <GoldIngot tier="legendary" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-[#104911]">Gold Vault</h1>
-          <p className="text-sm text-[#265a27]">A bar for every month you hit your savings goal</p>
+          <h1 className="text-2xl font-bold text-[#7a5500]">Gold Vault</h1>
+          <p className="text-sm text-[#9a7520]">A bar for every month you hit your savings goal</p>
         </div>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
-          <div className="text-4xl font-black text-[#104911] leading-none">{bars.length}</div>
-          <div className="text-xs text-[#265a27] font-semibold mt-1">Bars collected</div>
+        <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#fffde0] to-[#fff3b0] rounded-2xl p-4 border border-[#ffe066] shadow-sm text-center">
+          <div className="text-4xl font-black text-[#7a5500] leading-none">{bars.length}</div>
+          <div className="text-xs text-[#9a7520] font-semibold mt-1">Bars collected</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
-          <div className="text-lg font-black text-[#104911] tabular-nums leading-tight">{fmt(totalSaved)}</div>
-          <div className="text-xs text-[#265a27] font-semibold mt-1">Total saved</div>
+        <div className="bg-gradient-to-br from-[#fffde0] to-[#fff3b0] rounded-2xl p-4 border border-[#ffe066] shadow-sm text-center">
+          <div className="text-lg font-black text-[#7a5500] tabular-nums leading-tight">{fmt(totalSaved)}</div>
+          <div className="text-xs text-[#9a7520] font-semibold mt-1">Total saved</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
-          <div className="text-3xl font-black text-[#104911] leading-none">{streak}</div>
-          <div className="text-xs text-[#265a27] font-semibold mt-1">Best streak</div>
+        <div className="bg-gradient-to-br from-[#fffde0] to-[#fff3b0] rounded-2xl p-4 border border-[#ffe066] shadow-sm text-center">
+          <div className="text-3xl font-black text-[#7a5500] leading-none">{streak}</div>
+          <div className="text-xs text-[#9a7520] font-semibold mt-1">Best streak</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
-          <div className="text-3xl font-black text-[#104911] leading-none">{legendaryCount}</div>
-          <div className="text-xs text-[#265a27] font-semibold mt-1">Legendary</div>
+        <div className="bg-gradient-to-br from-[#fffde0] to-[#fff3b0] rounded-2xl p-4 border border-[#ffe066] shadow-sm text-center">
+          <div className="text-3xl font-black text-[#7a5500] leading-none">{legendaryCount}</div>
+          <div className="text-xs text-[#9a7520] font-semibold mt-1">Legendary</div>
         </div>
       </div>
 
       {/* Best bar callout */}
       {bestBar && (
-        <div className="flex items-center gap-3 bg-white border border-[#ffd449] rounded-2xl px-4 py-3 mb-6 shadow-sm">
+        <div className="flex items-center gap-3 bg-white border border-[#ffe066] rounded-2xl px-4 py-3 mb-6 shadow-sm">
           <div className="w-16 h-11 shrink-0">
             <GoldIngot tier={bestBar.tier} />
           </div>
           <div>
-            <div className="text-xs font-bold text-[#265a27] uppercase tracking-wide">Best month</div>
-            <div className="text-sm font-bold text-[#104911]">
+            <div className="text-xs font-bold text-[#9a7520] uppercase tracking-wide">Best month</div>
+            <div className="text-sm font-bold text-[#7a5500]">
               {MONTH_NAMES[bestBar.month - 1]} {bestBar.year} — {fmt(bestBar.savedAmount)} saved
             </div>
-            <div className="text-xs text-[#548c2f]">
+            <div className="text-xs text-[#b8a060]">
               {Math.round(bestBar.overshoot * 100)}% of your {fmt(bestBar.savingsGoal)} goal
             </div>
           </div>
@@ -310,11 +310,11 @@ function GoldVaultContent() {
 
       {/* Tier legend */}
       {bars.length > 0 && (
-        <div className="flex items-center gap-4 mb-5 text-[10px] text-[#265a27]">
+        <div className="flex items-center gap-4 mb-5 text-[10px] text-[#9a7520]">
           <span className="font-semibold">Tiers:</span>
           <span>Standard = goal met</span>
-          <span className="text-[#265a27] font-semibold">Premium = 150%+</span>
-          <span className="text-[#f9a620] font-semibold">Legendary = 200%+</span>
+          <span className="text-[#2e7d32] font-semibold">Premium = 150%+</span>
+          <span className="text-[#daa520] font-semibold">Legendary = 200%+</span>
         </div>
       )}
 
@@ -333,10 +333,10 @@ function GoldVaultContent() {
                 <GoldIngot tier={bar.tier} index={i} />
               </div>
               <div className="text-center w-full">
-                <div className="text-[11px] font-bold text-[#104911] leading-tight">
+                <div className="text-[11px] font-bold text-[#7a5500] leading-tight">
                   {MONTH_NAMES[bar.month - 1]} {bar.year}
                 </div>
-                <div className="text-[10px] text-[#265a27] tabular-nums">{fmt(bar.savedAmount)}</div>
+                <div className="text-[10px] text-[#9a7520] tabular-nums">{fmt(bar.savedAmount)}</div>
                 <div className="mt-0.5">
                   <TierBadge tier={bar.tier} />
                 </div>

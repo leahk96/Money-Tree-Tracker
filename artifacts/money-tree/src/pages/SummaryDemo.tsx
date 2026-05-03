@@ -107,11 +107,11 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white border border-[#E8E8E8] rounded-xl p-3 shadow-lg text-xs min-w-[110px]">
-      <div className="font-semibold text-[#104911] mb-1.5">{label}</div>
+      <div className="font-semibold text-[#1B5E20] mb-1.5">{label}</div>
       {payload.map(p => (
         <div key={p.name} className="flex items-center justify-between gap-3">
           <span style={{ color: p.color }}>{p.name}</span>
-          <span className="font-semibold text-[#104911] tabular-nums">{fmt(p.value)}</span>
+          <span className="font-semibold text-[#1B5E20] tabular-nums">{fmt(p.value)}</span>
         </div>
       ))}
     </div>
@@ -150,25 +150,25 @@ export default function SummaryDemo() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#265a27] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to track your own summary
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌳</span>
-          <span className="text-base font-bold text-[#104911]">Money Tree</span>
+          <span className="text-base font-bold text-[#1B5E20]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {DEMO_NAV.map(n => (
             <Link key={n.to} to={n.to}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
-                n.to === "/summary-demo" ? "bg-[#ebf5df] text-[#265a27]" : "text-[#546E7A] hover:bg-[#F5F5F5]"
+                n.to === "/summary-demo" ? "bg-[#E8F5E9] text-[#2E7D32]" : "text-[#546E7A] hover:bg-[#F5F5F5]"
               }`}
             >{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#265a27] text-white px-4 py-2 rounded-lg hover:bg-[#104911] transition font-medium">
+        <Link to="/signup" className="text-sm bg-[#2E7D32] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">
           Get started
         </Link>
       </header>
@@ -178,13 +178,13 @@ export default function SummaryDemo() {
         {/* Year nav */}
         <div className="flex items-center justify-between">
           <button onClick={() => canPrev && setSelectedYear(AVAILABLE_YEARS[yearIdx - 1])} disabled={!canPrev}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition disabled:opacity-30">←</button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30">←</button>
           <div className="text-center">
-            <h1 className="text-xl font-bold text-[#104911]">{selectedYear} {isCurrent ? "so far" : "in review"}</h1>
+            <h1 className="text-xl font-bold text-[#1B5E20]">{selectedYear} {isCurrent ? "so far" : "in review"}</h1>
             <p className="text-xs text-[#607D8B] mt-0.5">{isCurrent ? `${12 - d.goalsMetCount} months remaining` : "Full year"}</p>
           </div>
           <button onClick={() => canNext && setSelectedYear(AVAILABLE_YEARS[yearIdx + 1])} disabled={!canNext}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition disabled:opacity-30">→</button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30">→</button>
         </div>
 
         {/* Tree + headline */}
@@ -197,12 +197,12 @@ export default function SummaryDemo() {
             <div className="flex-1 space-y-2">
               <div>
                 <div className="text-xs text-[#607D8B] mb-0.5">Goals hit</div>
-                <div className="text-3xl font-bold text-[#265a27]">
+                <div className="text-3xl font-bold text-[#2E7D32]">
                   {d.goalsMetCount}<span className="text-lg text-[#9E9E9E] font-normal">/12</span>
                 </div>
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-2">
-                <motion.div className="bg-[#265a27] h-2 rounded-full"
+                <motion.div className="bg-[#2E7D32] h-2 rounded-full"
                   initial={{ width: 0 }} animate={{ width: `${(d.goalsMetCount / 12) * 100}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }} />
               </div>
@@ -225,7 +225,7 @@ export default function SummaryDemo() {
               transition={{ delay: 0.06 + i * 0.05 }}
               className="bg-white rounded-xl border border-[#E8E8E8] p-4">
               <div className="text-xs text-[#607D8B] mb-1">{card.label}</div>
-              <div className={`text-xl font-bold ${card.positive ? "text-[#265a27]" : "text-[#d4880a]"}`}>{card.value}</div>
+              <div className={`text-xl font-bold ${card.positive ? "text-[#2E7D32]" : "text-[#c05a00]"}`}>{card.value}</div>
               {card.sub && <div className="text-xs text-[#9E9E9E] mt-0.5">{card.sub}</div>}
             </motion.div>
           ))}
@@ -235,7 +235,7 @@ export default function SummaryDemo() {
         {chartMonths.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
-            <h3 className="font-semibold text-[#104911] text-sm mb-1">Monthly savings</h3>
+            <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Monthly savings</h3>
             <p className="text-xs text-[#9E9E9E] mb-4">How much you put away each month vs your goal</p>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={chartMonths} barGap={2} barSize={chartMonths.length > 6 ? 14 : 22}>
@@ -244,9 +244,9 @@ export default function SummaryDemo() {
                 <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
                   tickFormatter={v => `£${v}`} width={38} />
                 <Tooltip content={<ChartTooltip />} />
-                <ReferenceLine y={500} stroke="#ffd449" strokeDasharray="4 3" strokeWidth={1.5}
-                  label={{ value: "Goal", position: "right", fontSize: 9, fill: "#ffd449" }} />
-                <Bar dataKey="Saved" fill="#265a27" radius={[3, 3, 0, 0]} />
+                <ReferenceLine y={500} stroke="#FFD700" strokeDasharray="4 3" strokeWidth={1.5}
+                  label={{ value: "Goal", position: "right", fontSize: 9, fill: "#D4AF37" }} />
+                <Bar dataKey="Saved" fill="#2E7D32" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
@@ -256,7 +256,7 @@ export default function SummaryDemo() {
         {chartMonths.length > 1 && (
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
-            <h3 className="font-semibold text-[#104911] text-sm mb-1">Spending patterns</h3>
+            <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Spending patterns</h3>
             <p className="text-xs text-[#9E9E9E] mb-4">Needs and wants spending month by month</p>
             <ResponsiveContainer width="100%" height={180}>
               <LineChart data={chartMonths}>
@@ -266,20 +266,20 @@ export default function SummaryDemo() {
                   tickFormatter={v => `£${v}`} width={38} />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Line dataKey="Needs" stroke="#2a7a9e" strokeWidth={2} dot={{ r: 3, fill: "#2a7a9e" }} activeDot={{ r: 4 }} />
-                <Line dataKey="Wants" stroke="#f9a620" strokeWidth={2} dot={{ r: 3, fill: "#f9a620" }} activeDot={{ r: 4 }} />
+                <Line dataKey="Needs" stroke="#1565C0" strokeWidth={2} dot={{ r: 3, fill: "#1565C0" }} activeDot={{ r: 4 }} />
+                <Line dataKey="Wants" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: "#E65100" }} activeDot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
 
             {/* Insights */}
             {lowestWantsMonth && lowestNeedsMonth && (
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <div className="bg-[#fef6e0] rounded-xl p-3 border border-[#f0e0a0]">
+                <div className="bg-[#FFF3E0] rounded-xl p-3 border border-[#f0e0a0]">
                   <div className="text-[10px] text-[#9a7020] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
-                  <div className="text-sm font-bold text-[#ffd449]">{lowestWantsMonth.month}</div>
+                  <div className="text-sm font-bold text-[#D4AF37]">{lowestWantsMonth.month}</div>
                   <div className="text-xs text-[#b08030]">{fmt(lowestWantsMonth.wants)} spent</div>
                 </div>
-                <div className="bg-[#ddeef5] rounded-xl p-3 border border-[#c0d8f0]">
+                <div className="bg-[#E3F2FD] rounded-xl p-3 border border-[#c0d8f0]">
                   <div className="text-[10px] text-[#2a5080] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
                   <div className="text-sm font-bold text-[#3a70b0]">{lowestNeedsMonth.month}</div>
                   <div className="text-xs text-[#4a80c0]">{fmt(lowestNeedsMonth.needs)} spent</div>
@@ -292,7 +292,7 @@ export default function SummaryDemo() {
         {/* Quarterly coins */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
           className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
-          <h3 className="font-semibold text-[#104911] mb-4 text-sm">Quarterly coins</h3>
+          <h3 className="font-semibold text-[#1B5E20] mb-4 text-sm">Quarterly coins</h3>
           <div className="flex justify-around">
             {QUARTERS.map((q, i) => {
               const earned = quarterEarned[i];
@@ -301,12 +301,12 @@ export default function SummaryDemo() {
                   {earned ? (
                     <motion.div initial={{ scale: 0.5 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5 }}
                       className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow"
-                      style={{ background: "linear-gradient(135deg,#ffd449,#f9a620)" }}>🪙</motion.div>
+                      style={{ background: "linear-gradient(135deg,#FFD700,#FFA500)" }}>🪙</motion.div>
                   ) : (
-                    <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#c8dce0] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
+                    <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#d0e0d0] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
                   )}
-                  <span className={`text-xs font-semibold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{q.label}</span>
-                  <span className="text-[10px] text-[#a8c8d4]">{q.months}</span>
+                  <span className={`text-xs font-semibold ${earned ? "text-[#D4AF37]" : "text-[#9E9E9E]"}`}>{q.label}</span>
+                  <span className="text-[10px] text-[#b0c0b0]">{q.months}</span>
                 </div>
               );
             })}
@@ -316,7 +316,7 @@ export default function SummaryDemo() {
         {/* Monthly grid */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
           className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
-          <h3 className="font-semibold text-[#104911] mb-3 text-sm">{selectedYear} month by month</h3>
+          <h3 className="font-semibold text-[#1B5E20] mb-3 text-sm">{selectedYear} month by month</h3>
           <div className="grid grid-cols-4 gap-2">
             {d.months.map((m, i) => {
               const goalMet = m.hasData && m.saved >= m.goal;
@@ -324,20 +324,20 @@ export default function SummaryDemo() {
                 <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.38 + i * 0.02 }}
                   className={`rounded-xl p-2.5 border-2 ${
-                    goalMet ? "border-[#548c2f] bg-[#f0f7e8]"
+                    goalMet ? "border-[#4CAF50] bg-[#f0faf0]"
                     : m.hasData ? "border-[#E8E8E8] bg-white"
                     : "border-dashed border-[#E8E8E8] bg-[#FAFAFA]"
                   }`}
                 >
-                  <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#265a27]" : "text-[#546E7A]"}`}>
+                  <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
                     {MONTH_NAMES[i]}
                   </div>
                   {m.hasData ? (
                     <>
-                      <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#265a27]" : "text-[#104911]"}`}>
+                      <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
                         {fmt(m.saved)}
                       </div>
-                      <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#548c2f]" : "text-[#c06060]"}`}>
+                      <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
                         {goalMet ? "✓ Goal met" : `${fmt(m.goal - m.saved)} short`}
                       </div>
                     </>
@@ -352,10 +352,10 @@ export default function SummaryDemo() {
 
         {/* CTA */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center">
-          <div className="text-sm font-semibold text-[#104911] mb-1">Track your own year in Money Tree</div>
+          className="bg-gradient-to-r from-[#f0fbf0] to-[#E8F5E9] rounded-2xl border border-[#c8e8c8] p-5 text-center">
+          <div className="text-sm font-semibold text-[#1B5E20] mb-1">Track your own year in Money Tree</div>
           <div className="text-xs text-[#546E7A] mb-3">See your real savings, streaks, and tree grow month by month.</div>
-          <Link to="/signup" className="inline-block bg-[#265a27] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#104911] transition">
+          <Link to="/signup" className="inline-block bg-[#2E7D32] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#1B5E20] transition">
             Start for free →
           </Link>
         </motion.div>
