@@ -333,12 +333,12 @@ function BankNote({ x, y, rot, scale = 1, delay }: { x: number; y: number; rot: 
       transition={{ duration: 0.38, delay, ease: [0.34, 1.56, 0.64, 1] }}
     >
       <g transform={`translate(${x},${y}) rotate(${rot})`}>
-        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="rgba(0,0,0,0.28)" transform="translate(1.5,1.5)" />
-        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="#1a6e1a" />
-        <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#44c044" strokeWidth={0.9*scale} />
-        <ellipse cx={-w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
-        <ellipse cx={ w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
-        <rect x={-w/2} y={-h/2} width={w} height={h*0.25} rx={3.5*scale} fill="rgba(255,255,255,0.06)" />
+        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="rgba(0,0,0,0.15)" transform="translate(1.5,1.5)" />
+        <rect x={-w/2} y={-h/2} width={w} height={h} rx={3.5 * scale} fill="#85bb65" />
+        <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#5a8a40" strokeWidth={0.9*scale} />
+        <ellipse cx={-w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#5a8a40" strokeWidth={0.7*scale} />
+        <ellipse cx={ w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#5a8a40" strokeWidth={0.7*scale} />
+        <rect x={-w/2} y={-h/2} width={w} height={h*0.25} rx={3.5*scale} fill="rgba(255,255,255,0.18)" />
       </g>
     </motion.g>
   );
