@@ -212,7 +212,7 @@ export default function TreeDemo() {
                     <rect x="2" y="6" width="48" height="22" rx="4" fill="#FFD700" />
                     <rect x="6" y="10" width="40" height="14" rx="2" fill="none" stroke="#C8960C" strokeWidth="1.2" />
                     <rect x="2" y="6" width="48" height="6" rx="4" fill="rgba(255,255,255,0.18)" />
-                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#8a6200" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
+                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#8a6200" fontWeight="bold" fontFamily="Inter, sans-serif">GOLD</text>
                   </svg>
                 </div>
                 <div>

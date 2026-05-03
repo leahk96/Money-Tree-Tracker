@@ -125,7 +125,7 @@ function GoldBullion({ year, saved }: { year: number; saved: number }) {
         {/* Shine */}
         <rect x="18" y="27" width="30" height="4" rx="2" fill="white" opacity="0.2" />
         {/* Year text */}
-        <text x="60" y="43" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#6B4F10" fontFamily="sans-serif">
+        <text x="60" y="43" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#6B4F10" fontFamily="Inter, sans-serif">
           {year}
         </text>
       </svg>
@@ -145,7 +145,7 @@ function LockedBullion() {
         <polygon points="18,14 102,14 110,22 10,22" fill="#E8E8E8" />
         <polygon points="102,14 110,22 110,55 102,47" fill="#B0B0B0" />
         <polygon points="10,55 110,55 110,65 10,65" fill="#A0A0A0" />
-        <text x="60" y="43" textAnchor="middle" fontSize="18" fontFamily="sans-serif" fill="#B0B0B0">🔒</text>
+        <text x="60" y="43" textAnchor="middle" fontSize="18" fontFamily="Inter, sans-serif" fill="#B0B0B0">🔒</text>
       </svg>
       <div className="text-[9px] text-[#BDBDBD] text-center">Hit 12/12 goals<br/>to unlock</div>
     </div>
