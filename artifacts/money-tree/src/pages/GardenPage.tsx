@@ -92,10 +92,10 @@ function EmptyPlot({ year }: { year: number }) {
       <div className="w-full aspect-square flex items-center justify-center">
         <svg viewBox="0 0 360 348" className="w-full max-w-[120px] mx-auto">
           {/* Empty pot */}
-          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#757575" opacity={0.08} />
-          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#9e9e9e" opacity={0.5} />
-          <rect x={141} y={265} width={78} height={12} rx={5} fill="#757575" opacity={0.5} />
-          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#546e7a" opacity={0.5} />
+          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#7a3c10" opacity={0.08} />
+          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#c07838" opacity={0.5} />
+          <rect x={141} y={265} width={78} height={12} rx={5} fill="#9e5e26" opacity={0.5} />
+          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#4a2810" opacity={0.5} />
         </svg>
       </div>
       <div className="text-center">
@@ -120,12 +120,12 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       animate={{ opacity: 1, y: 0 }}
       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition w-full ${
         d.isCurrent
-          ? "bg-white border-2 border-[#ffd23f] shadow-md"
-          : "bg-white border border-[#E8E8E8] hover:border-[#0ead69]"
+          ? "bg-white border-2 border-[#ffd449] shadow-md"
+          : "bg-white border border-[#E8E8E8] hover:border-[#548c2f]"
       }`}
     >
       {d.isCurrent && (
-        <span className="text-[10px] font-bold text-[#c23354] bg-[#fffacc] border border-[#ffd23f] rounded-full px-2 py-0.5 -mb-1">
+        <span className="text-[10px] font-bold text-[#d4880a] bg-[#fff5c0] border border-[#ffd449] rounded-full px-2 py-0.5 -mb-1">
           GROWING NOW
         </span>
       )}
@@ -134,12 +134,12 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
       </div>
       <div className="text-center w-full">
         <div className="flex items-center justify-center gap-1">
-          <span className="text-sm font-bold text-[#035c37]">{d.year}</span>
+          <span className="text-sm font-bold text-[#104911]">{d.year}</span>
           {badge && <span className="text-sm">{badge}</span>}
         </div>
         {d.hasData ? (
           <>
-            <div className="text-[11px] text-[#035c37] font-semibold mt-0.5">
+            <div className="text-[11px] text-[#265a27] font-semibold mt-0.5">
               {d.goalsMetCount}/12 goals
             </div>
             <div className="text-[10px] text-[#607D8B]">
@@ -173,7 +173,7 @@ function GardenContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#035c37] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#265a27] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -187,7 +187,7 @@ function GardenContent() {
     <div className="max-w-2xl mx-auto px-4 py-6 pb-16 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-[#035c37]">My Garden</h1>
+        <h1 className="text-xl font-bold text-[#104911]">My Garden</h1>
         <p className="text-xs text-[#607D8B] mt-0.5">
           Every year you use Money Tree, a new tree grows in your garden.
         </p>
@@ -206,7 +206,7 @@ function GardenContent() {
             { label: "All-time saved", value: fmt(totalSavedAllTime) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-              <div className="text-base font-bold text-[#035c37]">{s.value}</div>
+              <div className="text-base font-bold text-[#265a27]">{s.value}</div>
               <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}
@@ -260,7 +260,7 @@ function GardenContent() {
                   +
                 </div>
               </div>
-              <div className="text-[10px] text-[#e2f9f0] text-center">And more…</div>
+              <div className="text-[10px] text-[#c8d8a0] text-center">And more…</div>
             </div>
           </div>
         </div>
@@ -271,10 +271,10 @@ function GardenContent() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="bg-gradient-to-r from-[#e2f9f0] to-[#e2f9f0] rounded-2xl border border-[#e2f9f0] p-5 text-center"
+        className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center"
       >
         <div className="text-2xl mb-2">🌳</div>
-        <div className="text-sm font-semibold text-[#035c37]">Keep coming back year after year</div>
+        <div className="text-sm font-semibold text-[#104911]">Keep coming back year after year</div>
         <div className="text-xs text-[#546E7A] mt-1">
           Each year you save, a new tree joins your garden. Build a forest over time.
         </div>

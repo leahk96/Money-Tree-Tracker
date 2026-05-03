@@ -12,12 +12,12 @@ interface MoneyTreeSVGProps {
 function PotSVG() {
   return (
     <g>
-      <ellipse cx={180} cy={334} rx={52} ry={7} fill="#757575" opacity={0.12} />
-      <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#9e9e9e" />
+      <ellipse cx={180} cy={334} rx={52} ry={7} fill="#7a3c10" opacity={0.12} />
+      <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#c07838" />
       <path d="M151 283 L153 292 Q180 298 207 292 L209 283 Z" fill="rgba(0,0,0,0.07)" />
-      <rect x={141} y={265} width={78} height={12} rx={5} fill="#757575" />
+      <rect x={141} y={265} width={78} height={12} rx={5} fill="#9e5e26" />
       <rect x={148} y={266} width={32} height={4} rx={2} fill="rgba(255,210,150,0.3)" />
-      <ellipse cx={180} cy={271} rx={34} ry={6} fill="#546e7a" />
+      <ellipse cx={180} cy={271} rx={34} ry={6} fill="#4a2810" />
       <ellipse cx={172} cy={269} rx={11} ry={2.5} fill="#6a3c1a" opacity={0.6} />
     </g>
   );
@@ -84,18 +84,18 @@ type C = { cx: number; cy: number; r: number; fill: string };
 const CANOPIES: C[][] = [
   [],
   [
-    { cx:180, cy:230, r:16, fill:"#035c37" },
-    { cx:171, cy:221, r:11, fill:"#035c37" },
-    { cx:189, cy:221, r:11, fill:"#035c37" },
+    { cx:180, cy:230, r:16, fill:"#265a27" },
+    { cx:171, cy:221, r:11, fill:"#265a27" },
+    { cx:189, cy:221, r:11, fill:"#265a27" },
     { cx:180, cy:214, r:12, fill:"#38a838" },
     { cx:175, cy:216, r:8,  fill:"#46b446" },
     { cx:186, cy:215, r:8,  fill:"#46b446" },
   ],
   [
-    { cx:180, cy:223, r:21, fill:"#035c37" },
+    { cx:180, cy:223, r:21, fill:"#104911" },
     { cx:166, cy:213, r:15, fill:"#226822" },
     { cx:194, cy:213, r:15, fill:"#226822" },
-    { cx:180, cy:204, r:17, fill:"#035c37" },
+    { cx:180, cy:204, r:17, fill:"#265a27" },
     { cx:170, cy:207, r:11, fill:"#36a036" },
     { cx:191, cy:207, r:11, fill:"#36a036" },
     { cx:180, cy:196, r:13, fill:"#42ae42" },
@@ -113,8 +113,8 @@ const CANOPIES: C[][] = [
   ],
   [
     { cx:180, cy:205, r:33, fill:"#184818" },
-    { cx:155, cy:191, r:22, fill:"#035c37" },
-    { cx:205, cy:191, r:22, fill:"#035c37" },
+    { cx:155, cy:191, r:22, fill:"#104911" },
+    { cx:205, cy:191, r:22, fill:"#104911" },
     { cx:180, cy:179, r:26, fill:"#247824" },
     { cx:157, cy:185, r:17, fill:"#2e9030" },
     { cx:203, cy:185, r:17, fill:"#2e9030" },
@@ -133,20 +133,20 @@ const CANOPIES: C[][] = [
     { cx:180, cy:155, r:22, fill:"#329432" },
     { cx:161, cy:161, r:15, fill:"#3ea43e" },
     { cx:199, cy:161, r:15, fill:"#3ea43e" },
-    { cx:180, cy:145, r:16, fill:"#0ead69" },
+    { cx:180, cy:145, r:16, fill:"#548c2f" },
     { cx:128, cy:188, r:18, fill:"#163a18" },
     { cx:232, cy:188, r:18, fill:"#163a18" },
   ],
   [
     { cx:180, cy:187, r:45, fill:"#143218" },
-    { cx:143, cy:169, r:31, fill:"#035c37" },
-    { cx:217, cy:169, r:31, fill:"#035c37" },
-    { cx:180, cy:154, r:36, fill:"#035c37" },
+    { cx:143, cy:169, r:31, fill:"#104911" },
+    { cx:217, cy:169, r:31, fill:"#104911" },
+    { cx:180, cy:154, r:36, fill:"#265a27" },
     { cx:148, cy:162, r:24, fill:"#267e28" },
     { cx:212, cy:162, r:24, fill:"#267e28" },
     { cx:180, cy:141, r:27, fill:"#2e8e2e" },
-    { cx:156, cy:148, r:18, fill:"#0ead69" },
-    { cx:204, cy:148, r:18, fill:"#0ead69" },
+    { cx:156, cy:148, r:18, fill:"#548c2f" },
+    { cx:204, cy:148, r:18, fill:"#548c2f" },
     { cx:180, cy:130, r:20, fill:"#42ae42" },
     { cx:122, cy:181, r:22, fill:"#143218" },
     { cx:238, cy:181, r:22, fill:"#143218" },
@@ -157,7 +157,7 @@ const CANOPIES: C[][] = [
     { cx:180, cy:178, r:52, fill:"#122c14" },
     { cx:136, cy:158, r:36, fill:"#184820" },
     { cx:224, cy:158, r:36, fill:"#184820" },
-    { cx:180, cy:143, r:41, fill:"#035c37" },
+    { cx:180, cy:143, r:41, fill:"#104911" },
     { cx:143, cy:152, r:28, fill:"#247828" },
     { cx:217, cy:152, r:28, fill:"#247828" },
     { cx:180, cy:128, r:32, fill:"#2c8c2c" },
@@ -173,7 +173,7 @@ const CANOPIES: C[][] = [
     { cx:180, cy:168, r:58, fill:"#102614" },
     { cx:130, cy:147, r:40, fill:"#164020" },
     { cx:230, cy:147, r:40, fill:"#164020" },
-    { cx:180, cy:131, r:47, fill:"#035c37" },
+    { cx:180, cy:131, r:47, fill:"#104911" },
     { cx:136, cy:141, r:32, fill:"#226e28" },
     { cx:224, cy:141, r:32, fill:"#226e28" },
     { cx:180, cy:114, r:37, fill:"#2a8428" },
@@ -184,14 +184,14 @@ const CANOPIES: C[][] = [
     { cx:253, cy:163, r:28, fill:"#102614" },
     { cx:110, cy:188, r:21, fill:"#0c1c0e" },
     { cx:250, cy:188, r:21, fill:"#0c1c0e" },
-    { cx:152, cy:107, r:18, fill:"#0ead69" },
-    { cx:208, cy:105, r:18, fill:"#0ead69" },
+    { cx:152, cy:107, r:18, fill:"#548c2f" },
+    { cx:208, cy:105, r:18, fill:"#548c2f" },
   ],
   [
     { cx:180, cy:150, r:75, fill:"#0e2012" },
     { cx:118, cy:126, r:53, fill:"#143a18" },
     { cx:242, cy:126, r:53, fill:"#143a18" },
-    { cx:180, cy:108, r:63, fill:"#035c37" },
+    { cx:180, cy:108, r:63, fill:"#104911" },
     { cx:124, cy:120, r:43, fill:"#206622" },
     { cx:236, cy:120, r:43, fill:"#206622" },
     { cx:180, cy:84,  r:50, fill:"#287c28" },
@@ -210,12 +210,12 @@ const CANOPIES: C[][] = [
     { cx:107, cy:111, r:63, fill:"#123212" },
     { cx:253, cy:111, r:63, fill:"#123212" },
     { cx:180, cy:90,  r:74, fill:"#184e18" },
-    { cx:114, cy:104, r:52, fill:"#035c37" },
-    { cx:246, cy:104, r:52, fill:"#035c37" },
+    { cx:114, cy:104, r:52, fill:"#104911" },
+    { cx:246, cy:104, r:52, fill:"#104911" },
     { cx:180, cy:62,  r:58, fill:"#267426" },
     { cx:128, cy:75,  r:42, fill:"#2e8a2e" },
     { cx:232, cy:75,  r:42, fill:"#2e8a2e" },
-    { cx:180, cy:44,  r:42, fill:"#0ead69" },
+    { cx:180, cy:44,  r:42, fill:"#548c2f" },
     { cx:78,  cy:132, r:44, fill:"#0c1c10" },
     { cx:282, cy:132, r:44, fill:"#0c1c10" },
     { cx:80,  cy:163, r:33, fill:"#08140a" },
@@ -228,8 +228,8 @@ const CANOPIES: C[][] = [
     { cx:97,  cy:98,  r:72,  fill:"#102a14" },
     { cx:263, cy:98,  r:72,  fill:"#102a14" },
     { cx:180, cy:74,  r:86,  fill:"#164618" },
-    { cx:105, cy:88,  r:62,  fill:"#035c37" },
-    { cx:255, cy:88,  r:62,  fill:"#035c37" },
+    { cx:105, cy:88,  r:62,  fill:"#104911" },
+    { cx:255, cy:88,  r:62,  fill:"#104911" },
     { cx:180, cy:46,  r:68,  fill:"#246c24" },
     { cx:120, cy:58,  r:50,  fill:"#2c8430" },
     { cx:240, cy:58,  r:50,  fill:"#2c8430" },
@@ -247,8 +247,8 @@ const CANOPIES: C[][] = [
     { cx:86,  cy:86,  r:84,  fill:"#0e2210" },
     { cx:274, cy:86,  r:84,  fill:"#0e2210" },
     { cx:180, cy:60,  r:98,  fill:"#143e16" },
-    { cx:94,  cy:74,  r:72,  fill:"#035c37" },
-    { cx:266, cy:74,  r:72,  fill:"#035c37" },
+    { cx:94,  cy:74,  r:72,  fill:"#104911" },
+    { cx:266, cy:74,  r:72,  fill:"#104911" },
     { cx:180, cy:28,  r:80,  fill:"#226422" },
     { cx:112, cy:40,  r:60,  fill:"#2a7c2a" },
     { cx:248, cy:40,  r:60,  fill:"#2a7c2a" },
@@ -342,15 +342,15 @@ function BankNote({ x, y, rot, scale = 1, delay }: { x: number; y: number; rot: 
           <line key={i} x1={-w/2+4} x2={w/2-4} y1={i*scale} y2={i*scale} stroke="#6aa84f" strokeWidth={0.4*scale} opacity={0.5} />
         ))}
         {/* Border */}
-        <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#0ead69" strokeWidth={0.9*scale} />
+        <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#548c2f" strokeWidth={0.9*scale} />
         {/* Centre oval portrait placeholder */}
         <ellipse cx={0} cy={0} rx={4*scale} ry={5.5*scale} fill="#6aaa48" opacity={0.5} />
-        <ellipse cx={0} cy={0} rx={4*scale} ry={5.5*scale} fill="none" stroke="#0ead69" strokeWidth={0.6*scale} />
+        <ellipse cx={0} cy={0} rx={4*scale} ry={5.5*scale} fill="none" stroke="#548c2f" strokeWidth={0.6*scale} />
         {/* Corner numerals */}
-        <text x={-w/2+5.5} y={-h/2+6.5} fontSize={4.5*scale} fill="#0ead69" fontFamily="serif" fontWeight="bold" opacity={0.85}>10</text>
-        <text x={ w/2-5.5} y={ h/2-2}   fontSize={4.5*scale} fill="#0ead69" fontFamily="serif" fontWeight="bold" opacity={0.85} textAnchor="end">10</text>
+        <text x={-w/2+5.5} y={-h/2+6.5} fontSize={4.5*scale} fill="#548c2f" fontFamily="serif" fontWeight="bold" opacity={0.85}>10</text>
+        <text x={ w/2-5.5} y={ h/2-2}   fontSize={4.5*scale} fill="#548c2f" fontFamily="serif" fontWeight="bold" opacity={0.85} textAnchor="end">10</text>
         {/* Serial number strip */}
-        <text x={-w/2+5} y={h/2-2.5} fontSize={2.6*scale} fill="#0ead69" fontFamily="monospace" letterSpacing={0.8*scale} opacity={0.7}>AA 2847619 B</text>
+        <text x={-w/2+5} y={h/2-2.5} fontSize={2.6*scale} fill="#548c2f" fontFamily="monospace" letterSpacing={0.8*scale} opacity={0.7}>AA 2847619 B</text>
         {/* Highlight sheen */}
         <rect x={-w/2} y={-h/2} width={w} height={h*0.28} rx={3.5*scale} fill="rgba(255,255,255,0.18)" />
       </g>
@@ -364,13 +364,13 @@ function SproutSVG() {
     <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
       <motion.path
         d="M180 248 Q180 233 180 219"
-        stroke="#0ead69" strokeWidth={2.5} fill="none" strokeLinecap="round"
+        stroke="#548c2f" strokeWidth={2.5} fill="none" strokeLinecap="round"
         initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
       />
       <motion.path
         d="M180 234 Q172 224 165 220 Q172 218 180 226"
-        fill="#0ead69"
+        fill="#548c2f"
         initial={{ scale: 0 }} animate={{ scale: 1 }}
         transition={{ duration: 0.4, delay: 0.8 }}
         style={{ transformOrigin: "172px 228px" }}
@@ -494,7 +494,7 @@ function LevelUpCelebration({ stage, onDone }: { stage: number; onDone: () => vo
 
       {/* Expanding ring */}
       <motion.div
-        className="absolute rounded-full border-[3px] border-[#0ead69]"
+        className="absolute rounded-full border-[3px] border-[#548c2f]"
         initial={{ width: 60, height: 60, opacity: 0.9 }}
         animate={{ width: 320, height: 320, opacity: 0 }}
         transition={{ duration: 0.75, ease: "easeOut" }}
@@ -543,7 +543,7 @@ function LevelUpCelebration({ stage, onDone }: { stage: number; onDone: () => vo
 
       {/* Rising badge */}
       <motion.div
-        className="absolute flex items-center gap-2 bg-[#035c37] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-green-900/30"
+        className="absolute flex items-center gap-2 bg-[#265a27] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-green-900/30"
         initial={{ y: 30, opacity: 0, scale: 0.6 }}
         animate={{ y: [30, -10, -80], opacity: [0, 1, 1, 0], scale: [0.6, 1.1, 1, 0.9] }}
         transition={{ duration: 2.0, ease: "easeOut", times: [0, 0.25, 0.7, 1] }}

@@ -29,12 +29,12 @@ function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void
       animate={{ opacity: 1, y: 0 }}
       className={`flex flex-col items-center gap-2 p-3 rounded-2xl transition w-full text-left ${
         d.isCurrent
-          ? "bg-white border-2 border-[#ffd23f] shadow-md"
-          : "bg-white border border-[#E8E8E8] hover:border-[#0ead69]"
+          ? "bg-white border-2 border-[#ffd449] shadow-md"
+          : "bg-white border border-[#E8E8E8] hover:border-[#548c2f]"
       }`}
     >
       {d.isCurrent && (
-        <span className="text-[10px] font-bold text-[#c23354] bg-[#fffacc] border border-[#ffd23f] rounded-full px-2 py-0.5 -mb-1">
+        <span className="text-[10px] font-bold text-[#d4880a] bg-[#fff5c0] border border-[#ffd449] rounded-full px-2 py-0.5 -mb-1">
           GROWING NOW
         </span>
       )}
@@ -43,10 +43,10 @@ function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void
       </div>
       <div className="text-center w-full">
         <div className="flex items-center justify-center gap-1">
-          <span className="text-sm font-bold text-[#035c37]">{d.year}</span>
+          <span className="text-sm font-bold text-[#104911]">{d.year}</span>
           {badge && <span className="text-sm">{badge}</span>}
         </div>
-        <div className="text-[11px] text-[#035c37] font-semibold mt-0.5">
+        <div className="text-[11px] text-[#265a27] font-semibold mt-0.5">
           {d.goalsMetCount}/12 goals
         </div>
         <div className="text-[10px] text-[#607D8B]">{fmt(d.totalSaved)} saved</div>
@@ -63,10 +63,10 @@ function EmptyPlot({ year }: { year: number }) {
     <div className="flex flex-col items-center gap-2 opacity-35">
       <div className="w-full aspect-square flex items-center justify-center">
         <svg viewBox="0 0 360 348" className="w-full max-w-[120px] mx-auto">
-          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#757575" opacity={0.08} />
-          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#9e9e9e" opacity={0.5} />
-          <rect x={141} y={265} width={78} height={12} rx={5} fill="#757575" opacity={0.5} />
-          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#546e7a" opacity={0.5} />
+          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#7a3c10" opacity={0.08} />
+          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#c07838" opacity={0.5} />
+          <rect x={141} y={265} width={78} height={12} rx={5} fill="#9e5e26" opacity={0.5} />
+          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#4a2810" opacity={0.5} />
         </svg>
       </div>
       <div className="text-center">
@@ -85,34 +85,34 @@ export default function GardenDemo() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#035c37] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#265a27] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own garden
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌳</span>
-          <span className="text-base font-bold text-[#035c37]">Money Tree</span>
+          <span className="text-base font-bold text-[#104911]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {DEMO_NAV.map(n => (
             <Link key={n.to} to={n.to}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                 n.to === "/garden-demo"
-                  ? "bg-[#e2f9f0] text-[#035c37]"
+                  ? "bg-[#ebf5df] text-[#265a27]"
                   : "text-[#546E7A] hover:bg-[#F5F5F5]"
               }`}
             >{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#035c37] text-white px-4 py-2 rounded-lg hover:bg-[#035c37] transition font-medium">
+        <Link to="/signup" className="text-sm bg-[#265a27] text-white px-4 py-2 rounded-lg hover:bg-[#104911] transition font-medium">
           Get started
         </Link>
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 pb-12 space-y-6">
         <div>
-          <h1 className="text-xl font-bold text-[#035c37]">My Garden</h1>
+          <h1 className="text-xl font-bold text-[#104911]">My Garden</h1>
           <p className="text-xs text-[#607D8B] mt-0.5">
             Every year you use Money Tree, a new tree grows in your garden.
           </p>
@@ -126,7 +126,7 @@ export default function GardenDemo() {
             { label: "All-time saved",  value: fmt(totalSaved) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-              <div className="text-base font-bold text-[#035c37]">{s.value}</div>
+              <div className="text-base font-bold text-[#265a27]">{s.value}</div>
               <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}
@@ -162,7 +162,7 @@ export default function GardenDemo() {
               <div className="w-full aspect-square flex items-center justify-center">
                 <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#9E9E9E] flex items-center justify-center text-2xl text-[#9E9E9E]">+</div>
               </div>
-              <div className="text-[10px] text-[#e2f9f0] text-center">And more…</div>
+              <div className="text-[10px] text-[#c8d8a0] text-center">And more…</div>
             </div>
           </div>
         </div>
@@ -170,12 +170,12 @@ export default function GardenDemo() {
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-          className="bg-gradient-to-r from-[#e2f9f0] to-[#e2f9f0] rounded-2xl border border-[#e2f9f0] p-5 text-center"
+          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center"
         >
           <div className="text-2xl mb-2">🌳</div>
-          <div className="text-sm font-semibold text-[#035c37]">Build your garden year on year</div>
+          <div className="text-sm font-semibold text-[#104911]">Build your garden year on year</div>
           <div className="text-xs text-[#546E7A] mt-1 mb-3">Each year you save, a new tree joins your garden.</div>
-          <Link to="/signup" className="inline-block bg-[#035c37] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#035c37] transition">
+          <Link to="/signup" className="inline-block bg-[#265a27] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#104911] transition">
             Start your garden →
           </Link>
         </motion.div>

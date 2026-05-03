@@ -16,8 +16,8 @@ export function ProtectedRoute({ children, requireOnboarding = true }: Protected
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border-4 border-[#035c37] border-t-transparent animate-spin" />
-          <p className="text-[#035c37] font-medium">Loading...</p>
+          <div className="w-12 h-12 rounded-full border-4 border-[#265a27] border-t-transparent animate-spin" />
+          <p className="text-[#265a27] font-medium">Loading...</p>
         </div>
       </div>
     );
