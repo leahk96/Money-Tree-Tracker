@@ -667,19 +667,19 @@ function BudgetContent() {
           {/* Chart 1: Budget summary */}
           <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
             <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Remaining amount</div>
-            <div className="text-[10px] text-[#9ab89a] mb-2">income minus all outgoings</div>
-            <div className={`text-2xl font-bold tabular-nums mb-1 ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-              {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
+            <div className="text-[10px] text-[#9ab89a] mb-2">after expenses &amp; savings goal</div>
+            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+              {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
             </div>
             <div className="w-full bg-[#e8f0e8] rounded-full h-2.5 overflow-hidden mb-1">
               <div
-                className={`h-2.5 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`}
-                style={{ width: `${leftPct}%` }}
+                className={`h-2.5 rounded-full transition-all duration-500 ${amountLeftToSpend >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`}
+                style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (amountLeftToSpend / income) * 100)) : 0}%` }}
               />
             </div>
             <div className="flex justify-between text-[10px] text-[#b0c4b0] mb-4">
               <span>Expenses: {formatCurrency(allocated)}</span>
-              <span>{Math.round(goalPct)}% of goal</span>
+              <span>{Math.round(goalPct)}% of goal met</span>
             </div>
 
             <div className="border-t border-[#f0f4f0] pt-3 space-y-2.5">
@@ -688,9 +688,9 @@ function BudgetContent() {
                 <span className="text-sm font-semibold tabular-nums text-[#1a4a1a]">{formatCurrency(savingsGoal)}</span>
               </div>
               <div className="flex items-start justify-between pt-2 border-t border-[#f0f4f0]">
-                <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">Amount spare after savings goal</span>
-                <span className={`text-sm font-bold tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                  {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
+                <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">Remaining balance</span>
+                <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                  {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
                 </span>
               </div>
             </div>
