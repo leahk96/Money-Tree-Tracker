@@ -360,6 +360,34 @@ export default function SummaryDemo() {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+
+            {/* Year-total summary row */}
+            {(() => {
+              const totalExp = chartMonths.reduce((s, m) => s + m.SavingsExpected, 0);
+              const totalAct = chartMonths.reduce((s, m) => s + m.SavingsActual, 0);
+              const hitPct   = totalExp > 0 ? Math.round((totalAct / totalExp) * 100) : 0;
+              const onTrack  = totalAct >= totalExp;
+              return (
+                <div className="mt-4 flex items-center justify-between rounded-xl border px-4 py-3 gap-4"
+                  style={{ backgroundColor: onTrack ? "#F0FAF0" : "#FFF3F3", borderColor: onTrack ? "#C8E6C9" : "#FFCDD2" }}>
+                  <div className="space-y-0.5">
+                    <div className="text-[10px] uppercase tracking-wide font-semibold" style={{ color: onTrack ? "#2E7D32" : "#B80000" }}>
+                      Year total
+                    </div>
+                    <div className="text-xs text-[#546E7A]">
+                      <span className="font-semibold text-[#1B5E20]">{fmt(totalAct)}</span>
+                      <span className="text-[#9E9E9E]"> of {fmt(totalExp)} planned</span>
+                    </div>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="text-2xl font-bold tabular-nums" style={{ color: onTrack ? "#2E7D32" : "#B80000" }}>
+                      {hitPct}%
+                    </div>
+                    <div className="text-[10px] text-[#9E9E9E]">hit rate</div>
+                  </div>
+                </div>
+              );
+            })()}
           </motion.div>
         )}
 
