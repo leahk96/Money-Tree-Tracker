@@ -227,13 +227,6 @@ export default function BudgetDemo() {
           {/* LEFT: Budget table */}
           <div className="flex-1 min-w-0 space-y-3">
 
-            {/* Income - full width */}
-            <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
-              onUpdate={updateExpected} onDelete={deleteRow}
-              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-              onNewRowNameChange={setNewRowName} />
-
             {/* Savings Allocations - dual-column Expected / Actual */}
             {(() => {
               const cfg = SECTION_CONFIG["savings"];
@@ -301,6 +294,13 @@ export default function BudgetDemo() {
                 </div>
               );
             })()}
+
+            {/* Income - full width */}
+            <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
+              onUpdate={updateExpected} onDelete={deleteRow}
+              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
+              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
+              onNewRowNameChange={setNewRowName} />
 
             {/* Expense table */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">

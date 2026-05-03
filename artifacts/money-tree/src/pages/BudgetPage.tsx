@@ -596,16 +596,6 @@ function BudgetContent() {
             </div>
           </div>
 
-          {/* Income - full width */}
-          <SideBySideSection
-            section="income" items={itemsFor("income")}
-            addingRow={addingRow} newRowName={newRowName}
-            onUpdate={updateAmount} onDelete={deleteRow}
-            onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-            onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-            onNewRowNameChange={setNewRowName}
-          />
-
           {/* Savings Allocations - dual-column Expected / Actual */}
           {(() => {
             const cfg = SECTION_CONFIG["savings"];
@@ -673,6 +663,16 @@ function BudgetContent() {
               </div>
             );
           })()}
+
+          {/* Income - full width */}
+          <SideBySideSection
+            section="income" items={itemsFor("income")}
+            addingRow={addingRow} newRowName={newRowName}
+            onUpdate={updateAmount} onDelete={deleteRow}
+            onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
+            onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
+            onNewRowNameChange={setNewRowName}
+          />
 
           {/* Expense table */}
           <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">
