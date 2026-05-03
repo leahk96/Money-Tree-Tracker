@@ -14,7 +14,7 @@ export interface MonthSummary {
 
 export interface TreeData {
   currentYear: number;
-  monthlySummaries: MonthSummary[]; // all 12 months of current year
+  monthlySummaries: MonthSummary[];
   goalsMetThisYear: number;
   currentStreak: number;
   bestStreak: number;
@@ -85,24 +85,16 @@ export function useTreeData() {
 
     const monthIds = months.map((m: Month) => m.id);
 
-    // Fetch all line items — savings = income minus expenses (remaining balance)
+    // savings = explicit savings bucket line items (Emergency fund, ISA, etc.)
     const { data: items } = await supabase
       .from("line_items")
-      .select("month_id,section,amount,actual_amount")
-      .in("month_id", monthIds);
+      .select("*")
+      .in("month_id", monthIds)
+      .eq("section", "savings");
 
     const summaries: MonthSummary[] = months.map((m: Month) => {
-      const mi = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
-      const inc = mi
-        .filter(i => i.section === "income")
-        .reduce((s, i) => s + i.amount, 0);
-      const exp = mi
-        .filter(i => ["bills", "debt"].includes(i.section))
-        .reduce((s, i) => s + i.amount, 0)
-        + mi
-          .filter(i => ["needs", "wants"].includes(i.section))
-          .reduce((s, i) => s + ((i.actual_amount ?? null) !== null ? (i.actual_amount as number) : i.amount), 0);
-      const totalSaved = Math.max(0, inc - exp);
+      const monthItems = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
+      const totalSaved = monthItems.reduce((s, i) => s + i.amount, 0);
       return {
         year: m.year,
         month: m.month,
