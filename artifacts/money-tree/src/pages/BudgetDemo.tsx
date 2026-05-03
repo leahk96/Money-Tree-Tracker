@@ -7,7 +7,7 @@ import { Section } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
   income:  { label: "Income",  emoji: "💰", color: "#4CAF50", textColor: "#1B5E20", rowBg: "#F5F5F5" },
-  savings: { label: "Savings", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
+  savings: { label: "Savings Allocations", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
   bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
   needs:   { label: "Needs",   emoji: "🛒", color: "#1565C0", textColor: "#0D47A1", rowBg: "#E3F2FD" },
   wants:   { label: "Wants",   emoji: "✨", color: "#B80000", textColor: "#BF360C", rowBg: "#FFF3E0" },
@@ -32,7 +32,7 @@ type SectionData = Record<Section, Item[]>;
 
 const DEMO: SectionData = {
   income:  [{ id:"i1", name:"Salary",         amount:2200, actual_amount:null }, { id:"i2", name:"Side income",   amount:300,  actual_amount:null }],
-  savings: [{ id:"s1", name:"Emergency fund", amount:200,  actual_amount:null }, { id:"s2", name:"Investments",   amount:150,  actual_amount:null }],
+  savings: [{ id:"s1", name:"Emergency fund", amount:200,  actual_amount:180  }, { id:"s2", name:"Investments",   amount:150,  actual_amount:150  }],
   bills:   [{ id:"b1", name:"Rent",            amount:950,  actual_amount:null }, { id:"b2", name:"Utilities",     amount:85,   actual_amount:null }, { id:"b3", name:"Subscriptions", amount:45, actual_amount:null }],
   needs:   [{ id:"n1", name:"Groceries",       amount:280,  actual_amount:312  }, { id:"n2", name:"Transport",     amount:120,  actual_amount:98   }],
   wants:   [{ id:"w1", name:"Eating out",      amount:160,  actual_amount:null }, { id:"w2", name:"Entertainment", amount:60,   actual_amount:45   }],
@@ -227,19 +227,80 @@ export default function BudgetDemo() {
           {/* LEFT: Budget table */}
           <div className="flex-1 min-w-0 space-y-3">
 
-            {/* Income + Savings side by side */}
-            <div className="flex gap-3">
-              <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
-                onUpdate={updateExpected} onDelete={deleteRow}
-                onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-                onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName} />
-              <SideBySideSection section="savings" items={sections.savings} addingRow={addingRow} newRowName={newRowName}
-                onUpdate={updateExpected} onDelete={deleteRow}
-                onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-                onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName} />
-            </div>
+            {/* Income - full width */}
+            <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
+              onUpdate={updateExpected} onDelete={deleteRow}
+              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
+              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
+              onNewRowNameChange={setNewRowName} />
+
+            {/* Savings Allocations - dual-column Expected / Actual */}
+            {(() => {
+              const cfg = SECTION_CONFIG["savings"];
+              const items = sections.savings;
+              const isAdding = addingRow === "savings";
+              const expectedTotal = items.reduce((a, i) => a + i.amount, 0);
+              const actualTotal   = items.reduce((a, i) => a + (i.actual_amount ?? i.amount), 0);
+              const hasActual     = items.some(i => i.actual_amount !== null && i.actual_amount !== undefined);
+              return (
+                <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">
+                  <div className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#E8E8E8]" style={{ backgroundColor: cfg.rowBg }}>
+                    <div className="px-4 py-2 flex items-center gap-1.5">
+                      <span className="text-sm">{cfg.emoji}</span>
+                      <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
+                    </div>
+                    <div className="py-1.5 pr-1 text-center">
+                      <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Expected</div>
+                      <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
+                        {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                      </div>
+                    </div>
+                    <div className="py-1.5 pr-1 text-center">
+                      <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Actual</div>
+                      <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
+                        {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                      </div>
+                    </div>
+                    <div />
+                  </div>
+
+                  {items.map(item => (
+                    <div key={item.id} className="grid grid-cols-[1fr_90px_90px_28px] border-b border-[#F5F5F5] hover:bg-[#FAFAFA] group">
+                      <div className="px-4 py-1.5 pl-9 flex items-center">
+                        <span className="text-sm text-[#37474F] truncate">{item.name}</span>
+                      </div>
+                      <div className="px-0.5 py-1 flex items-center justify-end">
+                        <AmountInput value={item.amount} onChange={v => updateExpected("savings", item.id, v)} />
+                      </div>
+                      <div className="px-0.5 py-1 flex items-center justify-end">
+                        <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual("savings", item.id, v)} />
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <button onClick={() => deleteRow("savings", item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="border-b border-[#F5F5F5]">
+                    {isAdding ? (
+                      <div className="flex gap-2 pl-9 pr-3 py-2">
+                        <input
+                          autoFocus value={newRowName}
+                          onChange={e => setNewRowName(e.target.value)}
+                          onKeyDown={e => { if (e.key === "Enter") addRow("savings"); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
+                          placeholder="e.g. Emergency fund…"
+                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
+                        />
+                        <button onClick={() => addRow("savings")} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
+                        <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
+                      </div>
+                    ) : (
+                      <button onClick={() => { setAddingRow("savings"); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* Expense table */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] overflow-hidden">
