@@ -563,10 +563,10 @@ function BudgetContent() {
       </AnimatePresence>
 
       {/* ── MAIN 2-COLUMN LAYOUT ── */}
-      <div className="flex gap-5 items-start">
+      <div className="flex flex-col lg:flex-row gap-5 items-stretch lg:items-start">
 
         {/* LEFT: Budget table */}
-        <div className="flex-1 min-w-0 space-y-3">
+        <div className="flex-1 min-w-0 space-y-3 w-full overflow-x-auto">
 
           {/* Copy from last month */}
           <div className="flex items-center justify-between">
@@ -797,7 +797,7 @@ function BudgetContent() {
         </div>
 
         {/* RIGHT: Charts column — sticky */}
-        <div className="w-72 shrink-0 space-y-4 sticky top-20">
+        <div className="w-full lg:w-72 lg:shrink-0 space-y-4 lg:sticky lg:top-20">
 
           {/* Chart 1: Budget summary */}
           <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
