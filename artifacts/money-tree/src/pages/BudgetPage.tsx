@@ -21,7 +21,6 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
-const ALL_SECTIONS: Section[] = ["income", "savings", "bills", "needs", "wants", "debt"];
 const PIE_COLORS: Record<Section, string> = {
   income: "#85BB65", savings: "#228B22", bills: "#c0516b",
   needs: "#5a8fc0", wants: "#d4900a", debt: "#8a9aaa",
@@ -171,7 +170,7 @@ function BudgetContent() {
       existing = created;
 
       if (created) {
-        const defaultItems = ["income","savings","bills","needs","wants","debt"].flatMap((section, si) =>
+        const defaultItems = ["income","bills","needs","wants","debt"].flatMap((section, si) =>
           DEFAULT_ROWS[section as Section].map((name, i) => ({
             month_id: created.id, section, name, amount: 0,
             sort_order: si * 100 + i, is_custom: false,
@@ -197,13 +196,14 @@ function BudgetContent() {
     if (allMonths && allMonths.length > 0) {
       const ids = allMonths.map((m: Month) => m.id);
       const { data: allItems } = await supabase
-        .from("line_items").select("month_id,amount").in("month_id", ids).eq("section","savings");
+        .from("line_items").select("month_id,section,amount,actual_amount").in("month_id", ids);
 
       const points: YtdPoint[] = allMonths.map((m: Month) => {
-        const saved = (allItems ?? [])
-          .filter((i: LineItem) => i.month_id === m.id)
-          .reduce((s: number, i: LineItem) => s + i.amount, 0);
-        return { month: SHORT_MONTHS[m.month - 1], saved, isCurrent: m.month === month };
+        const mi = (allItems ?? []).filter((i: LineItem) => i.month_id === m.id);
+        const inc = mi.filter((i: LineItem) => i.section === "income").reduce((s: number, i: LineItem) => s + i.amount, 0);
+        const exp = mi.filter((i: LineItem) => ["bills","debt"].includes(i.section)).reduce((s: number, i: LineItem) => s + i.amount, 0)
+                  + mi.filter((i: LineItem) => ["needs","wants"].includes(i.section)).reduce((s: number, i: LineItem) => s + (i.actual_amount ?? i.amount), 0);
+        return { month: SHORT_MONTHS[m.month - 1], saved: Math.max(0, inc - exp), isCurrent: m.month === month };
       });
       setYtdData(points.sort((a, b) => SHORT_MONTHS.indexOf(a.month) - SHORT_MONTHS.indexOf(b.month)));
     }
@@ -346,20 +346,18 @@ function BudgetContent() {
   const effectiveTotalFor = (s: Section) => itemsFor(s).reduce((a, i) => a + effectiveAmount(i), 0);
 
   const income    = totalFor("income");
-  const saved     = totalFor("savings");
   const expenses  = ["bills","debt"].reduce((a, s) => a + totalFor(s as Section), 0)
                   + effectiveTotalFor("needs") + effectiveTotalFor("wants");
-  const allocated = expenses; // savings tracked separately via goal strip, not counted as "allocated"
-  const leftover  = income - allocated;
+  const allocated = expenses;
+  const saved     = income - expenses; // remaining balance IS savings
+  const leftover  = saved;
 
   const savingsGoal = monthData?.savings_goal ?? 500;
   const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
   const goalMet = saved >= savingsGoal;
 
-  // Amount left to spend = leftover minus any remaining savings gap
-  const savingsShortfall = Math.max(0, savingsGoal - saved);
-  const amountLeftToSpend = leftover - savingsShortfall;
-  const leftPct = income > 0 ? Math.max(0, Math.min(100, (leftover / income) * 100)) : 0;
+  const vsGoal = saved - savingsGoal;
+  const leftPct = income > 0 ? Math.max(0, Math.min(100, (saved / savingsGoal) * 100)) : 0;
 
   const today = new Date();
   const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
@@ -369,13 +367,13 @@ function BudgetContent() {
   const showNudge = !goalMet && isCurrentMonth && isLateInMonth && (income > 0 || saved > 0);
 
   const ytdTotal = ytdData.reduce((a, p) => a + p.saved, 0);
-  const OUTGOING_SECTIONS: Section[] = ["savings", "bills", "needs", "wants", "debt"];
-  const remaining = income - (saved + allocated); // pie slices must sum to income; savings is its own slice
+  const OUTGOING_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
+  const remaining = income - allocated; // remaining = savings, shown as green slice
   const pieData = [
     ...OUTGOING_SECTIONS
       .map(s => ({ name: SECTION_CONFIG[s].label, value: totalFor(s), key: s, color: PIE_COLORS[s] }))
       .filter(d => d.value > 0),
-    ...(remaining > 0 ? [{ name: "Remaining", value: remaining, key: "remaining", color: "#d4e8d4" }] : []),
+    ...(remaining > 0 ? [{ name: "Savings", value: remaining, key: "remaining", color: "#228B22" }] : []),
   ];
 
   if (loading) {
@@ -480,7 +478,7 @@ function BudgetContent() {
                 ⏰ {daysLeft} day{daysLeft !== 1 ? "s" : ""} left — {formatCurrency(savingsGoal - saved)} short of your goal
               </div>
               <div className="text-xs text-[#b07830] mt-0.5">
-                Top up your savings this month to keep your tree growing
+                Try reducing expenses this month to hit your savings goal
               </div>
             </div>
             <span className="text-2xl ml-3 shrink-0">💪</span>
@@ -496,7 +494,7 @@ function BudgetContent() {
 
           {/* Copy from last month */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Income &amp; Savings</span>
+            <span className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide">Income</span>
             <div className="flex items-center gap-2">
               {copyError && (
                 <span className="text-xs text-red-400">{copyError}</span>
@@ -522,25 +520,15 @@ function BudgetContent() {
             </div>
           </div>
 
-          {/* Income + Savings side by side */}
-          <div className="flex gap-3">
-            <SideBySideSection
-              section="income" items={itemsFor("income")}
-              addingRow={addingRow} newRowName={newRowName}
-              onUpdate={updateAmount} onDelete={deleteRow}
-              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-              onNewRowNameChange={setNewRowName}
-            />
-            <SideBySideSection
-              section="savings" items={itemsFor("savings")}
-              addingRow={addingRow} newRowName={newRowName}
-              onUpdate={updateAmount} onDelete={deleteRow}
-              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-              onNewRowNameChange={setNewRowName}
-            />
-          </div>
+          {/* Income — full width */}
+          <SideBySideSection
+            section="income" items={itemsFor("income")}
+            addingRow={addingRow} newRowName={newRowName}
+            onUpdate={updateAmount} onDelete={deleteRow}
+            onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
+            onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
+            onNewRowNameChange={setNewRowName}
+          />
 
           {/* Expense table */}
           <div className="bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
@@ -654,10 +642,10 @@ function BudgetContent() {
               <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
               <div />
             </div>
-            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${income - allocated >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
-              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Remaining balance</div>
-              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${income - allocated >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {income - allocated >= 0 ? formatCurrency(income - allocated) : `−${formatCurrency(Math.abs(income - allocated))}`}
+            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+              <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Savings this month</div>
+              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
               </div>
               <div />
             </div>
@@ -669,31 +657,31 @@ function BudgetContent() {
 
           {/* Chart 1: Budget summary */}
           <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
-            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Remaining amount</div>
+            <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Saved this month</div>
             <div className="text-[10px] text-[#9ab89a] mb-2">income minus expenses</div>
-            <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-              {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+            <div className={`text-2xl font-bold tabular-nums mb-1 ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+              {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
             </div>
             <div className="w-full bg-[#e8f0e8] rounded-full h-2.5 overflow-hidden mb-1">
               <div
-                className={`h-2.5 rounded-full transition-all duration-500 ${leftover >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`}
+                className={`h-2.5 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`}
                 style={{ width: `${leftPct}%` }}
               />
             </div>
             <div className="flex justify-between text-[10px] text-[#b0c4b0] mb-4">
-              <span>Allocated: {formatCurrency(allocated)}</span>
-              <span>{Math.round(leftPct)}% remaining</span>
+              <span>Expenses: {formatCurrency(allocated)}</span>
+              <span>{Math.round(goalPct)}% of goal</span>
             </div>
 
             <div className="border-t border-[#f0f4f0] pt-3 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-[#7a9a7a]">Savings target</span>
+                <span className="text-xs text-[#7a9a7a]">Savings goal</span>
                 <span className="text-sm font-semibold tabular-nums text-[#1a4a1a]">{formatCurrency(savingsGoal)}</span>
               </div>
               <div className="flex items-start justify-between pt-2 border-t border-[#f0f4f0]">
-                <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">Amount spare after savings goal</span>
-                <span className={`text-sm font-bold tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                  {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
+                <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">vs goal</span>
+                <span className={`text-sm font-bold tabular-nums ${vsGoal >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                  {vsGoal >= 0 ? `+${formatCurrency(vsGoal)}` : `−${formatCurrency(Math.abs(vsGoal))}`}
                 </span>
               </div>
             </div>

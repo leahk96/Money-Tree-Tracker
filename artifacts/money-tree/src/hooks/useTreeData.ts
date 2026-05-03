@@ -31,7 +31,6 @@ function calcStreak(summaries: MonthSummary[]): { current: number; best: number 
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
 
-  // Build full year array sorted by month
   const sorted = [...summaries].sort((a, b) => a.month - b.month);
 
   let current = 0;
@@ -39,7 +38,6 @@ function calcStreak(summaries: MonthSummary[]): { current: number; best: number 
   let streak = 0;
 
   for (const s of sorted) {
-    // Only count months up to current
     if (s.year > currentYear || (s.year === currentYear && s.month > currentMonth)) break;
     if (s.goalMet) {
       streak++;
@@ -64,7 +62,6 @@ export function useTreeData() {
 
     const currentYear = new Date().getFullYear();
 
-    // Fetch all months for this year
     const { data: months } = await supabase
       .from("months")
       .select("*")
@@ -86,17 +83,26 @@ export function useTreeData() {
       return;
     }
 
-    // Fetch line items for all months
     const monthIds = months.map((m: Month) => m.id);
+
+    // Fetch all line items — savings = income minus expenses (remaining balance)
     const { data: items } = await supabase
       .from("line_items")
-      .select("*")
-      .in("month_id", monthIds)
-      .eq("section", "savings");
+      .select("month_id,section,amount,actual_amount")
+      .in("month_id", monthIds);
 
     const summaries: MonthSummary[] = months.map((m: Month) => {
-      const monthItems = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
-      const totalSaved = monthItems.reduce((s, i) => s + i.amount, 0);
+      const mi = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
+      const inc = mi
+        .filter(i => i.section === "income")
+        .reduce((s, i) => s + i.amount, 0);
+      const exp = mi
+        .filter(i => ["bills", "debt"].includes(i.section))
+        .reduce((s, i) => s + i.amount, 0)
+        + mi
+          .filter(i => ["needs", "wants"].includes(i.section))
+          .reduce((s, i) => s + ((i.actual_amount ?? null) !== null ? (i.actual_amount as number) : i.amount), 0);
+      const totalSaved = Math.max(0, inc - exp);
       return {
         year: m.year,
         month: m.month,

@@ -145,29 +145,28 @@ export default function BudgetDemo() {
   const totalActual   = (s: Section) => sections[s].reduce((a, i) => a + effectiveAmount(i, s), 0);
 
   const income    = totalExpected("income");
-  const saved     = totalExpected("savings");
   const expenses  = ["bills","debt"].reduce((a, s) => a + totalExpected(s as Section), 0)
                   + totalActual("needs") + totalActual("wants");
-  const allocated = expenses; // savings tracked separately via goal strip, not counted as "allocated"
-  const leftover  = income - allocated;
+  const allocated = expenses;
+  const saved     = income - expenses; // remaining balance IS savings
+  const leftover  = saved;
 
   const savingsGoal = 500;
   const goalPct = Math.min(100, Math.round((saved / savingsGoal) * 100));
   const goalMet = saved >= savingsGoal;
-  const savingsShortfall = Math.max(0, savingsGoal - saved);
-  const amountLeftToSpend = leftover - savingsShortfall;
-  const leftPct = income > 0 ? Math.max(0, Math.min(100, (leftover / income) * 100)) : 0;
+  const vsGoal = saved - savingsGoal;
+  const leftPct = income > 0 ? Math.max(0, Math.min(100, (saved / savingsGoal) * 100)) : 0;
 
   const ytdData = [...PRIOR_MONTHS, { month: "May", saved }];
   const ytdTotal = PRIOR_MONTHS.reduce((a, m) => a + m.saved, 0) + saved;
 
-  const OUTGOING_SECTIONS: Section[] = ["savings", "bills", "needs", "wants", "debt"];
-  const remaining = income - (saved + allocated); // pie slices must sum to income; savings is its own slice
+  const OUTGOING_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
+  const remaining = income - allocated; // remaining = savings, shown as green slice
   const pieData = [
     ...OUTGOING_SECTIONS
       .map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s, color: PIE_COLORS[s] }))
       .filter(d => d.value > 0),
-    ...(remaining > 0 ? [{ name: "Remaining", value: remaining, key: "remaining", color: "#d4e8d4" }] : []),
+    ...(remaining > 0 ? [{ name: "Savings", value: remaining, key: "remaining", color: "#228B22" }] : []),
   ];
 
   return (
@@ -224,19 +223,12 @@ export default function BudgetDemo() {
           {/* LEFT: Budget table */}
           <div className="flex-1 min-w-0 space-y-3">
 
-            {/* Income + Savings side by side */}
-            <div className="flex gap-3">
-              <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
-                onUpdate={updateExpected} onDelete={deleteRow}
-                onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-                onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName} />
-              <SideBySideSection section="savings" items={sections.savings} addingRow={addingRow} newRowName={newRowName}
-                onUpdate={updateExpected} onDelete={deleteRow}
-                onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
-                onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
-                onNewRowNameChange={setNewRowName} />
-            </div>
+            {/* Income — full width */}
+            <SideBySideSection section="income" items={sections.income} addingRow={addingRow} newRowName={newRowName}
+              onUpdate={updateExpected} onDelete={deleteRow}
+              onAddStart={s => { setAddingRow(s); setNewRowName(""); }}
+              onAddConfirm={addRow} onAddCancel={() => { setAddingRow(null); setNewRowName(""); }}
+              onNewRowNameChange={setNewRowName} />
 
             {/* Expense table */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] overflow-hidden">
@@ -342,10 +334,10 @@ export default function BudgetDemo() {
                 <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#c0516b]">{formatCurrency(allocated)}</div>
                 <div />
               </div>
-              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${income - allocated >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
-                <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Remaining balance</div>
-                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${income - allocated >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                  {income - allocated >= 0 ? formatCurrency(income - allocated) : `−${formatCurrency(Math.abs(income - allocated))}`}
+              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#228B22] bg-[#eef8ee]" : "border-[#c0516b] bg-[#fff0f2]"}`}>
+                <div className="px-4 py-2.5 text-sm font-bold text-[#1a4a1a]">Savings this month</div>
+                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                  {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
                 </div>
                 <div />
               </div>
@@ -357,28 +349,28 @@ export default function BudgetDemo() {
 
             {/* Budget summary widget */}
             <div className="bg-white rounded-xl border border-[#e0e8e0] p-4">
-              <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Remaining amount</div>
+              <div className="text-xs font-semibold text-[#5a7a5a] uppercase tracking-wide mb-0.5">Saved this month</div>
               <div className="text-[10px] text-[#9ab89a] mb-2">income minus expenses</div>
-              <div className={`text-2xl font-bold tabular-nums mb-1 ${leftover >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                {leftover >= 0 ? formatCurrency(leftover) : `−${formatCurrency(Math.abs(leftover))}`}
+              <div className={`text-2xl font-bold tabular-nums mb-1 ${saved >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
               </div>
               <div className="w-full bg-[#e8f0e8] rounded-full h-2.5 overflow-hidden mb-1">
-                <div className={`h-2.5 rounded-full transition-all duration-500 ${leftover >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`} style={{ width: `${leftPct}%` }} />
+                <div className={`h-2.5 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#85BB65]" : "bg-[#c0516b]"}`} style={{ width: `${leftPct}%` }} />
               </div>
               <div className="flex justify-between text-[10px] text-[#b0c4b0] mb-4">
-                <span>Allocated: {formatCurrency(allocated)}</span>
-                <span>{Math.round(leftPct)}% remaining</span>
+                <span>Expenses: {formatCurrency(allocated)}</span>
+                <span>{Math.round(goalPct)}% of goal</span>
               </div>
 
               <div className="border-t border-[#f0f4f0] pt-3 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#7a9a7a]">Savings target</span>
+                  <span className="text-xs text-[#7a9a7a]">Savings goal</span>
                   <span className="text-sm font-semibold tabular-nums text-[#1a4a1a]">{formatCurrency(savingsGoal)}</span>
                 </div>
                 <div className="flex items-start justify-between pt-2 border-t border-[#f0f4f0]">
-                  <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">Amount spare after savings goal</span>
-                  <span className={`text-sm font-bold tabular-nums ${amountLeftToSpend >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
-                    {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
+                  <span className="text-xs text-[#7a9a7a] leading-tight max-w-[120px]">vs goal</span>
+                  <span className={`text-sm font-bold tabular-nums ${vsGoal >= 0 ? "text-[#228B22]" : "text-[#c0516b]"}`}>
+                    {vsGoal >= 0 ? `+${formatCurrency(vsGoal)}` : `−${formatCurrency(Math.abs(vsGoal))}`}
                   </span>
                 </div>
               </div>
