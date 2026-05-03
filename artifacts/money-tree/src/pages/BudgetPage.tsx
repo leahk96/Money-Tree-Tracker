@@ -132,6 +132,58 @@ function SideBySideSection({
   );
 }
 
+// ── Confetti burst ────────────────────────────────────────────────────────────
+const CONFETTI_COLORS = ["#FFD700","#4CAF50","#FF6B35","#2E7D32","#FFC107","#66BB6A","#FF8C00","#A5D6A7","#FFEB3B","#81C784"];
+const CONFETTI_COUNT = 48;
+
+function ConfettiBurst({ show }: { show: boolean }) {
+  const particles = useRef(
+    Array.from({ length: CONFETTI_COUNT }, (_, i) => ({
+      id: i,
+      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      angle: (i / CONFETTI_COUNT) * 360 + (Math.random() - 0.5) * 20,
+      dist: 120 + Math.random() * 220,
+      size: 6 + Math.random() * 8,
+      rot: Math.random() * 720 - 360,
+      delay: Math.random() * 0.15,
+      shape: i % 3 === 0 ? "circle" : i % 3 === 1 ? "rect" : "strip",
+    }))
+  ).current;
+
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center overflow-hidden">
+      {particles.map(p => {
+        const rad = (p.angle * Math.PI) / 180;
+        const tx = Math.cos(rad) * p.dist;
+        const ty = Math.sin(rad) * p.dist - 80;
+        return (
+          <motion.div
+            key={p.id}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0, rotate: 0 }}
+            animate={{ x: tx, y: ty, opacity: 0, scale: 1, rotate: p.rot }}
+            transition={{ duration: 0.9 + Math.random() * 0.5, delay: p.delay, ease: [0.2, 0.8, 0.4, 1] }}
+            style={{
+              position: "absolute",
+              width: p.shape === "strip" ? 3 : p.size,
+              height: p.shape === "strip" ? p.size * 2.5 : p.size,
+              borderRadius: p.shape === "circle" ? "50%" : p.shape === "strip" ? 2 : 2,
+              backgroundColor: p.color,
+            }}
+          />
+        );
+      })}
+      <motion.div
+        initial={{ scale: 0, opacity: 1 }}
+        animate={{ scale: 3.5, opacity: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        style={{ position: "absolute", width: 40, height: 40, borderRadius: "50%", backgroundColor: "#FFD700", opacity: 0.5 }}
+      />
+    </div>
+  );
+}
+
 function BudgetContent() {
   const { fmt, symbol } = useCurrency();
   const { user } = useAuth();
@@ -154,7 +206,9 @@ function BudgetContent() {
   const [copying, setCopying] = useState(false);
   const [copyDone, setCopyDone] = useState(false);
   const [copyError, setCopyError] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
   const saveTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const prevGoalMet = useRef<boolean | null>(null);
 
   const monthName = new Date(year, month - 1).toLocaleDateString("en-GB", { month: "long", year: "numeric" });
 
@@ -377,6 +431,17 @@ function BudgetContent() {
   const isLateInMonth = today.getDate() >= 20;
   const showNudge = !goalMet && isCurrentMonth && isLateInMonth && (income > 0 || saved > 0);
 
+  // Fire confetti when goal transitions from not-met → met
+  useEffect(() => {
+    if (loading) return;
+    if (prevGoalMet.current === false && goalMet === true) {
+      setShowConfetti(true);
+      const t = setTimeout(() => setShowConfetti(false), 2200);
+      return () => clearTimeout(t);
+    }
+    prevGoalMet.current = goalMet;
+  }, [goalMet, loading]);
+
   const ytdTotal = ytdData.reduce((a, p) => a + p.saved, 0);
   const OUTGOING_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
   const pieData = [
@@ -396,6 +461,7 @@ function BudgetContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-5 pb-10">
+      <ConfettiBurst show={showConfetti} />
       {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
         <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">←</button>
