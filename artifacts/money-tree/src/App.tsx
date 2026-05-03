@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
 import Onboarding from "@/pages/Onboarding";
 import BudgetPage from "@/pages/BudgetPage";
 import TreePage from "@/pages/TreePage";
@@ -34,6 +35,7 @@ function AppRoutes() {
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/onboarding">
         <ProtectedRoute requireOnboarding={false}>
           <Onboarding />
