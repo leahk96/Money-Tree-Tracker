@@ -33,7 +33,6 @@ function calcStreak(summaries: MonthSummary[]): { current: number; best: number 
 
   const sorted = [...summaries].sort((a, b) => a.month - b.month);
 
-  let current = 0;
   let best = 0;
   let streak = 0;
 
@@ -46,9 +45,8 @@ function calcStreak(summaries: MonthSummary[]): { current: number; best: number 
       streak = 0;
     }
   }
-  current = streak;
 
-  return { current, best };
+  return { current: streak, best };
 }
 
 export function useTreeData() {
@@ -85,16 +83,22 @@ export function useTreeData() {
 
     const monthIds = months.map((m: Month) => m.id);
 
-    // savings = explicit savings bucket line items (Emergency fund, ISA, etc.)
+    // Fetch all line items — saved = income − expenses (bills+needs+wants+debt)
     const { data: items } = await supabase
       .from("line_items")
-      .select("*")
-      .in("month_id", monthIds)
-      .eq("section", "savings");
+      .select("month_id, section, amount, actual_amount")
+      .in("month_id", monthIds);
 
     const summaries: MonthSummary[] = months.map((m: Month) => {
-      const monthItems = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
-      const totalSaved = monthItems.reduce((s, i) => s + i.amount, 0);
+      const mi = (items as LineItem[] ?? []).filter(i => i.month_id === m.id);
+      const income = mi.filter(i => i.section === "income").reduce((s, i) => s + i.amount, 0);
+      const expenses = mi
+        .filter(i => ["bills", "debt"].includes(i.section))
+        .reduce((s, i) => s + i.amount, 0)
+        + mi
+          .filter(i => ["needs", "wants"].includes(i.section))
+          .reduce((s, i) => s + (i.actual_amount ?? i.amount), 0);
+      const totalSaved = Math.max(0, income - expenses);
       return {
         year: m.year,
         month: m.month,
