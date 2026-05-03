@@ -76,40 +76,40 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Money Tree brand palette: #a8d5e2 #f9a620 #ffd449 #548c2f #104911 #265a27 */
+  /* Money Tree brand palette: #540d6e #ee4266 #ffd23f #3bceac #0ead69 #035c37 */
   --background: 0 0% 98%;
-  --foreground: 121 64% 17%;      /* #104911 Black Forest */
+  --foreground: 155 94% 19%;      /* #035c37 Emerald Depths */
   --border: 0 0% 88%;
   --card: 0 0% 100%;
-  --card-foreground: 121 64% 17%;
+  --card-foreground: 155 94% 19%;
   --card-border: 0 0% 88%;
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 121 64% 17%;
+  --sidebar-foreground: 155 94% 19%;
   --sidebar-border: 0 0% 88%;
-  --sidebar-primary: 121 41% 25%; /* #265a27 Hunter Green */
+  --sidebar-primary: 155 94% 19%; /* #035c37 Emerald Depths */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 96 50% 94%;   /* very light Forest Green tint */
-  --sidebar-accent-foreground: 121 64% 17%;
-  --sidebar-ring: 121 41% 25%;
+  --sidebar-accent: 154 60% 93%;  /* very light Jungle Green tint */
+  --sidebar-accent-foreground: 155 94% 19%;
+  --sidebar-ring: 155 94% 19%;
   --popover: 0 0% 100%;
-  --popover-foreground: 121 64% 17%;
+  --popover-foreground: 155 94% 19%;
   --popover-border: 0 0% 88%;
-  --primary: 121 41% 25%;         /* #265a27 Hunter Green */
+  --primary: 155 94% 19%;         /* #035c37 Emerald Depths */
   --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 96%;
-  --secondary-foreground: 121 64% 17%;
+  --secondary-foreground: 155 94% 19%;
   --muted: 0 0% 95%;
   --muted-foreground: 200 12% 45%;
-  --accent: 96 50% 94%;
-  --accent-foreground: 121 64% 17%;
-  --destructive: 350 70% 55%;
+  --accent: 154 60% 93%;
+  --accent-foreground: 155 94% 19%;
+  --destructive: 347 83% 60%;     /* #ee4266 Watermelon */
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 88%;
-  --ring: 121 41% 25%;
-  --chart-1: 121 41% 25%;   /* savings Hunter Green #265a27 */
-  --chart-2: 37 95% 55%;    /* bills Orange #f9a620 */
-  --chart-3: 193 50% 77%;   /* needs Light Blue #a8d5e2 */
-  --chart-4: 46 100% 64%;   /* wants Mustard #ffd449 */
+  --ring: 155 94% 19%;
+  --chart-1: 155 94% 19%;   /* savings Emerald Depths #035c37 */
+  --chart-2: 347 83% 60%;   /* bills Watermelon #ee4266 */
+  --chart-3: 166 60% 52%;   /* needs Turquoise #3bceac */
+  --chart-4: 46 100% 62%;   /* wants Golden Pollen #ffd23f */
   --chart-5: 200 18% 46%;   /* debt blue-grey #607D8B */
 
   --app-font-sans: 'Inter', sans-serif;

@@ -6,19 +6,19 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 import { Section } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
-  income:  { label: "Income",  emoji: "💰", color: "#548c2f", textColor: "#104911", rowBg: "#F5F5F5" },
-  savings: { label: "Savings", emoji: "🌱", color: "#265a27", textColor: "#104911", rowBg: "#ebf5df" },
-  bills:   { label: "Bills",   emoji: "🏠", color: "#f9a620", textColor: "#d4880a", rowBg: "#fef6e0" },
-  needs:   { label: "Needs",   emoji: "🛒", color: "#a8d5e2", textColor: "#104911", rowBg: "#e8f5f9" },
-  wants:   { label: "Wants",   emoji: "✨", color: "#ffd449", textColor: "#d4880a", rowBg: "#fef9e0" },
+  income:  { label: "Income",  emoji: "💰", color: "#0ead69", textColor: "#035c37", rowBg: "#F5F5F5" },
+  savings: { label: "Savings", emoji: "🌱", color: "#035c37", textColor: "#035c37", rowBg: "#e2f9f0" },
+  bills:   { label: "Bills",   emoji: "🏠", color: "#ee4266", textColor: "#c23354", rowBg: "#fde8ed" },
+  needs:   { label: "Needs",   emoji: "🛒", color: "#3bceac", textColor: "#035c37", rowBg: "#e0f9f4" },
+  wants:   { label: "Wants",   emoji: "✨", color: "#ffd23f", textColor: "#c23354", rowBg: "#fff9d0" },
   debt:    { label: "Debt",    emoji: "💳", color: "#607D8B", textColor: "#37474F", rowBg: "#ECEFF1" },
 };
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
-  income: "#548c2f", savings: "#265a27", bills: "#f9a620",
-  needs: "#a8d5e2", wants: "#ffd449", debt: "#607D8B",
+  income: "#0ead69", savings: "#035c37", bills: "#ee4266",
+  needs: "#3bceac", wants: "#ffd23f", debt: "#607D8B",
 };
 const PRIOR_MONTHS = [
   { month: "Jan", saved: 220 },
@@ -44,7 +44,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
   const [focused, setFocused] = useState(false);
   const [local, setLocal] = useState(value === 0 ? "" : String(value));
   return (
-    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#265a27] bg-white ring-1 ring-[#265a27]/20" : "border-transparent"}`}>
+    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#035c37] bg-white ring-1 ring-[#035c37]/20" : "border-transparent"}`}>
       <span className="text-xs text-[#9E9E9E] pl-1.5">{symbol}</span>
       <input
         type="number" min="0" step="0.01"
@@ -53,7 +53,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
         onFocus={() => { setFocused(true); setLocal(value === 0 ? "" : String(value)); }}
         onBlur={() => setFocused(false)}
         placeholder="—"
-        className="w-20 py-1 pr-1.5 text-sm text-right bg-transparent focus:outline-none text-[#104911] font-medium tabular-nums"
+        className="w-20 py-1 pr-1.5 text-sm text-right bg-transparent focus:outline-none text-[#035c37] font-medium tabular-nums"
       />
     </div>
   );
@@ -63,7 +63,7 @@ const ChartTooltip = ({ active, payload }: any) => {
   const { fmt } = useCurrency();
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white border border-[#E8E8E8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#104911]">
+    <div className="bg-white border border-[#E8E8E8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#035c37]">
       {fmt(payload[0].value)}
     </div>
   );
@@ -100,7 +100,7 @@ function SideBySideSection({
         <div key={item.id} className="flex items-center border-b border-[#F5F5F5] hover:bg-[#FAFAFA] group px-3 py-1.5">
           <span className="text-xs text-[#37474F] flex-1 truncate pr-2">{item.name}</span>
           <AmountInput value={item.amount} onChange={v => onUpdate(section, item.id, v)} />
-          <button onClick={() => onDelete(section, item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
+          <button onClick={() => onDelete(section, item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#ee4266] transition text-xs flex items-center justify-center">×</button>
         </div>
       ))}
       <div className="px-3 py-1.5">
@@ -108,12 +108,12 @@ function SideBySideSection({
           <div className="flex gap-1">
             <input autoFocus value={newRowName} onChange={e => onNewRowNameChange(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") onAddConfirm(section); if (e.key === "Escape") onAddCancel(); }}
-              placeholder="Item name…" className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#265a27]" />
-            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#265a27] text-white text-xs rounded">Add</button>
+              placeholder="Item name…" className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#035c37]" />
+            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#035c37] text-white text-xs rounded">Add</button>
             <button onClick={onAddCancel} className="px-1.5 py-0.5 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">✕</button>
           </div>
         ) : (
-          <button onClick={() => onAddStart(section)} className="text-xs text-[#265a27] hover:text-[#104911] font-medium">+ Add row</button>
+          <button onClick={() => onAddStart(section)} className="text-xs text-[#035c37] hover:text-[#035c37] font-medium">+ Add row</button>
         )}
       </div>
     </div>
@@ -170,19 +170,19 @@ export default function BudgetDemo() {
     ...OUTGOING_SECTIONS
       .map(s => ({ name: SECTION_CONFIG[s].label, value: totalActual(s), key: s, color: PIE_COLORS[s] }))
       .filter(d => d.value > 0),
-    ...(saved > 0 ? [{ name: "Savings", value: saved, key: "savings", color: "#548c2f" }] : []),
+    ...(saved > 0 ? [{ name: "Savings", value: saved, key: "savings", color: "#0ead69" }] : []),
   ];
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#265a27] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#035c37] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to save your data
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌳</span>
-          <span className="text-base font-bold text-[#104911]">Money Tree</span>
+          <span className="text-base font-bold text-[#035c37]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {[
@@ -191,20 +191,20 @@ export default function BudgetDemo() {
             { label: "Garden",  to: "/garden-demo" },
             { label: "Summary", to: "/summary-demo" },
           ].map(n => (
-            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to === "/demo" ? "bg-[#ebf5df] text-[#265a27]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
+            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to === "/demo" ? "bg-[#e2f9f0] text-[#035c37]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#265a27] text-white px-4 py-2 rounded-lg hover:bg-[#104911] transition font-medium">Get started</Link>
+        <Link to="/signup" className="text-sm bg-[#035c37] text-white px-4 py-2 rounded-lg hover:bg-[#035c37] transition font-medium">Get started</Link>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-5 pb-10">
         <div className="flex items-center justify-between mb-4">
-          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition">←</button>
-          <h2 className="text-base font-semibold text-[#104911]">May 2026</h2>
-          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#265a27] transition">→</button>
+          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#035c37] transition">←</button>
+          <h2 className="text-base font-semibold text-[#035c37]">May 2026</h2>
+          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#035c37] transition">→</button>
         </div>
 
-        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#265a27]" : "bg-[#f9a620]"}`}>
+        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#035c37]" : "bg-[#ee4266]"}`}>
           <div>
             <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
             <div className="text-white font-bold text-xl tabular-nums">
@@ -300,7 +300,7 @@ export default function BudgetDemo() {
                           <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(section, item.id, v)} />
                         </div>
                         <div className="flex items-center justify-center">
-                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
+                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#ee4266] transition text-xs flex items-center justify-center">×</button>
                         </div>
                       </div>
                     ) : (
@@ -312,7 +312,7 @@ export default function BudgetDemo() {
                           <AmountInput value={item.amount} onChange={v => updateExpected(section, item.id, v)} />
                         </div>
                         <div className="flex items-center justify-center">
-                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
+                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#ee4266] transition text-xs flex items-center justify-center">×</button>
                         </div>
                       </div>
                     ))}
@@ -322,12 +322,12 @@ export default function BudgetDemo() {
                         <div className="flex gap-2 pl-9 pr-3 py-2">
                           <input autoFocus value={newRowName} onChange={e => setNewRowName(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
-                            placeholder="Item name…" className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#265a27]" />
-                          <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#265a27] text-white text-xs rounded hover:bg-[#104911]">Add</button>
+                            placeholder="Item name…" className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#035c37]" />
+                          <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#035c37] text-white text-xs rounded hover:bg-[#035c37]">Add</button>
                           <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                         </div>
                       ) : (
-                        <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#265a27] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                        <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#035c37] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                       )}
                     </div>
                   </div>
@@ -336,18 +336,18 @@ export default function BudgetDemo() {
 
               {/* Footer totals */}
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t-2 border-[#E0E0E0]">
-                <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Total income</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#265a27]">{fmt(income)}</div>
+                <div className="px-4 py-2.5 text-sm font-bold text-[#035c37]">Total income</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#035c37]">{fmt(income)}</div>
                 <div />
               </div>
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
-                <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Total allocated</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#f9a620]">{fmt(allocated)}</div>
+                <div className="px-4 py-2.5 text-sm font-bold text-[#035c37]">Total allocated</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#ee4266]">{fmt(allocated)}</div>
                 <div />
               </div>
-              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#265a27] bg-[#ebf5df]" : "border-[#f9a620] bg-[#fef6e0]"}`}>
-                <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Remaining balance</div>
-                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
+              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#035c37] bg-[#e2f9f0]" : "border-[#ee4266] bg-[#fde8ed]"}`}>
+                <div className="px-4 py-2.5 text-sm font-bold text-[#035c37]">Remaining balance</div>
+                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#035c37]" : "text-[#ee4266]"}`}>
                   {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </div>
                 <div />
@@ -362,24 +362,24 @@ export default function BudgetDemo() {
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
               <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
-              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
+              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#035c37]" : "text-[#ee4266]"}`}>
                 {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
-                <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#548c2f]" : "bg-[#f9a620]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
+                <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#0ead69]" : "bg-[#ee4266]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
               </div>
               <div className="mb-3" />
 
               <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
                 <div className="flex items-start justify-between">
                   <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
-                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
+                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#035c37]" : "text-[#ee4266]"}`}>
                     {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-[#F5F5F5]">
                   <span className="text-xs text-[#607D8B]">Savings target</span>
-                  <span className="text-sm font-semibold tabular-nums text-[#104911]">{fmt(savingsGoal)}</span>
+                  <span className="text-sm font-semibold tabular-nums text-[#035c37]">{fmt(savingsGoal)}</span>
                 </div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export default function BudgetDemo() {
             {/* YTD savings */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-1">Saved year to date</div>
-              <div className="text-2xl font-bold text-[#265a27] tabular-nums mb-3">{fmt(ytdTotal)}</div>
+              <div className="text-2xl font-bold text-[#035c37] tabular-nums mb-3">{fmt(ytdTotal)}</div>
               <ResponsiveContainer width="100%" height={90}>
                 <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
@@ -396,7 +396,7 @@ export default function BudgetDemo() {
                   <Tooltip content={<ChartTooltip />} cursor={{ fill: "#F5F5F5" }} />
                   <Bar dataKey="saved" radius={[3,3,0,0]}>
                     {ytdData.map((_, i) => (
-                      <Cell key={i} fill={i === ytdData.length - 1 ? "#265a27" : "#548c2f"} />
+                      <Cell key={i} fill={i === ytdData.length - 1 ? "#035c37" : "#0ead69"} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -418,7 +418,7 @@ export default function BudgetDemo() {
                   </PieChart>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <span className="text-[9px] text-[#9E9E9E] leading-none">total</span>
-                    <span className="text-[11px] font-bold text-[#104911] leading-tight tabular-nums">{fmt(income)}</span>
+                    <span className="text-[11px] font-bold text-[#035c37] leading-tight tabular-nums">{fmt(income)}</span>
                   </div>
                 </div>
               </div>
@@ -428,7 +428,7 @@ export default function BudgetDemo() {
                     <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                     <span className="text-xs text-[#546E7A] flex-1">{entry.name}</span>
                     <span className="text-[10px] text-[#9E9E9E] tabular-nums mr-1">{Math.round((entry.value / income) * 100)}%</span>
-                    <span className="text-xs font-semibold text-[#104911] tabular-nums">{fmt(entry.value)}</span>
+                    <span className="text-xs font-semibold text-[#035c37] tabular-nums">{fmt(entry.value)}</span>
                   </div>
                 ))}
               </div>

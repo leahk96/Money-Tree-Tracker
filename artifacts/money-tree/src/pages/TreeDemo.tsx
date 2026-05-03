@@ -41,7 +41,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
           animate={{ scale: 1 }}
           transition={{ type: "spring", bounce: 0.5, delay: 0.15 + index * 0.08 }}
           className="w-16 h-16 rounded-full flex items-center justify-center shadow-md text-3xl"
-          style={{ background: "radial-gradient(circle at 35% 35%, #ffd449, #f9a620)" }}
+          style={{ background: "radial-gradient(circle at 35% 35%, #ffd23f, #ee4266)" }}
         >
           <motion.span
             animate={{ scale: [1, 1.1, 1] }}
@@ -55,9 +55,9 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
           <span className="text-3xl opacity-20">🪙</span>
         </div>
       )}
-      <span className={`text-xs font-bold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{label}</span>
+      <span className={`text-xs font-bold ${earned ? "text-[#ffd23f]" : "text-[#9E9E9E]"}`}>{label}</span>
       <span className="text-[10px] text-[#9E9E9E] text-center leading-tight">{months}</span>
-      <span className={`text-[10px] font-medium ${earned ? "text-[#ffd449]" : "text-[#ebf5df]"}`}>
+      <span className={`text-[10px] font-medium ${earned ? "text-[#ffd23f]" : "text-[#e2f9f0]"}`}>
         {earned ? "✓ Earned!" : "Locked"}
       </span>
     </motion.div>
@@ -68,14 +68,14 @@ export default function TreeDemo() {
   const { fmt } = useCurrency();
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#265a27] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#035c37] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own tree
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <span className="text-xl">🌳</span>
-          <span className="text-base font-bold text-[#104911]">Money Tree</span>
+          <span className="text-base font-bold text-[#035c37]">Money Tree</span>
         </div>
         <nav className="hidden md:flex items-center gap-1">
           {[
@@ -84,10 +84,10 @@ export default function TreeDemo() {
             { label:"Garden", to:"/garden-demo" },
             { label:"Summary", to:"/summary-demo" },
           ].map(n => (
-            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/tree-demo" ? "bg-[#ebf5df] text-[#265a27]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
+            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/tree-demo" ? "bg-[#e2f9f0] text-[#035c37]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#265a27] text-white px-4 py-2 rounded-lg hover:bg-[#104911] transition font-medium">Get started</Link>
+        <Link to="/signup" className="text-sm bg-[#035c37] text-white px-4 py-2 rounded-lg hover:bg-[#035c37] transition font-medium">Get started</Link>
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-5 pb-10">
@@ -99,8 +99,8 @@ export default function TreeDemo() {
           className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
         >
           <div className="flex items-center justify-between mb-1">
-            <h2 className="font-bold text-[#104911] text-base">Your Money Tree</h2>
-            <span className="text-xs font-semibold text-[#265a27] bg-[#ebf5df] px-2.5 py-1 rounded-full">
+            <h2 className="font-bold text-[#035c37] text-base">Your Money Tree</h2>
+            <span className="text-xs font-semibold text-[#035c37] bg-[#e2f9f0] px-2.5 py-1 rounded-full">
               {MONTHS_MET}/12 goals met
             </span>
           </div>
@@ -117,7 +117,7 @@ export default function TreeDemo() {
             </p>
             <div className="flex gap-1 shrink-0 ml-3">
               {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#265a27]" : "bg-[#E0E0E0]"}`} />
+                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#035c37]" : "bg-[#E0E0E0]"}`} />
               ))}
             </div>
           </div>
@@ -128,11 +128,11 @@ export default function TreeDemo() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.07 }}
-          className="bg-gradient-to-r from-[#fef6e0] to-[#fef9e0] rounded-2xl border border-[#ffd449] p-4 flex items-center justify-between"
+          className="bg-gradient-to-r from-[#fde8ed] to-[#fff9d0] rounded-2xl border border-[#ffd23f] p-4 flex items-center justify-between"
         >
           <div>
-            <div className="text-base font-bold text-[#d4880a]">🔥 4 month streak!</div>
-            <div className="text-xs text-[#d4880a] mt-0.5">Q1 coin earned — 2 more months in Q2 to get your next one</div>
+            <div className="text-base font-bold text-[#c23354]">🔥 4 month streak!</div>
+            <div className="text-xs text-[#c23354] mt-0.5">Q1 coin earned — 2 more months in Q2 to get your next one</div>
           </div>
           <div className="text-4xl">🔥</div>
         </motion.div>
@@ -144,19 +144,19 @@ export default function TreeDemo() {
           transition={{ delay: 0.1 }}
           className="bg-white rounded-2xl border border-[#E8E8E8] overflow-hidden"
         >
-          <div className="h-24 bg-gradient-to-br from-[#104911] to-[#548c2f] flex items-center justify-center text-5xl select-none">
+          <div className="h-24 bg-gradient-to-br from-[#035c37] to-[#0ead69] flex items-center justify-center text-5xl select-none">
             🏝️
           </div>
           <div className="p-4">
             <div className="text-xs text-[#546E7A] mb-0.5">Saving for</div>
-            <div className="text-lg font-bold text-[#104911]">Bali 2026</div>
+            <div className="text-lg font-bold text-[#035c37]">Bali 2026</div>
             <div className="mt-2 text-sm text-[#546E7A]">
               Saved so far:&nbsp;
-              <span className="font-semibold text-[#265a27]">{fmt(2030)}</span>
+              <span className="font-semibold text-[#035c37]">{fmt(2030)}</span>
               <span className="text-[#9E9E9E]"> / {fmt(8000)}</span>
             </div>
             <div className="mt-2 w-full bg-[#E8E8E8] rounded-full h-1.5">
-              <div className="bg-[#265a27] h-1.5 rounded-full" style={{ width: "25%" }} />
+              <div className="bg-[#035c37] h-1.5 rounded-full" style={{ width: "25%" }} />
             </div>
           </div>
         </motion.div>
@@ -177,7 +177,7 @@ export default function TreeDemo() {
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
           >
             <div className="flex items-start justify-between mb-1">
-              <h3 className="font-bold text-[#104911]">Quarterly coins</h3>
+              <h3 className="font-bold text-[#035c37]">Quarterly coins</h3>
               <span className="text-xs text-[#9E9E9E]">{coinsEarned}/4 earned</span>
             </div>
             <p className="text-xs text-[#607D8B] mb-5">
@@ -195,13 +195,13 @@ export default function TreeDemo() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18 }}
-            className={`mt-3 rounded-2xl border p-5 ${bullion ? "border-[#ffd449] bg-gradient-to-br from-[#fef9e0] to-[#fdfae8]" : "border-[#E8E8E8] bg-white"}`}
+            className={`mt-3 rounded-2xl border p-5 ${bullion ? "border-[#ffd23f] bg-gradient-to-br from-[#fff9d0] to-[#fdfce6]" : "border-[#E8E8E8] bg-white"}`}
           >
             {bullion ? (
               <div className="text-center space-y-2">
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", bounce: 0.5 }} className="text-5xl">🏆</motion.div>
-                <div className="font-bold text-[#ffd449] text-lg">Gold bullion unlocked!</div>
-                <div className="text-sm text-[#d4880a]">You hit your goal every single month. Extraordinary!</div>
+                <div className="font-bold text-[#ffd23f] text-lg">Gold bullion unlocked!</div>
+                <div className="text-sm text-[#c23354]">You hit your goal every single month. Extraordinary!</div>
               </div>
             ) : (
               <div className="flex items-center gap-4 text-left">
@@ -209,10 +209,10 @@ export default function TreeDemo() {
                 <div className="shrink-0">
                   <svg width="52" height="34" viewBox="0 0 52 34" className="opacity-30">
                     <rect x="4" y="8" width="44" height="22" rx="4" fill="#C8960C" />
-                    <rect x="2" y="6" width="48" height="22" rx="4" fill="#ffd449" />
+                    <rect x="2" y="6" width="48" height="22" rx="4" fill="#ffd23f" />
                     <rect x="6" y="10" width="40" height="14" rx="2" fill="none" stroke="#C8960C" strokeWidth="1.2" />
                     <rect x="2" y="6" width="48" height="6" rx="4" fill="rgba(255,255,255,0.18)" />
-                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#d4880a" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
+                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#c23354" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
                   </svg>
                 </div>
                 <div>
@@ -220,7 +220,7 @@ export default function TreeDemo() {
                   <div className="text-xs text-[#9E9E9E] mt-0.5">
                     Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bar.
                   </div>
-                  <div className="text-xs text-[#f9a620] mt-1.5 font-medium">
+                  <div className="text-xs text-[#ee4266] mt-1.5 font-medium">
                     {coinsEarned}/4 coins — {4 - coinsEarned} more quarter{4 - coinsEarned !== 1 ? "s" : ""} to go
                   </div>
                 </div>
