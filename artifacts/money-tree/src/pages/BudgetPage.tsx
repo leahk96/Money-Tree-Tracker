@@ -673,8 +673,8 @@ function BudgetContent() {
             </div>
             <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
               <div
-                className={`h-3 rounded-full transition-all duration-500 ${amountLeftToSpend >= 0 ? "bg-[#4CAF50]" : "bg-[#C62828]"}`}
-                style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (amountLeftToSpend / income) * 100)) : 0}%` }}
+                className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#4CAF50]" : "bg-[#C62828]"}`}
+                style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }}
               />
             </div>
             <div className="flex justify-between text-[10px] text-[#9E9E9E] mb-4">
@@ -683,15 +683,15 @@ function BudgetContent() {
             </div>
 
             <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-[#607D8B]">Savings target</span>
-                <span className="text-sm font-semibold tabular-nums text-[#1B5E20]">{formatCurrency(savingsGoal)}</span>
-              </div>
-              <div className="flex items-start justify-between pt-2 border-t border-[#F5F5F5]">
+              <div className="flex items-start justify-between">
                 <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
                 <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
                   {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
                 </span>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-[#F5F5F5]">
+                <span className="text-xs text-[#607D8B]">Savings target</span>
+                <span className="text-sm font-semibold tabular-nums text-[#1B5E20]">{formatCurrency(savingsGoal)}</span>
               </div>
             </div>
           </div>
