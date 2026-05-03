@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
-import { Month, LineItem } from "@/lib/types";
+import { Month, LineItem, Section } from "@/lib/types";
 
 export interface MonthDetail {
   month: number;
@@ -9,6 +9,8 @@ export interface MonthDetail {
   savingsGoal: number;
   goalMet: boolean;
   hasData: boolean;
+  needsTotal: number;
+  wantsTotal: number;
 }
 
 export interface YearData {
@@ -24,6 +26,14 @@ export interface YearData {
   bullionUnlocked: boolean;
   currentStreak: number;
   bestStreak: number;
+}
+
+const DUAL_AMOUNT: Section[] = ["needs", "wants"];
+
+function effectiveAmount(item: LineItem): number {
+  return DUAL_AMOUNT.includes(item.section) && item.actual_amount !== null && item.actual_amount !== undefined
+    ? item.actual_amount
+    : item.amount;
 }
 
 function calcStreaks(details: MonthDetail[], year: number): { current: number; best: number } {
@@ -45,13 +55,14 @@ export function useYearData(targetYear: number) {
   const [data, setData] = useState<YearData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetch = useCallback(async () => {
+  const load = useCallback(async () => {
     if (!user) { setLoading(false); return; }
     setLoading(true);
 
     const currentYear = new Date().getFullYear();
-    const empty = Array.from({ length: 12 }, (_, i) => ({
+    const empty: MonthDetail[] = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1, totalSaved: 0, savingsGoal: 500, goalMet: false, hasData: false,
+      needsTotal: 0, wantsTotal: 0,
     }));
 
     const { data: months } = await supabase
@@ -70,19 +81,40 @@ export function useYearData(targetYear: number) {
     }
 
     const monthIds = months.map((m: Month) => m.id);
-    const { data: items } = await supabase
-      .from("line_items").select("month_id,amount")
-      .in("month_id", monthIds).eq("section", "savings");
 
+    // Fetch all sections so we can derive income, savings, needs, wants properly
+    const { data: items } = await supabase
+      .from("line_items")
+      .select("month_id, section, amount, actual_amount")
+      .in("month_id", monthIds);
+
+    const allItems: LineItem[] = (items ?? []) as LineItem[];
     const monthMap = new Map(months.map((m: Month) => [m.month, m]));
+
     const monthDetails: MonthDetail[] = Array.from({ length: 12 }, (_, i) => {
       const m = i + 1;
-      const rec = monthMap.get(m);
-      if (!rec) return { month: m, totalSaved: 0, savingsGoal: 500, goalMet: false, hasData: false };
-      const saved = (items ?? [])
-        .filter((it: LineItem) => it.month_id === rec.id)
-        .reduce((s: number, it: LineItem) => s + it.amount, 0);
-      return { month: m, totalSaved: saved, savingsGoal: rec.savings_goal, goalMet: saved >= rec.savings_goal, hasData: true };
+      const rec = monthMap.get(m) as Month | undefined;
+      if (!rec) return { month: m, totalSaved: 0, savingsGoal: 500, goalMet: false, hasData: false, needsTotal: 0, wantsTotal: 0 };
+
+      const monthItems = allItems.filter(it => it.month_id === rec.id);
+      const income     = monthItems.filter(it => it.section === "income").reduce((s, it) => s + it.amount, 0);
+      const bills      = monthItems.filter(it => it.section === "bills").reduce((s, it) => s + it.amount, 0);
+      const debt       = monthItems.filter(it => it.section === "debt").reduce((s, it) => s + it.amount, 0);
+      const needsTotal = monthItems.filter(it => it.section === "needs").reduce((s, it) => s + effectiveAmount(it), 0);
+      const wantsTotal = monthItems.filter(it => it.section === "wants").reduce((s, it) => s + effectiveAmount(it), 0);
+      const expenses   = bills + debt + needsTotal + wantsTotal;
+      const saved      = income - expenses;
+      const hasData    = monthItems.length > 0;
+
+      return {
+        month: m,
+        totalSaved: Math.max(0, saved),
+        savingsGoal: rec.savings_goal,
+        goalMet: hasData && saved >= rec.savings_goal,
+        hasData,
+        needsTotal,
+        wantsTotal,
+      };
     });
 
     const goalsMetCount = monthDetails.filter(d => d.goalMet).length;
@@ -105,8 +137,8 @@ export function useYearData(targetYear: number) {
     setLoading(false);
   }, [user, targetYear]);
 
-  useEffect(() => { fetch(); }, [fetch]);
-  return { data, loading, refresh: fetch };
+  useEffect(() => { load(); }, [load]);
+  return { data, loading, refresh: load };
 }
 
 export function useAvailableYears() {

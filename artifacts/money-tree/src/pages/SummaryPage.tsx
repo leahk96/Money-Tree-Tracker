@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLocation, useParams } from "wouter";
+import {
+  BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip,
+  ResponsiveContainer, ReferenceLine, CartesianGrid, Legend,
+} from "recharts";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
@@ -14,6 +18,22 @@ const QUARTERS = [
   { label:"Q3", months:"Jul–Sep", q:"q3Earned" as const },
   { label:"Q4", months:"Oct–Dec", q:"q4Earned" as const },
 ];
+
+function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
+  const { fmt } = useCurrency();
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white border border-[#E8E8E8] rounded-xl p-3 shadow-lg text-xs min-w-[110px]">
+      <div className="font-semibold text-[#1B5E20] mb-1.5">{label}</div>
+      {payload.map(p => (
+        <div key={p.name} className="flex items-center justify-between gap-3">
+          <span style={{ color: p.color }}>{p.name}</span>
+          <span className="font-semibold text-[#1B5E20] tabular-nums">{fmt(p.value)}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function SummaryContent() {
   const { fmt } = useCurrency();
@@ -51,6 +71,20 @@ function SummaryContent() {
   // Calculate how much above/below total goal
   const totalGoal = monthDetails.filter(d => d.hasData).reduce((s, d) => s + d.savingsGoal, 0);
   const vsGoal = totalSaved - totalGoal;
+
+  // Chart data — only months with actual data
+  const activeMonths = monthDetails.filter(d => d.hasData);
+  const chartMonths = activeMonths.map(d => ({
+    month: MONTH_NAMES[d.month - 1],
+    Saved: d.totalSaved,
+    Goal: d.savingsGoal,
+    Needs: d.needsTotal,
+    Wants: d.wantsTotal,
+  }));
+
+  // Spending insights
+  const lowestWantsMonth = activeMonths.length > 1 ? activeMonths.reduce((a, b) => b.wantsTotal < a.wantsTotal ? b : a) : null;
+  const lowestNeedsMonth = activeMonths.length > 1 ? activeMonths.reduce((a, b) => b.needsTotal < a.needsTotal ? b : a) : null;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 pb-16 space-y-5">
@@ -134,11 +168,77 @@ function SummaryContent() {
         ))}
       </div>
 
+      {/* Monthly savings bar chart */}
+      {chartMonths.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+          className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
+        >
+          <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Monthly savings</h3>
+          <p className="text-xs text-[#9E9E9E] mb-4">How much you put away each month vs your goal</p>
+          <ResponsiveContainer width="100%" height={180}>
+            <BarChart data={chartMonths} barGap={2} barSize={chartMonths.length > 6 ? 14 : 22}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                tickFormatter={v => fmt(v)} width={48} />
+              <Tooltip content={<ChartTooltip />} />
+              <ReferenceLine y={chartMonths[0]?.Goal ?? 500} stroke="#FFD700" strokeDasharray="4 3" strokeWidth={1.5}
+                label={{ value: "Goal", position: "right", fontSize: 9, fill: "#D4AF37" }} />
+              <Bar dataKey="Saved" fill="#2E7D32" radius={[3, 3, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </motion.div>
+      )}
+
+      {/* Spending patterns line chart */}
+      {chartMonths.length > 1 && (
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24 }}
+          className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
+        >
+          <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Spending patterns</h3>
+          <p className="text-xs text-[#9E9E9E] mb-4">Needs and wants spending month by month</p>
+          <ResponsiveContainer width="100%" height={180}>
+            <LineChart data={chartMonths}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
+              <XAxis dataKey="month" tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: "#9E9E9E" }} axisLine={false} tickLine={false}
+                tickFormatter={v => fmt(v)} width={48} />
+              <Tooltip content={<ChartTooltip />} />
+              <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
+              <Line dataKey="Needs" stroke="#1565C0" strokeWidth={2} dot={{ r: 3, fill: "#1565C0" }} activeDot={{ r: 4 }} />
+              <Line dataKey="Wants" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: "#E65100" }} activeDot={{ r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
+
+          {/* Spending insights */}
+          {lowestWantsMonth && lowestNeedsMonth && (
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <div className="bg-[#FFF3E0] rounded-xl p-3 border border-[#f0e0a0]">
+                <div className="text-[10px] text-[#9a7020] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
+                <div className="text-sm font-bold text-[#D4AF37]">{MONTH_NAMES[lowestWantsMonth.month - 1]}</div>
+                <div className="text-xs text-[#b08030]">{fmt(lowestWantsMonth.wantsTotal)} spent</div>
+              </div>
+              <div className="bg-[#E3F2FD] rounded-xl p-3 border border-[#c0d8f0]">
+                <div className="text-[10px] text-[#2a5080] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
+                <div className="text-sm font-bold text-[#3a70b0]">{MONTH_NAMES[lowestNeedsMonth.month - 1]}</div>
+                <div className="text-xs text-[#4a80c0]">{fmt(lowestNeedsMonth.needsTotal)} spent</div>
+              </div>
+            </div>
+          )}
+        </motion.div>
+      )}
+
       {/* Quarterly coins */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.3 }}
         className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
       >
         <h3 className="font-semibold text-[#1B5E20] mb-4 text-sm">Quarterly coins</h3>
