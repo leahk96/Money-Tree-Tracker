@@ -15,6 +15,7 @@ import AnalyticsPage from "@/pages/AnalyticsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import SummaryPage from "@/pages/SummaryPage";
 import GardenPage from "@/pages/GardenPage";
+import GoldVaultPage from "@/pages/GoldVaultPage";
 import BudgetDemo from "@/pages/BudgetDemo";
 import TreeDemo from "@/pages/TreeDemo";
 import GardenDemo from "@/pages/GardenDemo";
@@ -50,6 +51,7 @@ function AppRoutes() {
       <Route path="/budget/:year/:month" component={BudgetPage} />
       <Route path="/tree" component={TreePage} />
       <Route path="/garden" component={GardenPage} />
+      <Route path="/vault" component={GoldVaultPage} />
       <Route path="/summary" component={SummaryPage} />
       <Route path="/summary/:year" component={SummaryPage} />
       <Route path="/analytics" component={AnalyticsPage} />
