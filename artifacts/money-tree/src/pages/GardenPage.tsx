@@ -15,6 +15,7 @@ interface GardenYearData {
   totalSaved: number;
   isCurrent: boolean;
   hasData: boolean;
+  bullionEarned: boolean;
 }
 
 function useGardenData() {
@@ -76,6 +77,7 @@ function useGardenData() {
         totalSaved: yearsMap.get(year)?.totalSaved ?? 0,
         isCurrent: year === currentYear,
         hasData: yearsMap.has(year),
+        bullionEarned: (yearsMap.get(year)?.goalsMetCount ?? 0) === 12,
       }));
 
       setYearData(result);
@@ -84,6 +86,70 @@ function useGardenData() {
   }, [user]);
 
   return { yearData, loading };
+}
+
+function GoldBullion({ year, saved }: { year: number; saved: number }) {
+  const { fmt } = useCurrency();
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ y: -3, scale: 1.04 }}
+      className="flex flex-col items-center gap-1.5"
+    >
+      <svg viewBox="0 0 120 72" className="w-24 h-auto drop-shadow-md">
+        <defs>
+          <linearGradient id={`gold-g-${year}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#FFE566" />
+            <stop offset="30%"  stopColor="#D4AF37" />
+            <stop offset="60%"  stopColor="#B8860B" />
+            <stop offset="100%" stopColor="#8B6914" />
+          </linearGradient>
+          <linearGradient id={`gold-top-${year}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#FFF0A0" />
+            <stop offset="100%" stopColor="#D4AF37" />
+          </linearGradient>
+          <linearGradient id={`gold-side-${year}`} x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stopColor="#A07820" />
+            <stop offset="100%" stopColor="#6B4F10" />
+          </linearGradient>
+        </defs>
+        {/* Bottom face */}
+        <polygon points="10,55 110,55 110,65 10,65" fill={`url(#gold-side-${year})`} />
+        {/* Front face */}
+        <rect x="10" y="22" width="100" height="33" rx="3" fill={`url(#gold-g-${year})`} />
+        {/* Top face */}
+        <polygon points="18,14 102,14 110,22 10,22" fill={`url(#gold-top-${year})`} />
+        {/* Side face */}
+        <polygon points="102,14 110,22 110,55 102,47" fill={`url(#gold-side-${year})`} opacity="0.7" />
+        {/* Shine */}
+        <rect x="18" y="27" width="30" height="4" rx="2" fill="white" opacity="0.2" />
+        {/* Year text */}
+        <text x="60" y="43" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#6B4F10" fontFamily="sans-serif">
+          {year}
+        </text>
+      </svg>
+      <div className="text-center">
+        <div className="text-[10px] font-bold text-[#D4AF37]">12/12</div>
+        <div className="text-[9px] text-[#9E9E9E]">{fmt(saved)} saved</div>
+      </div>
+    </motion.div>
+  );
+}
+
+function LockedBullion() {
+  return (
+    <div className="flex flex-col items-center gap-1.5 opacity-40">
+      <svg viewBox="0 0 120 72" className="w-24 h-auto">
+        <rect x="10" y="22" width="100" height="33" rx="3" fill="#D0D0D0" />
+        <polygon points="18,14 102,14 110,22 10,22" fill="#E8E8E8" />
+        <polygon points="102,14 110,22 110,55 102,47" fill="#B0B0B0" />
+        <polygon points="10,55 110,55 110,65 10,65" fill="#A0A0A0" />
+        <text x="60" y="43" textAnchor="middle" fontSize="18" fontFamily="sans-serif" fill="#B0B0B0">🔒</text>
+      </svg>
+      <div className="text-[9px] text-[#BDBDBD] text-center">Hit 12/12 goals<br/>to unlock</div>
+    </div>
+  );
 }
 
 function EmptyPlot({ year }: { year: number }) {
@@ -182,6 +248,7 @@ function GardenContent() {
   const currentData = yearData.find(d => d.isCurrent);
   const totalSavedAllTime = yearData.reduce((s, d) => s + d.totalSaved, 0);
   const totalGoalsAllTime = yearData.reduce((s, d) => s + d.goalsMetCount, 0);
+  const bullionYears = yearData.filter(d => d.bullionEarned);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 pb-16 space-y-6">
@@ -265,6 +332,43 @@ function GardenContent() {
           </div>
         </div>
       </div>
+
+      {/* Bullion Collection */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="bg-gradient-to-br from-[#fffbe6] to-[#fff3c0] rounded-2xl border border-[#e8d870] p-5"
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-lg">🏅</span>
+          <h2 className="text-sm font-bold text-[#8B6914]">Gold Bullion Collection</h2>
+          {bullionYears.length > 0 && (
+            <span className="ml-auto text-[10px] font-bold text-[#D4AF37] bg-[#fff8cc] border border-[#e8d870] rounded-full px-2 py-0.5">
+              {bullionYears.length} bar{bullionYears.length !== 1 ? "s" : ""}
+            </span>
+          )}
+        </div>
+        <p className="text-[11px] text-[#a08030] mb-4">
+          Earn a gold bar by hitting all 12 monthly savings goals in a year.
+        </p>
+
+        {bullionYears.length > 0 ? (
+          <div className="flex flex-wrap gap-5 justify-start">
+            {bullionYears.map(d => (
+              <GoldBullion key={d.year} year={d.year} saved={d.totalSaved} />
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <LockedBullion />
+            <div className="text-xs text-[#b09040]">
+              <div className="font-semibold mb-0.5">No bullion yet</div>
+              <div className="text-[#c0a050]">Hit all 12 goals in a calendar year to cast your first gold bar.</div>
+            </div>
+          </div>
+        )}
+      </motion.div>
 
       {/* Footer CTA */}
       <motion.div
