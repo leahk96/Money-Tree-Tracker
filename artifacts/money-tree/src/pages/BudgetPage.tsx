@@ -272,8 +272,9 @@ function BudgetContent() {
     let prevM = month - 1, prevY = year;
     if (prevM < 1) { prevM = 12; prevY--; }
 
+    // Fetch previous month record including savings_goal
     const { data: prevMonthRecord } = await supabase
-      .from("months").select("id")
+      .from("months").select("id, savings_goal")
       .eq("user_id", user.id).eq("year", prevY).eq("month", prevM)
       .single();
 
@@ -294,38 +295,43 @@ function BudgetContent() {
       return;
     }
 
+    // 1. Copy savings goal from last month
+    const prevGoal = prevMonthRecord.savings_goal;
+    if (prevGoal && prevGoal !== monthData.savings_goal) {
+      await supabase.from("months").update({ savings_goal: prevGoal }).eq("id", monthData.id);
+      setMonthData(prev => prev ? { ...prev, savings_goal: prevGoal } : prev);
+    }
+
     const prevMap = new Map((prevItems as LineItem[]).map(i => [`${i.section}::${i.name}`, i]));
     const currentKeys = new Set(lineItems.map(i => `${i.section}::${i.name}`));
 
-    // Update amounts on existing matching rows
+    // 2. Update amounts on all existing matching rows
     const updatedItems = lineItems.map(item => {
       const prev = prevMap.get(`${item.section}::${item.name}`);
       return prev ? { ...item, amount: prev.amount } : item;
     });
     setLineItems(updatedItems);
 
-    // Persist each matched row
-    const matchedIds = updatedItems
-      .filter(item => prevMap.has(`${item.section}::${item.name}`))
-      .map(item => ({ id: item.id, amount: item.amount }));
-    await Promise.all(matchedIds.map(({ id, amount }) =>
-      supabase.from("line_items").update({ amount }).eq("id", id)
-    ));
-
-    // Insert custom rows from last month that don't exist yet
-    const newCustomRows = (prevItems as LineItem[]).filter(
-      i => i.is_custom && !currentKeys.has(`${i.section}::${i.name}`)
+    await Promise.all(
+      updatedItems
+        .filter(item => prevMap.has(`${item.section}::${item.name}`))
+        .map(({ id, amount }) => supabase.from("line_items").update({ amount }).eq("id", id))
     );
-    if (newCustomRows.length > 0) {
+
+    // 3. Insert ALL rows from last month that don't exist this month (custom or default)
+    const missingRows = (prevItems as LineItem[]).filter(
+      i => !currentKeys.has(`${i.section}::${i.name}`)
+    );
+    if (missingRows.length > 0) {
       const { data: inserted } = await supabase
         .from("line_items")
-        .insert(newCustomRows.map(row => ({
+        .insert(missingRows.map(row => ({
           month_id: monthData.id,
           section: row.section,
           name: row.name,
           amount: row.amount,
           sort_order: row.sort_order,
-          is_custom: true,
+          is_custom: row.is_custom,
         })))
         .select();
       if (inserted) setLineItems(prev => [...prev, ...(inserted as LineItem[])]);
