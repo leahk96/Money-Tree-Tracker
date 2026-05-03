@@ -1,5 +1,6 @@
 import { motion, useAnimationControls } from "framer-motion";
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 interface MoneyTreeSVGProps {
   /** Number of months this year where savings goal was met (0–12) */
@@ -321,8 +322,9 @@ const ALL_NOTES: NotePos[] = [
 // How many notes to show per stage (0–12)
 const NOTES_SHOWN = [0, 0, 1, 2, 3, 5, 7, 9, 11, 13, 16, 20, 27];
 
-// ── £ Banknote ────────────────────────────────────────────────────────────────
+// ── Banknote ──────────────────────────────────────────────────────────────────
 function BankNote({ x, y, rot, scale = 1, delay }: { x: number; y: number; rot: number; scale?: number; delay: number }) {
+  const { symbol } = useCurrency();
   const w = 40 * scale;
   const h = 22 * scale;
   return (
@@ -338,7 +340,7 @@ function BankNote({ x, y, rot, scale = 1, delay }: { x: number; y: number; rot: 
         <rect x={-w/2+3.5} y={-h/2+3} width={w-7} height={h-6} rx={2*scale} fill="none" stroke="#44c044" strokeWidth={0.9*scale} />
         <ellipse cx={-w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
         <ellipse cx={ w/5} cy={0} rx={3.5*scale} ry={4.5*scale} fill="none" stroke="#44c044" strokeWidth={0.7*scale} />
-        <text x="0" y={4*scale} textAnchor="middle" fontSize={10*scale} fill="#8ae88a" fontWeight="bold" fontFamily="Georgia, 'Times New Roman', serif">£</text>
+        <text x="0" y={4*scale} textAnchor="middle" fontSize={10*scale} fill="#8ae88a" fontWeight="bold" fontFamily="Georgia, 'Times New Roman', serif">{symbol}</text>
         <rect x={-w/2} y={-h/2} width={w} height={h*0.25} rx={3.5*scale} fill="rgba(255,255,255,0.06)" />
       </g>
     </motion.g>
@@ -397,6 +399,7 @@ function SparklesSVG() {
 
 // ── Floating coins (stage 8+) ─────────────────────────────────────────────────
 function FloatingCoins({ stage }: { stage: number }) {
+  const { symbol } = useCurrency();
   if (stage < 8) return null;
   const coins = [
     { x:164, y:185, delay:0.0 }, { x:196, y:183, delay:0.5 },
@@ -416,7 +419,7 @@ function FloatingCoins({ stage }: { stage: number }) {
         >
           <circle cx={c.x} cy={c.y} r={5} fill="#d4a800" opacity={0.85} />
           <circle cx={c.x} cy={c.y} r={3.5} fill="none" stroke="#f0c800" strokeWidth={0.8} />
-          <text x={c.x} y={c.y + 2} textAnchor="middle" fontSize="4.5" fill="#f8e040" fontWeight="bold" fontFamily="serif">£</text>
+          <text x={c.x} y={c.y + 2} textAnchor="middle" fontSize="4.5" fill="#f8e040" fontWeight="bold" fontFamily="serif">{symbol}</text>
         </motion.g>
       ))}
     </>

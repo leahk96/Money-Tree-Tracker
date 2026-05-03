@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
-import { CURRENCY_SYMBOL, formatCurrency, parseCurrency } from "@/lib/currency";
+import { parseCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Section } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
@@ -39,11 +40,12 @@ const DEMO: SectionData = {
 };
 
 function AmountInput({ value, onChange }: { value: number; onChange: (v: string) => void }) {
+  const { symbol } = useCurrency();
   const [focused, setFocused] = useState(false);
   const [local, setLocal] = useState(value === 0 ? "" : String(value));
   return (
     <div className={`flex items-center rounded border transition-all ${focused ? "border-[#2E7D32] bg-white ring-1 ring-[#2E7D32]/20" : "border-transparent"}`}>
-      <span className="text-xs text-[#9E9E9E] pl-1.5">{CURRENCY_SYMBOL}</span>
+      <span className="text-xs text-[#9E9E9E] pl-1.5">{symbol}</span>
       <input
         type="number" min="0" step="0.01"
         value={focused ? local : (value === 0 ? "" : String(value))}
@@ -58,10 +60,11 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
 }
 
 const ChartTooltip = ({ active, payload }: any) => {
+  const { fmt } = useCurrency();
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white border border-[#E8E8E8] rounded-lg px-3 py-1.5 shadow text-xs font-semibold text-[#1B5E20]">
-      {formatCurrency(payload[0].value)}
+      {fmt(payload[0].value)}
     </div>
   );
 };
@@ -78,6 +81,7 @@ function SideBySideSection({
   onAddCancel: () => void;
   onNewRowNameChange: (v: string) => void;
 }) {
+  const { fmt } = useCurrency();
   const cfg = SECTION_CONFIG[section];
   const total = items.reduce((a, i) => a + i.amount, 0);
   const isAdding = addingRow === section;
@@ -89,7 +93,7 @@ function SideBySideSection({
           <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
         </div>
         <span className="text-sm font-bold tabular-nums" style={{ color: cfg.color }}>
-          {total > 0 ? formatCurrency(total) : <span className="text-[#BDBDBD] font-normal">—</span>}
+          {total > 0 ? fmt(total) : <span className="text-[#BDBDBD] font-normal">—</span>}
         </span>
       </div>
       {items.map(item => (
@@ -117,6 +121,7 @@ function SideBySideSection({
 }
 
 export default function BudgetDemo() {
+  const { fmt, symbol } = useCurrency();
   const [sections, setSections] = useState<SectionData>(DEMO);
   const [addingRow, setAddingRow] = useState<Section | null>(null);
   const [newRowName, setNewRowName] = useState("");
@@ -203,7 +208,7 @@ export default function BudgetDemo() {
           <div>
             <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
             <div className="text-white font-bold text-xl tabular-nums">
-              {formatCurrency(saved)} <span className="text-white/60 font-normal text-sm">/ {formatCurrency(savingsGoal)}</span>
+              {fmt(saved)} <span className="text-white/60 font-normal text-sm">/ {fmt(savingsGoal)}</span>
             </div>
           </div>
           <div className="flex-1 min-w-[160px] max-w-xs">
@@ -211,7 +216,7 @@ export default function BudgetDemo() {
               <div className="bg-white rounded-full h-3 transition-all duration-500" style={{ width: `${goalPct}%` }} />
             </div>
             <div className="text-white/80 text-xs mt-1 text-right">
-              {goalMet ? "✓ Goal met — tree growing!" : `${formatCurrency(savingsGoal - saved)} to go`}
+              {goalMet ? "✓ Goal met — tree growing!" : `${fmt(savingsGoal - saved)} to go`}
             </div>
           </div>
           <button className="text-white/70 hover:text-white text-xs underline shrink-0">Edit goal</button>
@@ -259,13 +264,13 @@ export default function BudgetDemo() {
                         <div className="py-1.5 pr-1 text-center">
                           <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Expected</div>
                           <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
-                            {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                            {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
                           </div>
                         </div>
                         <div className="py-1.5 pr-1 text-center">
                           <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Actual</div>
                           <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
-                            {actualTotal > 0 ? formatCurrency(actualTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                            {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
                           </div>
                         </div>
                         <div />
@@ -277,7 +282,7 @@ export default function BudgetDemo() {
                           <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
                         </div>
                         <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
-                          {expectedTotal > 0 ? formatCurrency(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                          {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
                         </div>
                         <div />
                       </div>
@@ -332,18 +337,18 @@ export default function BudgetDemo() {
               {/* Footer totals */}
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t-2 border-[#E0E0E0]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total income</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#2E7D32]">{formatCurrency(income)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#2E7D32]">{fmt(income)}</div>
                 <div />
               </div>
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total allocated</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{formatCurrency(allocated)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{fmt(allocated)}</div>
                 <div />
               </div>
               <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#2E7D32] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Remaining balance</div>
                 <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
-                  {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
+                  {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </div>
                 <div />
               </div>
@@ -358,7 +363,7 @@ export default function BudgetDemo() {
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
               <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
               <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
-                {amountLeftToSpend >= 0 ? formatCurrency(amountLeftToSpend) : `−${formatCurrency(Math.abs(amountLeftToSpend))}`}
+                {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
                 <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#4CAF50]" : "bg-[#C62828]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
@@ -369,12 +374,12 @@ export default function BudgetDemo() {
                 <div className="flex items-start justify-between">
                   <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
                   <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
-                    {saved >= 0 ? formatCurrency(saved) : `−${formatCurrency(Math.abs(saved))}`}
+                    {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-[#F5F5F5]">
                   <span className="text-xs text-[#607D8B]">Savings target</span>
-                  <span className="text-sm font-semibold tabular-nums text-[#1B5E20]">{formatCurrency(savingsGoal)}</span>
+                  <span className="text-sm font-semibold tabular-nums text-[#1B5E20]">{fmt(savingsGoal)}</span>
                 </div>
               </div>
             </div>
@@ -382,7 +387,7 @@ export default function BudgetDemo() {
             {/* YTD savings */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-1">Saved year to date</div>
-              <div className="text-2xl font-bold text-[#2E7D32] tabular-nums mb-3">{formatCurrency(ytdTotal)}</div>
+              <div className="text-2xl font-bold text-[#2E7D32] tabular-nums mb-3">{fmt(ytdTotal)}</div>
               <ResponsiveContainer width="100%" height={90}>
                 <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
@@ -413,7 +418,7 @@ export default function BudgetDemo() {
                   </PieChart>
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                     <span className="text-[9px] text-[#9E9E9E] leading-none">total</span>
-                    <span className="text-[11px] font-bold text-[#1B5E20] leading-tight tabular-nums">{formatCurrency(income)}</span>
+                    <span className="text-[11px] font-bold text-[#1B5E20] leading-tight tabular-nums">{fmt(income)}</span>
                   </div>
                 </div>
               </div>
@@ -423,7 +428,7 @@ export default function BudgetDemo() {
                     <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: entry.color }} />
                     <span className="text-xs text-[#546E7A] flex-1">{entry.name}</span>
                     <span className="text-[10px] text-[#9E9E9E] tabular-nums mr-1">{Math.round((entry.value / income) * 100)}%</span>
-                    <span className="text-xs font-semibold text-[#1B5E20] tabular-nums">{formatCurrency(entry.value)}</span>
+                    <span className="text-xs font-semibold text-[#1B5E20] tabular-nums">{fmt(entry.value)}</span>
                   </div>
                 ))}
               </div>

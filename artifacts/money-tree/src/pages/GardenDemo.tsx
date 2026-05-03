@@ -1,7 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const DEMO_YEARS = [
   { year: 2024, goalsMetCount: 9,  totalSaved: 4800, isCurrent: false, hasData: true },
@@ -18,6 +18,7 @@ const DEMO_NAV = [
 ];
 
 function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void }) {
+  const { fmt } = useCurrency();
   const badge = d.goalsMetCount === 12 ? "🏆" : d.goalsMetCount >= 9 ? "⭐" : null;
   return (
     <motion.button
@@ -48,7 +49,7 @@ function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void
         <div className="text-[11px] text-[#2E7D32] font-semibold mt-0.5">
           {d.goalsMetCount}/12 goals
         </div>
-        <div className="text-[10px] text-[#607D8B]">{formatCurrency(d.totalSaved)} saved</div>
+        <div className="text-[10px] text-[#607D8B]">{fmt(d.totalSaved)} saved</div>
         {!d.isCurrent && (
           <div className="text-[9px] text-[#9E9E9E] mt-0.5 uppercase tracking-wide">Year complete</div>
         )}
@@ -121,7 +122,7 @@ export default function GardenDemo() {
           {[
             { label: "Years active",    value: String(DEMO_YEARS.length) },
             { label: "Goals hit",       value: String(totalGoals) },
-            { label: "All-time saved",  value: formatCurrency(totalSaved) },
+            { label: "All-time saved",  value: fmt(totalSaved) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
               <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>

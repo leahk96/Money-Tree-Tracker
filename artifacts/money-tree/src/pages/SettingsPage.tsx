@@ -5,9 +5,11 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/contexts/ProfileContext";
-import { formatCurrency, CURRENCY_SYMBOL, parseCurrency } from "@/lib/currency";
+import { parseCurrency, SUPPORTED_CURRENCIES } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 function SettingsContent() {
+  const { symbol, fmt } = useCurrency();
   const { user, signOut } = useAuth();
   const { profile, updateProfile, refreshProfile } = useProfile();
   const [, navigate] = useLocation();
@@ -20,6 +22,11 @@ function SettingsContent() {
   const [savingGoal, setSavingGoal] = useState(false);
   const [goalSaved, setGoalSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Currency section state
+  const [selectedCurrency, setSelectedCurrency] = useState(profile?.currency ?? "GBP");
+  const [savingCurrency, setSavingCurrency] = useState(false);
+  const [currencySaved, setCurrencySaved] = useState(false);
 
   // Password change state
   const [currentPw, setCurrentPw] = useState("");
@@ -40,6 +47,7 @@ function SettingsContent() {
       setGoalName(profile.goal_name ?? "");
       setGoalTarget(profile.goal_target_total ? String(profile.goal_target_total) : "");
       setGoalPhotoUrl(profile.goal_photo_url ?? "");
+      setSelectedCurrency(profile.currency ?? "GBP");
     }
   }, [profile]);
 
@@ -67,6 +75,14 @@ function SettingsContent() {
     setSavingGoal(false);
     setGoalSaved(true);
     setTimeout(() => setGoalSaved(false), 2500);
+  };
+
+  const saveCurrency = async () => {
+    setSavingCurrency(true);
+    await updateProfile({ currency: selectedCurrency });
+    setSavingCurrency(false);
+    setCurrencySaved(true);
+    setTimeout(() => setCurrencySaved(false), 2500);
   };
 
   const changePassword = async () => {
@@ -158,7 +174,7 @@ function SettingsContent() {
           <div>
             <label className="block text-xs font-semibold text-[#37474F] mb-1.5">Target amount</label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2E7D32] font-semibold text-sm">{CURRENCY_SYMBOL}</span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2E7D32] font-semibold text-sm">{symbol}</span>
               <input
                 type="number"
                 value={goalTarget}
@@ -169,7 +185,7 @@ function SettingsContent() {
               />
             </div>
             {goalTarget && (
-              <p className="text-xs text-[#607D8B] mt-1">Target: {formatCurrency(parseCurrency(goalTarget))}</p>
+              <p className="text-xs text-[#607D8B] mt-1">Target: {fmt(parseCurrency(goalTarget))}</p>
             )}
           </div>
 
@@ -184,6 +200,41 @@ function SettingsContent() {
               <>✓ Saved!</>
             ) : (
               "Save goal"
+            )}
+          </button>
+        </div>
+      </section>
+
+      {/* ── CURRENCY ── */}
+      <section className="bg-white rounded-2xl border border-[#E0E0E0] overflow-hidden">
+        <div className="px-5 py-4 border-b border-[#F5F5F5]">
+          <h2 className="font-semibold text-[#1B5E20]">Currency</h2>
+          <p className="text-xs text-[#607D8B] mt-0.5">Choose how amounts are displayed across the app</p>
+        </div>
+        <div className="px-5 py-5 space-y-4">
+          <div>
+            <label className="block text-xs font-semibold text-[#37474F] mb-1.5">Display currency</label>
+            <select
+              value={selectedCurrency}
+              onChange={e => setSelectedCurrency(e.target.value)}
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] bg-white"
+            >
+              {Object.entries(SUPPORTED_CURRENCIES).map(([code, { label, symbol }]) => (
+                <option key={code} value={code}>{symbol} — {label} ({code})</option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={saveCurrency}
+            disabled={savingCurrency || selectedCurrency === (profile?.currency ?? "GBP")}
+            className="w-full py-2.5 bg-[#2E7D32] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition disabled:opacity-60 text-sm flex items-center justify-center gap-2"
+          >
+            {savingCurrency ? (
+              <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" /> Saving…</>
+            ) : currencySaved ? (
+              <>✓ Currency updated!</>
+            ) : (
+              "Save currency"
             )}
           </button>
         </div>

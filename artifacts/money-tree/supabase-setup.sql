@@ -13,8 +13,12 @@ create table if not exists public.profiles (
   yearly_target       numeric,
   default_monthly_goal numeric     not null default 500,
   best_streak         integer     not null default 0,
+  currency            text        not null default 'GBP',
   created_at          timestamptz not null default now()
 );
+
+-- Add currency column to existing databases (safe to re-run)
+alter table public.profiles add column if not exists currency text not null default 'GBP';
 
 create table if not exists public.months (
   id           uuid        primary key default gen_random_uuid(),

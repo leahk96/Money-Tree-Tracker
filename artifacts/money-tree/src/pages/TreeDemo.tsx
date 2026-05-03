@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { motion } from "framer-motion";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const QUARTERS = [
@@ -65,6 +65,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
 }
 
 export default function TreeDemo() {
+  const { fmt } = useCurrency();
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
@@ -151,8 +152,8 @@ export default function TreeDemo() {
             <div className="text-lg font-bold text-[#1B5E20]">Bali 2026</div>
             <div className="mt-2 text-sm text-[#546E7A]">
               Saved so far:&nbsp;
-              <span className="font-semibold text-[#2E7D32]">{formatCurrency(2030)}</span>
-              <span className="text-[#9E9E9E]"> / {formatCurrency(8000)}</span>
+              <span className="font-semibold text-[#2E7D32]">{fmt(2030)}</span>
+              <span className="text-[#9E9E9E]"> / {fmt(8000)}</span>
             </div>
             <div className="mt-2 w-full bg-[#E8E8E8] rounded-full h-1.5">
               <div className="bg-[#2E7D32] h-1.5 rounded-full" style={{ width: "25%" }} />

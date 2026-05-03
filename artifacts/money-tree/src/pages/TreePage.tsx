@@ -5,7 +5,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { useTreeData, MonthSummary } from "@/hooks/useTreeData";
 import { useProfile } from "@/contexts/ProfileContext";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const QUARTERS = [
@@ -53,6 +53,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
 }
 
 function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | null; month: number; isCurrent: boolean; onClick: () => void }) {
+  const { fmt } = useCurrency();
   const monthIdx = summary ? summary.month - 1 : -1;
   const name = monthIdx >= 0 ? MONTH_NAMES[monthIdx] : "—";
   const hasData = !!summary;
@@ -78,10 +79,10 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
       {hasData ? (
         <>
           <div className={`text-sm font-bold ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
-            {formatCurrency(totalSaved)}
+            {fmt(totalSaved)}
           </div>
           <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#9E9E9E]"}`}>
-            {goalMet ? "✓ Goal met" : `${formatCurrency((summary?.savingsGoal ?? 0) - totalSaved)} to go`}
+            {goalMet ? "✓ Goal met" : `${fmt((summary?.savingsGoal ?? 0) - totalSaved)} to go`}
           </div>
         </>
       ) : (
@@ -92,6 +93,7 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
 }
 
 function TreeContent() {
+  const { fmt } = useCurrency();
   const { data, loading } = useTreeData();
   const { profile } = useProfile();
   const [, navigate] = useLocation();
@@ -168,9 +170,9 @@ function TreeContent() {
             <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
             {data && (
               <div className="text-sm text-[#546E7A] mt-1">
-                Total saved this year: <span className="font-semibold text-[#2E7D32]">{formatCurrency(data.totalSavedThisYear)}</span>
+                Total saved this year: <span className="font-semibold text-[#2E7D32]">{fmt(data.totalSavedThisYear)}</span>
                 {profile.yearly_target && (
-                  <span className="text-[#9E9E9E]"> / {formatCurrency(profile.yearly_target)}</span>
+                  <span className="text-[#9E9E9E]"> / {fmt(profile.yearly_target)}</span>
                 )}
               </div>
             )}

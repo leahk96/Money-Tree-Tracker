@@ -2,6 +2,7 @@ export type Section = "savings" | "income" | "bills" | "needs" | "wants" | "debt
 
 export interface Profile {
   user_id: string;
+  currency: string;
   goal_name: string | null;
   goal_photo_url: string | null;
   goal_target_total: number | null;

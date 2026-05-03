@@ -6,7 +6,7 @@ import {
   ResponsiveContainer, ReferenceLine, CartesianGrid, Legend,
 } from "recharts";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const DEMO_NAV = [
   { label: "Budget",  to: "/demo" },
@@ -103,6 +103,7 @@ const SCENARIOS: Record<number, YearScenario> = {
 const AVAILABLE_YEARS = [2024, 2025, 2026];
 
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
+  const { fmt } = useCurrency();
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-white border border-[#E8E8E8] rounded-xl p-3 shadow-lg text-xs min-w-[110px]">
@@ -110,7 +111,7 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
       {payload.map(p => (
         <div key={p.name} className="flex items-center justify-between gap-3">
           <span style={{ color: p.color }}>{p.name}</span>
-          <span className="font-semibold text-[#1B5E20] tabular-nums">{formatCurrency(p.value)}</span>
+          <span className="font-semibold text-[#1B5E20] tabular-nums">{fmt(p.value)}</span>
         </div>
       ))}
     </div>
@@ -118,6 +119,7 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
 }
 
 export default function SummaryDemo() {
+  const { fmt } = useCurrency();
   const [selectedYear, setSelectedYear] = useState(2026);
   const d = SCENARIOS[selectedYear];
   const yearIdx = AVAILABLE_YEARS.indexOf(selectedYear);
@@ -214,7 +216,7 @@ export default function SummaryDemo() {
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: "Total saved",     value: formatCurrency(d.totalSaved), sub: vsGoal >= 0 ? `+${formatCurrency(vsGoal)} above goal` : `${formatCurrency(Math.abs(vsGoal))} below goal`, positive: vsGoal >= 0 },
+            { label: "Total saved",     value: fmt(d.totalSaved), sub: vsGoal >= 0 ? `+${fmt(vsGoal)} above goal` : `${fmt(Math.abs(vsGoal))} below goal`, positive: vsGoal >= 0 },
             { label: "Best streak",     value: `${d.bestStreak} months`,     sub: d.currentStreak > 0 ? `Current: ${d.currentStreak}` : undefined, positive: true },
             { label: "Goals smashed",   value: `${d.goalsMetCount}/12`,       sub: d.goalsMetCount === 12 ? "Perfect year!" : `${12 - d.goalsMetCount} to go`, positive: d.goalsMetCount >= 6 },
             { label: "Quarterly coins", value: `${quarterEarned.filter(Boolean).length}/4`, sub: "Hit every month in a quarter", positive: quarterEarned.some(Boolean) },
@@ -275,12 +277,12 @@ export default function SummaryDemo() {
                 <div className="bg-[#FFF3E0] rounded-xl p-3 border border-[#f0e0a0]">
                   <div className="text-[10px] text-[#9a7020] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
                   <div className="text-sm font-bold text-[#D4AF37]">{lowestWantsMonth.month}</div>
-                  <div className="text-xs text-[#b08030]">{formatCurrency(lowestWantsMonth.wants)} spent</div>
+                  <div className="text-xs text-[#b08030]">{fmt(lowestWantsMonth.wants)} spent</div>
                 </div>
                 <div className="bg-[#E3F2FD] rounded-xl p-3 border border-[#c0d8f0]">
                   <div className="text-[10px] text-[#2a5080] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
                   <div className="text-sm font-bold text-[#3a70b0]">{lowestNeedsMonth.month}</div>
-                  <div className="text-xs text-[#4a80c0]">{formatCurrency(lowestNeedsMonth.needs)} spent</div>
+                  <div className="text-xs text-[#4a80c0]">{fmt(lowestNeedsMonth.needs)} spent</div>
                 </div>
               </div>
             )}
@@ -333,10 +335,10 @@ export default function SummaryDemo() {
                   {m.hasData ? (
                     <>
                       <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
-                        {formatCurrency(m.saved)}
+                        {fmt(m.saved)}
                       </div>
                       <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
-                        {goalMet ? "✓ Goal met" : `${formatCurrency(m.goal - m.saved)} short`}
+                        {goalMet ? "✓ Goal met" : `${fmt(m.goal - m.saved)} short`}
                       </div>
                     </>
                   ) : (

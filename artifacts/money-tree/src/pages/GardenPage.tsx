@@ -6,7 +6,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Month, LineItem } from "@/lib/types";
 
 interface GardenYearData {
@@ -107,6 +107,7 @@ function EmptyPlot({ year }: { year: number }) {
 }
 
 function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
+  const { fmt } = useCurrency();
   const isFullYear = !d.isCurrent;
   const badge = d.goalsMetCount === 12 ? "🏆" : d.goalsMetCount >= 9 ? "⭐" : null;
 
@@ -142,7 +143,7 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
               {d.goalsMetCount}/12 goals
             </div>
             <div className="text-[10px] text-[#607D8B]">
-              {formatCurrency(d.totalSaved)} saved
+              {fmt(d.totalSaved)} saved
             </div>
           </>
         ) : (
@@ -201,7 +202,7 @@ function GardenContent() {
           {[
             { label: "Years active", value: String(yearData.length) },
             { label: "Goals hit", value: `${totalGoalsAllTime}` },
-            { label: "All-time saved", value: formatCurrency(totalSavedAllTime) },
+            { label: "All-time saved", value: fmt(totalSavedAllTime) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
               <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>

@@ -5,7 +5,7 @@ import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { MoneyTreeSVG } from "@/components/MoneyTreeSVG";
 import { useYearData, useAvailableYears } from "@/hooks/useYearData";
-import { formatCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const QUARTERS = [
@@ -16,6 +16,7 @@ const QUARTERS = [
 ];
 
 function SummaryContent() {
+  const { fmt } = useCurrency();
   const [, navigate] = useLocation();
   const params = useParams<{ year?: string }>();
   const currentYear = new Date().getFullYear();
@@ -114,7 +115,7 @@ function SummaryContent() {
       {/* Big stat cards */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: "Total saved", value: formatCurrency(totalSaved), sub: totalGoal > 0 ? (vsGoal >= 0 ? `+${formatCurrency(vsGoal)} above goal` : `${formatCurrency(Math.abs(vsGoal))} below goal`) : undefined, positive: vsGoal >= 0 },
+          { label: "Total saved", value: fmt(totalSaved), sub: totalGoal > 0 ? (vsGoal >= 0 ? `+${fmt(vsGoal)} above goal` : `${fmt(Math.abs(vsGoal))} below goal`) : undefined, positive: vsGoal >= 0 },
           { label: "Best streak", value: `${bestStreak} month${bestStreak !== 1 ? "s" : ""}`, sub: currentStreak > 0 ? `Current: ${currentStreak}` : undefined, positive: true },
           { label: "Goals smashed", value: `${goalsMetCount}/12`, sub: goalsMetCount === 12 ? "Perfect year!" : `${12 - goalsMetCount} to go`, positive: goalsMetCount >= 6 },
           { label: data?.bullionUnlocked ? "Gold bullion" : "Quarterly coins", value: data?.bullionUnlocked ? "🏆 Unlocked!" : `${[data?.q1Earned, data?.q2Earned, data?.q3Earned, data?.q4Earned].filter(Boolean).length}/4`, sub: data?.bullionUnlocked ? "All 4 coins earned" : "Hit every month in a quarter", positive: !!data?.bullionUnlocked },
@@ -203,10 +204,10 @@ function SummaryContent() {
                 {d.hasData ? (
                   <>
                     <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
-                      {formatCurrency(d.totalSaved)}
+                      {fmt(d.totalSaved)}
                     </div>
                     <div className={`text-[10px] mt-0.5 ${d.goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
-                      {d.goalMet ? "✓ Goal met" : `${formatCurrency(d.savingsGoal - d.totalSaved)} short`}
+                      {d.goalMet ? "✓ Goal met" : `${fmt(d.savingsGoal - d.totalSaved)} short`}
                     </div>
                   </>
                 ) : (
