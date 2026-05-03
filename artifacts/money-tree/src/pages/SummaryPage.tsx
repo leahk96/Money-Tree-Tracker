@@ -194,7 +194,7 @@ function SummaryContent() {
               <Bar dataKey="Goal" fill="#D4AF37" radius={[3, 3, 0, 0]} opacity={0.75} />
               <Bar dataKey="Saved" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
-                  <Cell key={i} fill={entry.Saved >= entry.Goal ? "#2E7D32" : "#E65100"} />
+                  <Cell key={i} fill={entry.Saved >= entry.Goal ? "#2E7D32" : "#E57373"} />
                 ))}
               </Bar>
             </BarChart>
@@ -222,7 +222,7 @@ function SummaryContent() {
                 <Tooltip content={<ChartTooltip />} />
                 <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
                 <Line dataKey="Needs" stroke="#1565C0" strokeWidth={2} dot={{ r: 3, fill: "#1565C0" }} activeDot={{ r: 4 }} />
-                <Line dataKey="Wants" stroke="#E65100" strokeWidth={2} dot={{ r: 3, fill: "#E65100" }} activeDot={{ r: 4 }} />
+                <Line dataKey="Wants" stroke="#E57373" strokeWidth={2} dot={{ r: 3, fill: "#E57373" }} activeDot={{ r: 4 }} />
               </LineChart>
             ) : (
               <BarChart data={chartMonths} barCategoryGap="40%" barGap={4}>
@@ -232,7 +232,7 @@ function SummaryContent() {
                   tickFormatter={v => fmt(v)} width={52} />
                 <Tooltip content={<ChartTooltip />} />
                 <Bar dataKey="Needs" fill="#1565C0" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="Wants" fill="#E65100" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="Wants" fill="#E57373" radius={[3, 3, 0, 0]} />
               </BarChart>
             )}
           </ResponsiveContainer>
@@ -275,7 +275,7 @@ function SummaryContent() {
               <ReferenceLine y={0} stroke="#E0E0E0" strokeWidth={1.5} />
               <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
-                  <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#E65100"} />
+                  <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#E57373"} />
                 ))}
               </Bar>
             </BarChart>

@@ -10,7 +10,7 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
   savings: { label: "Savings", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
   bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
   needs:   { label: "Needs",   emoji: "🛒", color: "#1565C0", textColor: "#0D47A1", rowBg: "#E3F2FD" },
-  wants:   { label: "Wants",   emoji: "✨", color: "#E65100", textColor: "#BF360C", rowBg: "#FFF3E0" },
+  wants:   { label: "Wants",   emoji: "✨", color: "#E57373", textColor: "#BF360C", rowBg: "#FFF3E0" },
   debt:    { label: "Debt",    emoji: "💳", color: "#607D8B", textColor: "#37474F", rowBg: "#ECEFF1" },
 };
 
@@ -18,7 +18,7 @@ const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
   income: "#4CAF50", savings: "#2E7D32", bills: "#C62828",
-  needs: "#1565C0", wants: "#E65100", debt: "#607D8B",
+  needs: "#1565C0", wants: "#E57373", debt: "#607D8B",
 };
 const PRIOR_MONTHS = [
   { month: "Jan", saved: 220 },
@@ -204,7 +204,7 @@ export default function BudgetDemo() {
           <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">→</button>
         </div>
 
-        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#2E7D32]" : "bg-[#E65100]"}`}>
+        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#2E7D32]" : "bg-[#E57373]"}`}>
           <div>
             <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
             <div className="text-white font-bold text-xl tabular-nums">
