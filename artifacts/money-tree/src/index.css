@@ -107,9 +107,9 @@
   --input: 0 0% 88%;
   --ring: 121 41% 25%;
   --chart-1: 121 41% 25%;   /* savings Hunter Green #265a27 */
-  --chart-2: 0 71% 47%;     /* bills red #C62828 */
-  --chart-3: 193 50% 40%;   /* needs Light Blue derived #2a7a9e */
-  --chart-4: 37 95% 55%;    /* wants Orange #f9a620 */
+  --chart-2: 37 95% 55%;    /* bills Orange #f9a620 */
+  --chart-3: 193 50% 77%;   /* needs Light Blue #a8d5e2 */
+  --chart-4: 46 100% 64%;   /* wants Mustard #ffd449 */
   --chart-5: 200 18% 46%;   /* debt blue-grey #607D8B */
 
   --app-font-sans: 'Inter', sans-serif;

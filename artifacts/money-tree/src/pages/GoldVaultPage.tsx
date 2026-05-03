@@ -96,12 +96,12 @@ function useVaultData() {
 function GoldIngot({ tier, index = 0 }: { tier: Tier; index?: number }) {
   const uid = `gi-${tier}-${index}`;
 
-  const TOP_LIGHT  = tier === "legendary" ? "#fffbea" : tier === "premium" ? "#fff5c0" : "#ffd449";
-  const TOP_DARK   = tier === "legendary" ? "#f5d020" : tier === "premium" ? "#e8b800" : "#c8920a";
-  const FRONT_TOP  = tier === "legendary" ? "#f9a620" : tier === "premium" ? "#c89000" : "#b87800";
-  const FRONT_BOT  = tier === "legendary" ? "#8b6000" : tier === "premium" ? "#104911" : "#6b4400";
-  const SIDE       = tier === "legendary" ? "#104911" : tier === "premium" ? "#6b4400" : "#5a3800";
-  const STAMP      = tier === "legendary" ? "#5a3800" : "#4a2c00";
+  const TOP_LIGHT  = tier === "legendary" ? "#fdfae8" : tier === "premium" ? "#fdf9d0" : "#ffd449";
+  const TOP_DARK   = tier === "legendary" ? "#ffd449" : tier === "premium" ? "#ffd449" : "#f9a620";
+  const FRONT_TOP  = tier === "legendary" ? "#f9a620" : tier === "premium" ? "#f9a620" : "#d4880a";
+  const FRONT_BOT  = tier === "legendary" ? "#265a27" : tier === "premium" ? "#104911" : "#265a27";
+  const SIDE       = tier === "legendary" ? "#104911" : tier === "premium" ? "#265a27" : "#104911";
+  const STAMP      = tier === "legendary" ? "#104911" : "#104911";
 
   return (
     <svg viewBox="0 0 140 90" className="w-full h-full" style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.25))" }}>
@@ -185,9 +185,9 @@ function GoldIngot({ tier, index = 0 }: { tier: Tier; index?: number }) {
       {/* Legendary sparkles */}
       {tier === "legendary" && (
         <>
-          <circle cx="18" cy="20" r="1.5" fill="#fffbea" opacity="0.8" />
-          <circle cx="126" cy="26" r="1" fill="#fffbea" opacity="0.6" />
-          <circle cx="110" cy="62" r="1.2" fill="#fffbea" opacity="0.5" />
+          <circle cx="18" cy="20" r="1.5" fill="#fdfae8" opacity="0.8" />
+          <circle cx="126" cy="26" r="1" fill="#fdfae8" opacity="0.6" />
+          <circle cx="110" cy="62" r="1.2" fill="#fdfae8" opacity="0.5" />
         </>
       )}
       {/* Premium shimmer stripe */}
@@ -221,7 +221,7 @@ function EmptyVault() {
         <GoldIngot tier="standard" />
       </div>
       <div>
-        <p className="text-lg font-semibold text-[#b8860b]">Your vault is empty</p>
+        <p className="text-lg font-semibold text-[#f9a620]">Your vault is empty</p>
         <p className="text-sm text-[#BDBDBD] mt-1 max-w-xs">
           Hit your monthly savings goal to earn your first gold bar
         </p>
@@ -272,19 +272,19 @@ function GoldVaultContent() {
 
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
+        <div className="col-span-2 sm:col-span-1 bg-gradient-to-br from-[#fdfae8] to-[#fdf9d0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
           <div className="text-4xl font-black text-[#104911] leading-none">{bars.length}</div>
           <div className="text-xs text-[#265a27] font-semibold mt-1">Bars collected</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
+        <div className="bg-gradient-to-br from-[#fdfae8] to-[#fdf9d0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
           <div className="text-lg font-black text-[#104911] tabular-nums leading-tight">{fmt(totalSaved)}</div>
           <div className="text-xs text-[#265a27] font-semibold mt-1">Total saved</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
+        <div className="bg-gradient-to-br from-[#fdfae8] to-[#fdf9d0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
           <div className="text-3xl font-black text-[#104911] leading-none">{streak}</div>
           <div className="text-xs text-[#265a27] font-semibold mt-1">Best streak</div>
         </div>
-        <div className="bg-gradient-to-br from-[#fffbea] to-[#fff5c0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
+        <div className="bg-gradient-to-br from-[#fdfae8] to-[#fdf9d0] rounded-2xl p-4 border border-[#ffd449] shadow-sm text-center">
           <div className="text-3xl font-black text-[#104911] leading-none">{legendaryCount}</div>
           <div className="text-xs text-[#265a27] font-semibold mt-1">Legendary</div>
         </div>

@@ -8,17 +8,17 @@ import { Section } from "@/lib/types";
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
   income:  { label: "Income",  emoji: "💰", color: "#548c2f", textColor: "#104911", rowBg: "#F5F5F5" },
   savings: { label: "Savings", emoji: "🌱", color: "#265a27", textColor: "#104911", rowBg: "#ebf5df" },
-  bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
-  needs:   { label: "Needs",   emoji: "🛒", color: "#2a7a9e", textColor: "#1a5f7a", rowBg: "#ddeef5" },
-  wants:   { label: "Wants",   emoji: "✨", color: "#f9a620", textColor: "#d4880a", rowBg: "#fef6e0" },
+  bills:   { label: "Bills",   emoji: "🏠", color: "#f9a620", textColor: "#d4880a", rowBg: "#fef6e0" },
+  needs:   { label: "Needs",   emoji: "🛒", color: "#a8d5e2", textColor: "#104911", rowBg: "#e8f5f9" },
+  wants:   { label: "Wants",   emoji: "✨", color: "#ffd449", textColor: "#d4880a", rowBg: "#fef9e0" },
   debt:    { label: "Debt",    emoji: "💳", color: "#607D8B", textColor: "#37474F", rowBg: "#ECEFF1" },
 };
 
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
-  income: "#548c2f", savings: "#265a27", bills: "#C62828",
-  needs: "#2a7a9e", wants: "#f9a620", debt: "#607D8B",
+  income: "#548c2f", savings: "#265a27", bills: "#f9a620",
+  needs: "#a8d5e2", wants: "#ffd449", debt: "#607D8B",
 };
 const PRIOR_MONTHS = [
   { month: "Jan", saved: 220 },
@@ -100,7 +100,7 @@ function SideBySideSection({
         <div key={item.id} className="flex items-center border-b border-[#F5F5F5] hover:bg-[#FAFAFA] group px-3 py-1.5">
           <span className="text-xs text-[#37474F] flex-1 truncate pr-2">{item.name}</span>
           <AmountInput value={item.amount} onChange={v => onUpdate(section, item.id, v)} />
-          <button onClick={() => onDelete(section, item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+          <button onClick={() => onDelete(section, item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
         </div>
       ))}
       <div className="px-3 py-1.5">
@@ -300,7 +300,7 @@ export default function BudgetDemo() {
                           <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(section, item.id, v)} />
                         </div>
                         <div className="flex items-center justify-center">
-                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
                         </div>
                       </div>
                     ) : (
@@ -312,7 +312,7 @@ export default function BudgetDemo() {
                           <AmountInput value={item.amount} onChange={v => updateExpected(section, item.id, v)} />
                         </div>
                         <div className="flex items-center justify-center">
-                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                          <button onClick={() => deleteRow(section, item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-[#f9a620] transition text-xs flex items-center justify-center">×</button>
                         </div>
                       </div>
                     ))}
@@ -342,12 +342,12 @@ export default function BudgetDemo() {
               </div>
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Total allocated</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{fmt(allocated)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#f9a620]">{fmt(allocated)}</div>
                 <div />
               </div>
-              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#265a27] bg-[#ebf5df]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
+              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#265a27] bg-[#ebf5df]" : "border-[#f9a620] bg-[#fef6e0]"}`}>
                 <div className="px-4 py-2.5 text-sm font-bold text-[#104911]">Remaining balance</div>
-                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
                   {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </div>
                 <div />
@@ -362,18 +362,18 @@ export default function BudgetDemo() {
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
               <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
-              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
                 {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
-                <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#548c2f]" : "bg-[#C62828]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
+                <div className={`h-3 rounded-full transition-all duration-500 ${saved >= 0 ? "bg-[#548c2f]" : "bg-[#f9a620]"}`} style={{ width: `${income > 0 ? Math.max(0, Math.min(100, (saved / income) * 100)) : 0}%` }} />
               </div>
               <div className="mb-3" />
 
               <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
                 <div className="flex items-start justify-between">
                   <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
-                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#C62828]"}`}>
+                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#265a27]" : "text-[#f9a620]"}`}>
                     {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                   </span>
                 </div>

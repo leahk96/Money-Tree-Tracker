@@ -128,7 +128,7 @@ function SettingsContent() {
           <div className="flex items-center gap-4">
             <div
               onClick={() => fileRef.current?.click()}
-              className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#c8dce0] bg-[#F5F5F5] flex items-center justify-center cursor-pointer hover:border-[#265a27] transition overflow-hidden shrink-0"
+              className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#e8f5f9] bg-[#F5F5F5] flex items-center justify-center cursor-pointer hover:border-[#265a27] transition overflow-hidden shrink-0"
             >
               {goalPhotoUrl ? (
                 <img src={goalPhotoUrl} alt="Goal" className="w-full h-full object-cover" />
@@ -149,7 +149,7 @@ function SettingsContent() {
               {goalPhotoUrl && (
                 <button
                   onClick={() => setGoalPhotoUrl("")}
-                  className="text-xs text-red-400 hover:text-red-600 mt-1.5 transition"
+                  className="text-xs text-[#f9a620] hover:text-[#d4880a] mt-1.5 transition"
                 >
                   Remove photo
                 </button>
@@ -273,7 +273,7 @@ function SettingsContent() {
                 placeholder="Confirm new password"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#265a27]/40 text-sm text-[#104911] placeholder:text-[#9E9E9E]"
               />
-              {pwError && <p className="text-xs text-red-500">{pwError}</p>}
+              {pwError && <p className="text-xs text-[#f9a620]">{pwError}</p>}
               {pwSaved && <p className="text-xs text-[#265a27] font-medium">✓ Password updated</p>}
               <button
                 onClick={changePassword}
@@ -296,9 +296,9 @@ function SettingsContent() {
       </section>
 
       {/* ── DANGER ZONE ── */}
-      <section className="bg-white rounded-2xl border border-red-100 overflow-hidden">
-        <div className="px-5 py-4 border-b border-red-50">
-          <h2 className="font-semibold text-red-600">Danger zone</h2>
+      <section className="bg-white rounded-2xl border border-[#fef6e0] overflow-hidden">
+        <div className="px-5 py-4 border-b border-[#fef6e0]">
+          <h2 className="font-semibold text-[#d4880a]">Danger zone</h2>
         </div>
 
         <div className="px-5 py-5">
@@ -310,7 +310,7 @@ function SettingsContent() {
               </div>
               <button
                 onClick={() => setShowDelete(true)}
-                className="shrink-0 px-4 py-2 border border-red-200 text-red-500 rounded-xl text-sm hover:bg-red-50 transition font-medium"
+                className="shrink-0 px-4 py-2 border border-[#f9a620] text-[#d4880a] rounded-xl text-sm hover:bg-[#fef6e0] transition font-medium"
               >
                 Delete
               </button>
@@ -325,7 +325,7 @@ function SettingsContent() {
                 value={deleteConfirm}
                 onChange={e => setDeleteConfirm(e.target.value)}
                 placeholder="Type DELETE to confirm"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-red-200 focus:outline-none focus:ring-2 focus:ring-red-300 text-sm text-[#104911]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#f9a620] focus:outline-none focus:ring-2 focus:ring-[#f9a620] text-sm text-[#104911]"
               />
               <div className="flex gap-3">
                 <button
@@ -337,7 +337,7 @@ function SettingsContent() {
                 <button
                   onClick={deleteAccount}
                   disabled={deleteConfirm !== "DELETE" || deleting}
-                  className="flex-1 py-2.5 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition disabled:opacity-40 text-sm"
+                  className="flex-1 py-2.5 bg-[#f9a620] text-white font-semibold rounded-xl hover:bg-[#d4880a] transition disabled:opacity-40 text-sm"
                 >
                   {deleting ? "Deleting…" : "Delete account"}
                 </button>

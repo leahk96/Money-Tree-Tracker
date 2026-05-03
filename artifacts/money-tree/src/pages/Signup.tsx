@@ -49,7 +49,7 @@ export default function Signup() {
           <p className="text-[#546E7A] mt-3 text-base leading-relaxed">
             We've sent a confirmation link to <strong>{email}</strong>. Click it to activate your account, then come back here to sign in.
           </p>
-          <div className="mt-6 p-4 bg-[#F5F5F5] border border-[#d4e8b8] rounded-xl text-sm text-[#265a27] text-left space-y-1">
+          <div className="mt-6 p-4 bg-[#F5F5F5] border border-[#ebf5df] rounded-xl text-sm text-[#265a27] text-left space-y-1">
             <p className="font-semibold mb-2">💡 Tip: skip email confirmation</p>
             <p>If you control this Supabase project, go to <strong>Authentication → Settings</strong> and turn off <strong>Enable email confirmations</strong> for instant sign-up.</p>
           </div>
@@ -74,7 +74,7 @@ export default function Signup() {
           <h2 className="text-xl font-semibold text-[#104911] mb-6">Create your account</h2>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="mb-4 p-3 bg-[#fef6e0] border border-[#f9a620] rounded-lg text-[#d4880a] text-sm">
               {error}
             </div>
           )}

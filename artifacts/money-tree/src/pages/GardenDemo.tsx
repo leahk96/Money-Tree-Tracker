@@ -34,7 +34,7 @@ function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void
       }`}
     >
       {d.isCurrent && (
-        <span className="text-[10px] font-bold text-[#d4880a] bg-[#fff5c0] border border-[#ffd449] rounded-full px-2 py-0.5 -mb-1">
+        <span className="text-[10px] font-bold text-[#d4880a] bg-[#fdf9d0] border border-[#ffd449] rounded-full px-2 py-0.5 -mb-1">
           GROWING NOW
         </span>
       )}
@@ -63,10 +63,10 @@ function EmptyPlot({ year }: { year: number }) {
     <div className="flex flex-col items-center gap-2 opacity-35">
       <div className="w-full aspect-square flex items-center justify-center">
         <svg viewBox="0 0 360 348" className="w-full max-w-[120px] mx-auto">
-          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#7a3c10" opacity={0.08} />
-          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#c07838" opacity={0.5} />
-          <rect x={141} y={265} width={78} height={12} rx={5} fill="#9e5e26" opacity={0.5} />
-          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#4a2810" opacity={0.5} />
+          <ellipse cx={180} cy={334} rx={52} ry={7} fill="#757575" opacity={0.08} />
+          <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#9e9e9e" opacity={0.5} />
+          <rect x={141} y={265} width={78} height={12} rx={5} fill="#757575" opacity={0.5} />
+          <ellipse cx={180} cy={271} rx={34} ry={6} fill="#546e7a" opacity={0.5} />
         </svg>
       </div>
       <div className="text-center">
@@ -162,7 +162,7 @@ export default function GardenDemo() {
               <div className="w-full aspect-square flex items-center justify-center">
                 <div className="w-16 h-16 rounded-full border-2 border-dashed border-[#9E9E9E] flex items-center justify-center text-2xl text-[#9E9E9E]">+</div>
               </div>
-              <div className="text-[10px] text-[#c8d8a0] text-center">And more…</div>
+              <div className="text-[10px] text-[#ebf5df] text-center">And more…</div>
             </div>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function GardenDemo() {
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center"
+          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#ebf5df] p-5 text-center"
         >
           <div className="text-2xl mb-2">🌳</div>
           <div className="text-sm font-semibold text-[#104911]">Build your garden year on year</div>

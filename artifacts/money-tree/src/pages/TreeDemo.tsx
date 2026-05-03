@@ -41,7 +41,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
           animate={{ scale: 1 }}
           transition={{ type: "spring", bounce: 0.5, delay: 0.15 + index * 0.08 }}
           className="w-16 h-16 rounded-full flex items-center justify-center shadow-md text-3xl"
-          style={{ background: "radial-gradient(circle at 35% 35%, #FFE066, #f9a620)" }}
+          style={{ background: "radial-gradient(circle at 35% 35%, #ffd449, #f9a620)" }}
         >
           <motion.span
             animate={{ scale: [1, 1.1, 1] }}
@@ -57,7 +57,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
       )}
       <span className={`text-xs font-bold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{label}</span>
       <span className="text-[10px] text-[#9E9E9E] text-center leading-tight">{months}</span>
-      <span className={`text-[10px] font-medium ${earned ? "text-[#ffd449]" : "text-[#c8d8a0]"}`}>
+      <span className={`text-[10px] font-medium ${earned ? "text-[#ffd449]" : "text-[#ebf5df]"}`}>
         {earned ? "✓ Earned!" : "Locked"}
       </span>
     </motion.div>
@@ -128,7 +128,7 @@ export default function TreeDemo() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.07 }}
-          className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-amber-200 p-4 flex items-center justify-between"
+          className="bg-gradient-to-r from-[#fef6e0] to-[#fef9e0] rounded-2xl border border-[#ffd449] p-4 flex items-center justify-between"
         >
           <div>
             <div className="text-base font-bold text-[#d4880a]">🔥 4 month streak!</div>
@@ -195,7 +195,7 @@ export default function TreeDemo() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18 }}
-            className={`mt-3 rounded-2xl border p-5 ${bullion ? "border-[#ffd449] bg-gradient-to-br from-yellow-50 to-amber-50" : "border-[#E8E8E8] bg-white"}`}
+            className={`mt-3 rounded-2xl border p-5 ${bullion ? "border-[#ffd449] bg-gradient-to-br from-[#fef9e0] to-[#fdfae8]" : "border-[#E8E8E8] bg-white"}`}
           >
             {bullion ? (
               <div className="text-center space-y-2">
@@ -212,7 +212,7 @@ export default function TreeDemo() {
                     <rect x="2" y="6" width="48" height="22" rx="4" fill="#ffd449" />
                     <rect x="6" y="10" width="40" height="14" rx="2" fill="none" stroke="#C8960C" strokeWidth="1.2" />
                     <rect x="2" y="6" width="48" height="6" rx="4" fill="rgba(255,255,255,0.18)" />
-                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#8a6200" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
+                    <text x="26" y="19" textAnchor="middle" fontSize="7" fill="#d4880a" fontWeight="bold" fontFamily="Georgia, serif">GOLD</text>
                   </svg>
                 </div>
                 <div>
@@ -220,7 +220,7 @@ export default function TreeDemo() {
                   <div className="text-xs text-[#9E9E9E] mt-0.5">
                     Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bar.
                   </div>
-                  <div className="text-xs text-[#c8a000] mt-1.5 font-medium">
+                  <div className="text-xs text-[#f9a620] mt-1.5 font-medium">
                     {coinsEarned}/4 coins — {4 - coinsEarned} more quarter{4 - coinsEarned !== 1 ? "s" : ""} to go
                   </div>
                 </div>

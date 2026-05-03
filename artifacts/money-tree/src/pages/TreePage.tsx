@@ -86,7 +86,7 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
           </div>
         </>
       ) : (
-        <div className="text-[10px] text-[#c8d8a0]">No data</div>
+        <div className="text-[10px] text-[#ebf5df]">No data</div>
       )}
     </motion.button>
   );
@@ -141,7 +141,7 @@ function TreeContent() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-amber-200 p-4 flex items-center justify-between"
+          className="bg-gradient-to-r from-[#fef6e0] to-[#fef9e0] rounded-2xl border border-[#ffd449] p-4 flex items-center justify-between"
         >
           <div>
             <div className="text-lg font-bold text-[#d4880a]">
@@ -208,7 +208,7 @@ function TreeContent() {
         transition={{ delay: 0.2 }}
         className={`rounded-2xl border p-5 text-center transition-all duration-700 ${
           data?.bullionUnlocked
-            ? "border-[#ffd449] bg-gradient-to-r from-yellow-50 to-amber-50"
+            ? "border-[#ffd449] bg-gradient-to-r from-[#fef9e0] to-[#fdfae8]"
             : "border-[#E8E8E8] bg-white"
         }`}
       >

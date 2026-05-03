@@ -266,7 +266,7 @@ export default function SummaryDemo() {
                   tickFormatter={v => `£${v}`} width={38} />
                 <Tooltip content={<ChartTooltip />} />
                 <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
-                <Line dataKey="Needs" stroke="#2a7a9e" strokeWidth={2} dot={{ r: 3, fill: "#2a7a9e" }} activeDot={{ r: 4 }} />
+                <Line dataKey="Needs" stroke="#a8d5e2" strokeWidth={2} dot={{ r: 3, fill: "#a8d5e2" }} activeDot={{ r: 4 }} />
                 <Line dataKey="Wants" stroke="#f9a620" strokeWidth={2} dot={{ r: 3, fill: "#f9a620" }} activeDot={{ r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
@@ -274,15 +274,15 @@ export default function SummaryDemo() {
             {/* Insights */}
             {lowestWantsMonth && lowestNeedsMonth && (
               <div className="mt-4 grid grid-cols-2 gap-2">
-                <div className="bg-[#fef6e0] rounded-xl p-3 border border-[#f0e0a0]">
-                  <div className="text-[10px] text-[#9a7020] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
+                <div className="bg-[#fef6e0] rounded-xl p-3 border border-[#ffd449]">
+                  <div className="text-[10px] text-[#d4880a] font-semibold uppercase tracking-wide mb-0.5">Best Wants month</div>
                   <div className="text-sm font-bold text-[#ffd449]">{lowestWantsMonth.month}</div>
-                  <div className="text-xs text-[#b08030]">{fmt(lowestWantsMonth.wants)} spent</div>
+                  <div className="text-xs text-[#d4880a]">{fmt(lowestWantsMonth.wants)} spent</div>
                 </div>
-                <div className="bg-[#ddeef5] rounded-xl p-3 border border-[#c0d8f0]">
-                  <div className="text-[10px] text-[#2a5080] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
-                  <div className="text-sm font-bold text-[#3a70b0]">{lowestNeedsMonth.month}</div>
-                  <div className="text-xs text-[#4a80c0]">{fmt(lowestNeedsMonth.needs)} spent</div>
+                <div className="bg-[#e8f5f9] rounded-xl p-3 border border-[#a8d5e2]">
+                  <div className="text-[10px] text-[#265a27] font-semibold uppercase tracking-wide mb-0.5">Best Needs month</div>
+                  <div className="text-sm font-bold text-[#548c2f]">{lowestNeedsMonth.month}</div>
+                  <div className="text-xs text-[#a8d5e2]">{fmt(lowestNeedsMonth.needs)} spent</div>
                 </div>
               </div>
             )}
@@ -303,10 +303,10 @@ export default function SummaryDemo() {
                       className="w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow"
                       style={{ background: "linear-gradient(135deg,#ffd449,#f9a620)" }}>🪙</motion.div>
                   ) : (
-                    <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#c8dce0] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
+                    <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#e8f5f9] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
                   )}
                   <span className={`text-xs font-semibold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{q.label}</span>
-                  <span className="text-[10px] text-[#a8c8d4]">{q.months}</span>
+                  <span className="text-[10px] text-[#a8d5e2]">{q.months}</span>
                 </div>
               );
             })}
@@ -337,7 +337,7 @@ export default function SummaryDemo() {
                       <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#265a27]" : "text-[#104911]"}`}>
                         {fmt(m.saved)}
                       </div>
-                      <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#548c2f]" : "text-[#c06060]"}`}>
+                      <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#548c2f]" : "text-[#f9a620]"}`}>
                         {goalMet ? "✓ Goal met" : `${fmt(m.goal - m.saved)} short`}
                       </div>
                     </>
@@ -352,7 +352,7 @@ export default function SummaryDemo() {
 
         {/* CTA */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#d4e8b8] p-5 text-center">
+          className="bg-gradient-to-r from-[#f0f7e8] to-[#ebf5df] rounded-2xl border border-[#ebf5df] p-5 text-center">
           <div className="text-sm font-semibold text-[#104911] mb-1">Track your own year in Money Tree</div>
           <div className="text-xs text-[#546E7A] mb-3">See your real savings, streaks, and tree grow month by month.</div>
           <Link to="/signup" className="inline-block bg-[#265a27] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#104911] transition">

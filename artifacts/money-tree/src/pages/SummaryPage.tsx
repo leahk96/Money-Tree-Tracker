@@ -162,10 +162,10 @@ function SummaryContent() {
                     style={{ background: "linear-gradient(135deg,#ffd449,#f9a620)" }}
                   >🪙</motion.div>
                 ) : (
-                  <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#c8dce0] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
+                  <div className="w-14 h-14 rounded-full border-2 border-dashed border-[#e8f5f9] bg-[#FAFAFA] flex items-center justify-center text-2xl opacity-25">🪙</div>
                 )}
                 <span className={`text-xs font-semibold ${earned ? "text-[#ffd449]" : "text-[#9E9E9E]"}`}>{q.label}</span>
-                <span className="text-[10px] text-[#a8c8d4]">{q.months}</span>
+                <span className="text-[10px] text-[#a8d5e2]">{q.months}</span>
               </motion.div>
             );
           })}
@@ -206,7 +206,7 @@ function SummaryContent() {
                     <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#265a27]" : "text-[#104911]"}`}>
                       {fmt(d.totalSaved)}
                     </div>
-                    <div className={`text-[10px] mt-0.5 ${d.goalMet ? "text-[#548c2f]" : "text-[#c06060]"}`}>
+                    <div className={`text-[10px] mt-0.5 ${d.goalMet ? "text-[#548c2f]" : "text-[#f9a620]"}`}>
                       {d.goalMet ? "✓ Goal met" : `${fmt(d.savingsGoal - d.totalSaved)} short`}
                     </div>
                   </>
@@ -225,7 +225,7 @@ function SummaryContent() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.45 }}
         onClick={() => navigate("/garden")}
-        className="w-full py-3 bg-[#F5F5F5] border border-[#d4e8b8] rounded-xl text-sm font-medium text-[#265a27] hover:bg-[#e8f5e0] transition"
+        className="w-full py-3 bg-[#F5F5F5] border border-[#ebf5df] rounded-xl text-sm font-medium text-[#265a27] hover:bg-[#ebf5df] transition"
       >
         🌳 View your garden →
       </motion.button>

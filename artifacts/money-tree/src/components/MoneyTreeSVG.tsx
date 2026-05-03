@@ -12,12 +12,12 @@ interface MoneyTreeSVGProps {
 function PotSVG() {
   return (
     <g>
-      <ellipse cx={180} cy={334} rx={52} ry={7} fill="#7a3c10" opacity={0.12} />
-      <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#c07838" />
+      <ellipse cx={180} cy={334} rx={52} ry={7} fill="#757575" opacity={0.12} />
+      <path d="M149 272 L157 304 Q180 314 203 304 L211 272 Z" fill="#9e9e9e" />
       <path d="M151 283 L153 292 Q180 298 207 292 L209 283 Z" fill="rgba(0,0,0,0.07)" />
-      <rect x={141} y={265} width={78} height={12} rx={5} fill="#9e5e26" />
+      <rect x={141} y={265} width={78} height={12} rx={5} fill="#757575" />
       <rect x={148} y={266} width={32} height={4} rx={2} fill="rgba(255,210,150,0.3)" />
-      <ellipse cx={180} cy={271} rx={34} ry={6} fill="#4a2810" />
+      <ellipse cx={180} cy={271} rx={34} ry={6} fill="#546e7a" />
       <ellipse cx={172} cy={269} rx={11} ry={2.5} fill="#6a3c1a" opacity={0.6} />
     </g>
   );

@@ -103,7 +103,7 @@ export default function Onboarding() {
 
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8E8E8] p-8">
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="mb-4 p-3 bg-[#fef6e0] border border-[#f9a620] rounded-lg text-[#d4880a] text-sm">
               {error}
             </div>
           )}
@@ -140,7 +140,7 @@ export default function Onboarding() {
                       />
                       <button
                         onClick={() => { setGoalPhoto(null); setGoalPhotoPreview(null); }}
-                        className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center text-[#546E7A] hover:text-red-500 shadow-sm border border-[#e0e0e0] text-xs"
+                        className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center text-[#546E7A] hover:text-[#f9a620] shadow-sm border border-[#e0e0e0] text-xs"
                       >
                         ✕
                       </button>
