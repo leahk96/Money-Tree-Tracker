@@ -19,19 +19,33 @@ function getRawBody(req: VercelRequest): Promise<Buffer> {
   });
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") return res.status(405).end();
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> {
+  if (req.method !== "POST") {
+    res.status(405).end();
+    return;
+  }
 
   const sig = req.headers["stripe-signature"];
-  if (!sig) return res.status(400).json({ error: "Missing stripe-signature header" });
+  if (!sig) {
+    res.status(400).json({ error: "Missing stripe-signature header" });
+    return;
+  }
 
   const rawBody = await getRawBody(req);
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
   } catch (err: any) {
-    return res.status(400).json({ error: `Webhook verification failed: ${err.message}` });
+    res.status(400).json({ error: `Webhook verification failed: ${err.message}` });
+    return;
   }
 
   if (event.type === "checkout.session.completed") {

@@ -1,21 +1,34 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== "POST") return res.status(405).end();
+function parseJwt(token: string): { sub: string; email?: string } | null {
+  try {
+    const payload = JSON.parse(
+      Buffer.from(token.split(".")[1], "base64url").toString()
+    );
+    return payload?.sub ? payload : null;
+  } catch {
+    return null;
+  }
+}
+
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> {
+  if (req.method !== "POST") {
+    res.status(405).end();
+    return;
+  }
 
   const token = (req.headers.authorization ?? "").replace("Bearer ", "");
-  if (!token) return res.status(401).json({ error: "Unauthorized" });
-
-  const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-  if (authError || !user) return res.status(401).json({ error: "Unauthorized" });
+  const payload = token ? parseJwt(token) : null;
+  if (!payload) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -36,8 +49,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       mode: "payment",
       success_url: `${req.headers.origin}/settings?upgraded=true`,
       cancel_url: `${req.headers.origin}/settings`,
-      customer_email: user.email,
-      metadata: { user_id: user.id },
+      customer_email: payload.email,
+      metadata: { user_id: payload.sub },
     });
 
     res.json({ url: session.url });
