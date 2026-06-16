@@ -61,7 +61,8 @@ export default function Onboarding() {
       goal_name: goalName || null,
       goal_photo_url: photoUrl,
       best_streak: 0,
-    });
+      onboarding_completed: true,
+    } as any);
 
     if (profileError) {
       setError("Something went wrong saving your profile. Please try again.");

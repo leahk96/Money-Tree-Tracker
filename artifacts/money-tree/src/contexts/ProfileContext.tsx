@@ -47,7 +47,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
-  const hasCompletedOnboarding = !!profile;
+  const hasCompletedOnboarding = !!(profile && (profile as any).onboarding_completed);
 
   return (
     <ProfileContext.Provider value={{
