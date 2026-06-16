@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -11,18 +11,25 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 function SettingsContent() {
   const { symbol, fmt } = useCurrency();
   const { user, signOut } = useAuth();
-  const { profile, updateProfile, refreshProfile } = useProfile();
-  const [location, navigate] = useLocation();
+  const { profile, updateProfile, refreshProfile, isPremium } = useProfile();
+  const [, navigate] = useLocation();
   const [upgradeSuccess, setUpgradeSuccess] = useState(false);
+  const isPremiumRef = useRef(isPremium);
+  useEffect(() => { isPremiumRef.current = isPremium; }, [isPremium]);
 
-  // Refresh profile after Stripe redirect so the banner disappears immediately
+  // Poll for the premium flag after Stripe redirects back — the webhook is
+  // async so is_premium may not be true in the DB yet when we arrive.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("upgraded") === "true") {
-      setUpgradeSuccess(true);
-      refreshProfile();
-      navigate("/settings", { replace: true });
-    }
+    if (params.get("upgraded") !== "true") return;
+    setUpgradeSuccess(true);
+    navigate("/settings", { replace: true });
+    let attempts = 0;
+    const timer = setInterval(async () => {
+      await refreshProfile();
+      if (isPremiumRef.current || ++attempts >= 8) clearInterval(timer);
+    }, 1500);
+    return () => clearInterval(timer);
   }, []);
 
   // Goal section state

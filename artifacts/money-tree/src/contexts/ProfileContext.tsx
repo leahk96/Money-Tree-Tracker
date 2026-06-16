@@ -18,11 +18,15 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  // Track which user ID we last fetched for — guards the window between
+  // user becoming non-null and the fetchProfile effect running.
+  const [loadedForUserId, setLoadedForUserId] = useState<string | null | undefined>(undefined);
 
   const fetchProfile = useCallback(async () => {
     if (!user) {
       setProfile(null);
       setLoading(false);
+      setLoadedForUserId(null);
       return;
     }
     setLoading(true);
@@ -33,6 +37,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       .single();
     setProfile(data ?? null);
     setLoading(false);
+    setLoadedForUserId(user.id);
   }, [user]);
 
   useEffect(() => {
@@ -50,7 +55,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
-  const isLoading = authLoading || loading;
+  // isLoading stays true until we've finished fetching for the current user.
+  // This prevents ProtectedRoute from briefly seeing profile=null between
+  // auth setting user and the fetchProfile effect firing.
+  const isLoading = authLoading || loading || (!!user && loadedForUserId !== user.id);
   const hasCompletedOnboarding = !!profile?.onboarding_completed;
   const isPremium = !!profile?.is_premium;
 
