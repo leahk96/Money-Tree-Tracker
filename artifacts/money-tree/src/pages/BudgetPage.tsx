@@ -107,7 +107,7 @@ function SideBySideSection({
         <div key={item.id} className="flex items-center border-b border-[#F5F5F5] hover:bg-[#FAFAFA] group px-3 py-1.5">
           <span className="text-xs text-[#37474F] flex-1 truncate pr-2">{item.name}</span>
           <AmountInput value={item.amount} onChange={v => onUpdate(item.id, v)} />
-          <button onClick={() => onDelete(item.id)} className="opacity-0 group-hover:opacity-100 ml-1 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+          <button onClick={() => onDelete(item.id)} className="ml-1 w-6 h-6 md:w-4 md:h-4 rounded text-[#BDBDBD] hover:text-red-500 active:text-red-500 transition text-sm md:text-xs flex items-center justify-center md:opacity-0 md:group-hover:opacity-100">×</button>
         </div>
       ))}
 
@@ -638,7 +638,7 @@ function BudgetContent() {
                       <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(item.id, v)} />
                     </div>
                     <div className="flex items-center justify-center">
-                      <button onClick={() => deleteRow(item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                      <button onClick={() => deleteRow(item.id)} className="w-6 h-6 md:w-4 md:h-4 rounded text-[#BDBDBD] hover:text-red-500 active:text-red-500 transition text-sm md:text-xs flex items-center justify-center md:opacity-0 md:group-hover:opacity-100">×</button>
                     </div>
                   </div>
                 ))}
@@ -736,7 +736,7 @@ function BudgetContent() {
                         <AmountInput value={item.actual_amount ?? 0} onChange={v => updateActual(item.id, v)} />
                       </div>
                       <div className="flex items-center justify-center">
-                        <button onClick={() => deleteRow(item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                        <button onClick={() => deleteRow(item.id)} className="w-6 h-6 md:w-4 md:h-4 rounded text-[#BDBDBD] hover:text-red-500 active:text-red-500 transition text-sm md:text-xs flex items-center justify-center md:opacity-0 md:group-hover:opacity-100">×</button>
                       </div>
                     </div>
                   ) : (
@@ -749,7 +749,7 @@ function BudgetContent() {
                         <AmountInput value={item.amount} onChange={v => updateAmount(item.id, v)} />
                       </div>
                       <div className="flex items-center justify-center">
-                        <button onClick={() => deleteRow(item.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 rounded text-[#BDBDBD] hover:text-red-500 transition text-xs flex items-center justify-center">×</button>
+                        <button onClick={() => deleteRow(item.id)} className="w-6 h-6 md:w-4 md:h-4 rounded text-[#BDBDBD] hover:text-red-500 active:text-red-500 transition text-sm md:text-xs flex items-center justify-center md:opacity-0 md:group-hover:opacity-100">×</button>
                       </div>
                     </div>
                   ))}
