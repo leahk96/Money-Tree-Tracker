@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         },
       ],
       mode: "payment",
-      success_url: `https://www.moneytreetracker.com/settings?upgraded=true`,
+      success_url: `https://www.moneytreetracker.com/settings?upgraded=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://www.moneytreetracker.com/settings`,
       customer_email: payload.email,
       metadata: { user_id: payload.sub },

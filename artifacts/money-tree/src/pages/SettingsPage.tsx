@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -10,26 +10,27 @@ import { useCurrency } from "@/contexts/CurrencyContext";
 
 function SettingsContent() {
   const { symbol, fmt } = useCurrency();
-  const { user, signOut } = useAuth();
+  const { user, signOut, session } = useAuth();
   const { profile, updateProfile, refreshProfile, isPremium } = useProfile();
   const [, navigate] = useLocation();
   const [upgradeSuccess, setUpgradeSuccess] = useState(false);
-  const isPremiumRef = useRef(isPremium);
-  useEffect(() => { isPremiumRef.current = isPremium; }, [isPremium]);
-
-  // Poll for the premium flag after Stripe redirects back — the webhook is
-  // async so is_premium may not be true in the DB yet when we arrive.
+  // After Stripe redirects back, verify the payment directly with our server
+  // and update is_premium immediately — don't rely solely on the webhook.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("upgraded") !== "true") return;
+    const sessionId = params.get("session_id");
     setUpgradeSuccess(true);
     navigate("/settings", { replace: true });
-    let attempts = 0;
-    const timer = setInterval(async () => {
-      await refreshProfile();
-      if (isPremiumRef.current || ++attempts >= 8) clearInterval(timer);
-    }, 1500);
-    return () => clearInterval(timer);
+
+    if (!sessionId || !session) return;
+    fetch(`/api/verify-upgrade?session_id=${encodeURIComponent(sessionId)}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+      .then(r => r.json())
+      .then(data => { if (data.success) refreshProfile(); })
+      .catch(() => {});
   }, []);
 
   // Goal section state
