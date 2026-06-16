@@ -48,6 +48,7 @@ export default async function handler(req, res) {
         .from("profiles")
         .update({
           is_premium: true,
+          onboarding_completed: true,
           stripe_customer_id: session.customer,
         })
         .eq("user_id", userId);
