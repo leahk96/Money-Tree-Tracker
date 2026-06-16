@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/contexts/ProfileContext";
 import { supabase } from "@/lib/supabase";
+import { useState } from "react";
 
 interface NavItem {
   to: string;
@@ -20,12 +21,28 @@ const NAV: NavItem[] = [
 ];
 
 export function AppLayout({ children }: { children: ReactNode }) {
-  const { signOut, user } = useAuth();
+  const { signOut, user, session } = useAuth();
   const { isPremium } = useProfile();
   const [location] = useLocation();
+  const [upgrading, setUpgrading] = useState(false);
 
   const isActive = (item: NavItem) =>
     item.match.some(p => location === p || location.startsWith(p + "/"));
+
+  const handleUpgrade = async () => {
+    if (!session || upgrading) return;
+    setUpgrading(true);
+    try {
+      const res = await fetch("/api/create-checkout", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const { url } = await res.json();
+      if (url) window.location.href = url;
+    } finally {
+      setUpgrading(false);
+    }
+  };
 
   const handleSignOut = async () => {
     if (!isPremium && user) {
@@ -73,8 +90,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {!isPremium && (
           <div className="flex items-center justify-between px-6 py-2 bg-[#17914A] text-white">
             <span className="text-sm">Upgrade to save your progress — pay once, yours forever.</span>
-            <button className="ml-4 px-4 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs hover:bg-gray-50 transition whitespace-nowrap">
-              Upgrade
+            <button onClick={handleUpgrade} disabled={upgrading} className="ml-4 px-4 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs hover:bg-gray-50 transition whitespace-nowrap disabled:opacity-60">
+              {upgrading ? "Loading..." : "Upgrade"}
             </button>
           </div>
         )}
@@ -89,8 +106,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {!isPremium && (
         <div className="md:hidden fixed bottom-[60px] inset-x-0 z-30 flex items-center justify-between px-4 py-2.5 bg-[#17914A] text-white">
           <span className="text-xs font-medium leading-tight">Pay once — save your progress forever.</span>
-          <button className="ml-3 px-3 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs whitespace-nowrap">
-            Upgrade
+          <button onClick={handleUpgrade} disabled={upgrading} className="ml-3 px-3 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs whitespace-nowrap disabled:opacity-60">
+            {upgrading ? "..." : "Upgrade"}
           </button>
         </div>
       )}
