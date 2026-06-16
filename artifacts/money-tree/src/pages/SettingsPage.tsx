@@ -62,14 +62,19 @@ function SettingsContent() {
     }
   }, [profile]);
 
+  const [photoError, setPhotoError] = useState("");
+
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     setUploadingPhoto(true);
+    setPhotoError("");
     const ext = file.name.split(".").pop();
     const path = `${user.id}/goal.${ext}`;
     const { error } = await supabase.storage.from("goal-photos").upload(path, file, { upsert: true });
-    if (!error) {
+    if (error) {
+      setPhotoError(`Upload failed: ${error.message}`);
+    } else {
       const { data } = supabase.storage.from("goal-photos").getPublicUrl(path);
       setGoalPhotoUrl(data.publicUrl);
     }
@@ -161,6 +166,7 @@ function SettingsContent() {
             </div>
             <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
             <div className="flex-1">
+              {photoError && <p className="text-xs text-red-500 mb-1">{photoError}</p>}
               <p className="text-xs text-[#546E7A] leading-relaxed">
                 Add a photo of what you're saving for — a holiday, car, house, or anything else. It'll appear on your tree page.
               </p>

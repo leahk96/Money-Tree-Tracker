@@ -53,10 +53,13 @@ export default function Onboarding() {
         .from("goal-photos")
         .upload(path, goalPhoto, { upsert: true });
 
-      if (!uploadError) {
-        const { data } = supabase.storage.from("goal-photos").getPublicUrl(path);
-        photoUrl = data.publicUrl;
+      if (uploadError) {
+        setError(`Photo upload failed: ${uploadError.message}`);
+        setLoading(false);
+        return;
       }
+      const { data } = supabase.storage.from("goal-photos").getPublicUrl(path);
+      photoUrl = data.publicUrl;
     }
 
     const { error: profileError } = await updateProfile({
