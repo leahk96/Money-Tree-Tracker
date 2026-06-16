@@ -73,12 +73,12 @@ function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | nul
             : "border-[#E8E8E8] bg-white"
       }`}
     >
-      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
+      <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#17914A]" : "text-[#546E7A]"}`}>
         {name}
       </div>
       {hasData ? (
         <>
-          <div className={`text-sm font-bold ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
+          <div className={`text-sm font-bold ${goalMet ? "text-[#17914A]" : "text-[#1B5E20]"}`}>
             {fmt(totalSaved)}
           </div>
           <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#9E9E9E]"}`}>
@@ -104,7 +104,7 @@ function TreeContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#17914A] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -125,7 +125,7 @@ function TreeContent() {
       >
         <div className="flex items-center justify-between mb-1">
           <h2 className="font-bold text-[#1B5E20] text-base">Your Money Tree</h2>
-          <span className="text-xs font-semibold text-[#2E7D32] bg-[#E8F5E9] px-2.5 py-1 rounded-full">
+          <span className="text-xs font-semibold text-[#17914A] bg-[#E8F5E9] px-2.5 py-1 rounded-full">
             {goalsMetThisYear}/12 goals met
           </span>
         </div>
@@ -144,7 +144,7 @@ function TreeContent() {
           </p>
           <div className="flex gap-1 shrink-0 ml-3">
             {Array.from({ length: 12 }, (_, i) => (
-              <div key={i} className={`w-2 h-2 rounded-full ${i < goalsMetThisYear ? "bg-[#2E7D32]" : "bg-[#E0E0E0]"}`} />
+              <div key={i} className={`w-2 h-2 rounded-full ${i < goalsMetThisYear ? "bg-[#17914A]" : "bg-[#E0E0E0]"}`} />
             ))}
           </div>
         </div>
@@ -184,7 +184,7 @@ function TreeContent() {
             <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
             {data && (
               <div className="text-sm text-[#546E7A] mt-1">
-                Total saved this year: <span className="font-semibold text-[#2E7D32]">{fmt(data.totalSavedThisYear)}</span>
+                Total saved this year: <span className="font-semibold text-[#17914A]">{fmt(data.totalSavedThisYear)}</span>
                 {profile.yearly_target && (
                   <span className="text-[#9E9E9E]"> / {fmt(profile.yearly_target)}</span>
                 )}

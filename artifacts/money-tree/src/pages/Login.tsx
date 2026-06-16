@@ -44,29 +44,29 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Email</label>
+              <label className="block text-sm font-medium text-[#17914A] mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#17914A] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Password</label>
+              <label className="block text-sm font-medium text-[#17914A] mb-1.5">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#17914A] focus:border-transparent text-[#1B5E20] placeholder-[#9E9E9E] transition"
               />
             </div>
 
             <div className="text-right">
-              <Link to="/forgot-password" className="text-sm text-[#2E7D32] hover:underline">
+              <Link to="/forgot-password" className="text-sm text-[#17914A] hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -74,7 +74,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#17914A] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
@@ -82,7 +82,7 @@ export default function Login() {
 
           <p className="text-center text-sm text-[#546E7A] mt-6">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-[#2E7D32] font-medium hover:underline">
+            <Link to="/signup" className="text-[#17914A] font-medium hover:underline">
               Sign up free
             </Link>
           </p>

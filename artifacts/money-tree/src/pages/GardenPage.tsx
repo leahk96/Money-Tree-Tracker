@@ -205,7 +205,7 @@ function TreePlot({ d, onClick }: { d: GardenYearData; onClick: () => void }) {
         </div>
         {d.hasData ? (
           <>
-            <div className="text-[11px] text-[#2E7D32] font-semibold mt-0.5">
+            <div className="text-[11px] text-[#17914A] font-semibold mt-0.5">
               {d.goalsMetCount}/12 goals
             </div>
             <div className="text-[10px] text-[#607D8B]">
@@ -239,7 +239,7 @@ function GardenContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#17914A] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -273,7 +273,7 @@ function GardenContent() {
             { label: "All-time saved", value: fmt(totalSavedAllTime) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-              <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>
+              <div className="text-base font-bold text-[#17914A]">{s.value}</div>
               <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}

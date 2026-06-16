@@ -87,7 +87,7 @@ export default function Onboarding() {
             <div key={s.id} className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
                 step === s.id
-                  ? "bg-[#2E7D32] text-white"
+                  ? "bg-[#17914A] text-white"
                   : step > s.id
                     ? "bg-[#4CAF50] text-white"
                     : "bg-[#E8E8E8] text-[#546E7A]"
@@ -117,18 +117,18 @@ export default function Onboarding() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">Goal name</label>
+                  <label className="block text-sm font-medium text-[#17914A] mb-1.5">Goal name</label>
                   <input
                     type="text"
                     value={goalName}
                     onChange={e => setGoalName(e.target.value)}
                     placeholder="e.g. Bali 2026, House deposit, Emergency fund"
-                    className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] text-[#1B5E20] placeholder-[#9E9E9E] transition"
+                    className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#17914A] text-[#1B5E20] placeholder-[#9E9E9E] transition"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-[#2E7D32] mb-1.5">
+                  <label className="block text-sm font-medium text-[#17914A] mb-1.5">
                     Goal photo <span className="text-[#9E9E9E] font-normal">(optional)</span>
                   </label>
                   {goalPhotoPreview ? (
@@ -146,7 +146,7 @@ export default function Onboarding() {
                       </button>
                     </div>
                   ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-32 rounded-xl border-2 border-dashed border-[#D0D0D0] bg-[#FAFAFA] cursor-pointer hover:border-[#2E7D32] hover:bg-[#F5F5F5] transition">
+                    <label className="flex flex-col items-center justify-center w-full h-32 rounded-xl border-2 border-dashed border-[#D0D0D0] bg-[#FAFAFA] cursor-pointer hover:border-[#17914A] hover:bg-[#F5F5F5] transition">
                       <span className="text-2xl mb-1">📷</span>
                       <span className="text-sm text-[#546E7A]">Click to upload a photo</span>
                       <span className="text-xs text-[#9E9E9E]">JPG, PNG, max 5MB</span>
@@ -158,7 +158,7 @@ export default function Onboarding() {
 
               <button
                 onClick={handleStep1}
-                className="w-full mt-6 py-3 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition"
+                className="w-full mt-6 py-3 bg-[#17914A] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition"
               >
                 Continue
               </button>
@@ -171,19 +171,19 @@ export default function Onboarding() {
               <h2 className="text-xl font-semibold text-[#1B5E20] mb-2">You're all set!</h2>
               <p className="text-[#546E7A] text-sm mb-6">
                 {goalName ? (
-                  <>You're saving for <span className="font-semibold text-[#2E7D32]">{goalName}</span>. </>
+                  <>You're saving for <span className="font-semibold text-[#17914A]">{goalName}</span>. </>
                 ) : null}
                 Time to plant your Money Tree.
               </p>
 
               <div className="bg-[#F5F5F5] rounded-xl p-4 mb-6 text-left space-y-2">
-                <div className="flex items-center gap-2 text-sm text-[#2E7D32]">
+                <div className="flex items-center gap-2 text-sm text-[#17914A]">
                   <span className="text-green-500">✓</span> Track your income and expenses each month
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#2E7D32]">
+                <div className="flex items-center gap-2 text-sm text-[#17914A]">
                   <span className="text-green-500">✓</span> Set a savings goal each month and watch your tree grow
                 </div>
-                <div className="flex items-center gap-2 text-sm text-[#2E7D32]">
+                <div className="flex items-center gap-2 text-sm text-[#17914A]">
                   <span className="text-green-500">✓</span> Earn gold coins for great quarters
                 </div>
               </div>
@@ -191,14 +191,14 @@ export default function Onboarding() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep(1)}
-                  className="flex-1 py-3 border border-[#D0D0D0] text-[#2E7D32] font-medium rounded-xl hover:bg-[#F5F5F5] transition"
+                  className="flex-1 py-3 border border-[#D0D0D0] text-[#17914A] font-medium rounded-xl hover:bg-[#F5F5F5] transition"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleFinish}
                   disabled={loading}
-                  className="flex-1 py-3 bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60"
+                  className="flex-1 py-3 bg-[#17914A] hover:bg-[#1B5E20] text-white font-semibold rounded-xl transition disabled:opacity-60"
                 >
                   {loading ? "Setting up..." : "Let's go!"}
                 </button>

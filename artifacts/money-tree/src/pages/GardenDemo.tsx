@@ -46,7 +46,7 @@ function TreePlot({ d, onClick }: { d: typeof DEMO_YEARS[0]; onClick: () => void
           <span className="text-sm font-bold text-[#1B5E20]">{d.year}</span>
           {badge && <span className="text-sm">{badge}</span>}
         </div>
-        <div className="text-[11px] text-[#2E7D32] font-semibold mt-0.5">
+        <div className="text-[11px] text-[#17914A] font-semibold mt-0.5">
           {d.goalsMetCount}/12 goals
         </div>
         <div className="text-[10px] text-[#607D8B]">{fmt(d.totalSaved)} saved</div>
@@ -144,7 +144,7 @@ export default function GardenDemo() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own garden
       </div>
 
@@ -158,13 +158,13 @@ export default function GardenDemo() {
             <Link key={n.to} to={n.to}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
                 n.to === "/garden-demo"
-                  ? "bg-[#E8F5E9] text-[#2E7D32]"
+                  ? "bg-[#E8F5E9] text-[#17914A]"
                   : "text-[#546E7A] hover:bg-[#F5F5F5]"
               }`}
             >{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#2E7D32] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">
+        <Link to="/signup" className="text-sm bg-[#17914A] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">
           Get started
         </Link>
       </header>
@@ -185,7 +185,7 @@ export default function GardenDemo() {
             { label: "All-time saved",  value: fmt(totalSaved) },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-xl border border-[#E8E8E8] p-3 text-center">
-              <div className="text-base font-bold text-[#2E7D32]">{s.value}</div>
+              <div className="text-base font-bold text-[#17914A]">{s.value}</div>
               <div className="text-[10px] text-[#607D8B] mt-0.5">{s.label}</div>
             </div>
           ))}
@@ -269,7 +269,7 @@ export default function GardenDemo() {
           <div className="text-2xl mb-2">🌳</div>
           <div className="text-sm font-semibold text-[#1B5E20]">Build your garden year on year</div>
           <div className="text-xs text-[#546E7A] mt-1 mb-3">Each year you save, a new tree joins your garden.</div>
-          <Link to="/signup" className="inline-block bg-[#2E7D32] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#1B5E20] transition">
+          <Link to="/signup" className="inline-block bg-[#17914A] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#1B5E20] transition">
             Start your garden →
           </Link>
         </motion.div>

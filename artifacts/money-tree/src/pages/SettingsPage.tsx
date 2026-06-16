@@ -128,12 +128,12 @@ function SettingsContent() {
           <div className="flex items-center gap-4">
             <div
               onClick={() => fileRef.current?.click()}
-              className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#c8dcc8] bg-[#F5F5F5] flex items-center justify-center cursor-pointer hover:border-[#2E7D32] transition overflow-hidden shrink-0"
+              className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#c8dcc8] bg-[#F5F5F5] flex items-center justify-center cursor-pointer hover:border-[#17914A] transition overflow-hidden shrink-0"
             >
               {goalPhotoUrl ? (
                 <img src={goalPhotoUrl} alt="Goal" className="w-full h-full object-cover" />
               ) : uploadingPhoto ? (
-                <div className="w-5 h-5 rounded-full border-2 border-[#2E7D32] border-t-transparent animate-spin" />
+                <div className="w-5 h-5 rounded-full border-2 border-[#17914A] border-t-transparent animate-spin" />
               ) : (
                 <div className="text-center">
                   <div className="text-2xl mb-0.5">📷</div>
@@ -166,7 +166,7 @@ function SettingsContent() {
               onChange={e => setGoalName(e.target.value)}
               placeholder="e.g. Family holiday to Italy"
               maxLength={80}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
             />
           </div>
 
@@ -174,14 +174,14 @@ function SettingsContent() {
           <div>
             <label className="block text-xs font-semibold text-[#37474F] mb-1.5">Target amount</label>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2E7D32] font-semibold text-sm">{symbol}</span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#17914A] font-semibold text-sm">{symbol}</span>
               <input
                 type="number"
                 value={goalTarget}
                 onChange={e => setGoalTarget(e.target.value)}
                 placeholder="5000"
                 min={0}
-                className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
+                className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
               />
             </div>
             {goalTarget && (
@@ -192,7 +192,7 @@ function SettingsContent() {
           <button
             onClick={saveGoal}
             disabled={savingGoal}
-            className="w-full py-2.5 bg-[#2E7D32] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition disabled:opacity-60 text-sm flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-[#17914A] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition disabled:opacity-60 text-sm flex items-center justify-center gap-2"
           >
             {savingGoal ? (
               <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" /> Saving…</>
@@ -217,7 +217,7 @@ function SettingsContent() {
             <select
               value={selectedCurrency}
               onChange={e => setSelectedCurrency(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] bg-white"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] bg-white"
             >
               {Object.entries(SUPPORTED_CURRENCIES).map(([code, { label, symbol }]) => (
                 <option key={code} value={code}>{symbol} — {label} ({code})</option>
@@ -227,7 +227,7 @@ function SettingsContent() {
           <button
             onClick={saveCurrency}
             disabled={savingCurrency || selectedCurrency === (profile?.currency ?? "GBP")}
-            className="w-full py-2.5 bg-[#2E7D32] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition disabled:opacity-60 text-sm flex items-center justify-center gap-2"
+            className="w-full py-2.5 bg-[#17914A] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition disabled:opacity-60 text-sm flex items-center justify-center gap-2"
           >
             {savingCurrency ? (
               <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" /> Saving…</>
@@ -264,21 +264,21 @@ function SettingsContent() {
                 value={newPw}
                 onChange={e => setNewPw(e.target.value)}
                 placeholder="New password"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
               />
               <input
                 type="password"
                 value={confirmPw}
                 onChange={e => setConfirmPw(e.target.value)}
                 placeholder="Confirm new password"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] placeholder:text-[#9E9E9E]"
               />
               {pwError && <p className="text-xs text-red-500">{pwError}</p>}
-              {pwSaved && <p className="text-xs text-[#2E7D32] font-medium">✓ Password updated</p>}
+              {pwSaved && <p className="text-xs text-[#17914A] font-medium">✓ Password updated</p>}
               <button
                 onClick={changePassword}
                 disabled={savingPw || !newPw || !confirmPw}
-                className="w-full py-2.5 border border-[#2E7D32] text-[#2E7D32] font-semibold rounded-xl hover:bg-[#F5F5F5] transition disabled:opacity-40 text-sm"
+                className="w-full py-2.5 border border-[#17914A] text-[#17914A] font-semibold rounded-xl hover:bg-[#F5F5F5] transition disabled:opacity-40 text-sm"
               >
                 {savingPw ? "Updating…" : "Update password"}
               </button>

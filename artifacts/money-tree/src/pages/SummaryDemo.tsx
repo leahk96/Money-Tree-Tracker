@@ -155,7 +155,7 @@ export default function SummaryDemo() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to track your own summary
       </div>
 
@@ -168,12 +168,12 @@ export default function SummaryDemo() {
           {DEMO_NAV.map(n => (
             <Link key={n.to} to={n.to}
               className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
-                n.to === "/summary-demo" ? "bg-[#E8F5E9] text-[#2E7D32]" : "text-[#546E7A] hover:bg-[#F5F5F5]"
+                n.to === "/summary-demo" ? "bg-[#E8F5E9] text-[#17914A]" : "text-[#546E7A] hover:bg-[#F5F5F5]"
               }`}
             >{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#2E7D32] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">
+        <Link to="/signup" className="text-sm bg-[#17914A] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">
           Get started
         </Link>
       </header>
@@ -183,13 +183,13 @@ export default function SummaryDemo() {
         {/* Year nav */}
         <div className="flex items-center justify-between">
           <button onClick={() => canPrev && setSelectedYear(AVAILABLE_YEARS[yearIdx - 1])} disabled={!canPrev}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30">←</button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition disabled:opacity-30">←</button>
           <div className="text-center">
             <h1 className="text-xl font-bold text-[#1B5E20]">{selectedYear} {isCurrent ? "so far" : "in review"}</h1>
             <p className="text-xs text-[#607D8B] mt-0.5">{isCurrent ? `${12 - d.goalsMetCount} months remaining` : "Full year"}</p>
           </div>
           <button onClick={() => canNext && setSelectedYear(AVAILABLE_YEARS[yearIdx + 1])} disabled={!canNext}
-            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30">→</button>
+            className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition disabled:opacity-30">→</button>
         </div>
 
         {/* Tree + headline */}
@@ -202,12 +202,12 @@ export default function SummaryDemo() {
             <div className="flex-1 space-y-2">
               <div>
                 <div className="text-xs text-[#607D8B] mb-0.5">Goals hit</div>
-                <div className="text-3xl font-bold text-[#2E7D32]">
+                <div className="text-3xl font-bold text-[#17914A]">
                   {d.goalsMetCount}<span className="text-lg text-[#9E9E9E] font-normal">/12</span>
                 </div>
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-2">
-                <motion.div className="bg-[#2E7D32] h-2 rounded-full"
+                <motion.div className="bg-[#17914A] h-2 rounded-full"
                   initial={{ width: 0 }} animate={{ width: `${(d.goalsMetCount / 12) * 100}%` }}
                   transition={{ duration: 0.8, ease: "easeOut" }} />
               </div>
@@ -230,7 +230,7 @@ export default function SummaryDemo() {
               transition={{ delay: 0.06 + i * 0.05 }}
               className="bg-white rounded-xl border border-[#E8E8E8] p-4">
               <div className="text-xs text-[#607D8B] mb-1">{card.label}</div>
-              <div className={`text-xl font-bold ${card.positive ? "text-[#2E7D32]" : "text-[#c05a00]"}`}>{card.value}</div>
+              <div className={`text-xl font-bold ${card.positive ? "text-[#17914A]" : "text-[#c05a00]"}`}>{card.value}</div>
               {card.sub && <div className="text-xs text-[#9E9E9E] mt-0.5">{card.sub}</div>}
             </motion.div>
           ))}
@@ -244,7 +244,7 @@ export default function SummaryDemo() {
             <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved — side by side each month</p>
             <div className="flex items-center gap-4 mb-3">
               <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#D4AF37]" /><span className="text-[10px] text-[#9E9E9E]">Goal</span></div>
-              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
             </div>
             <ResponsiveContainer width="100%" height={190}>
               <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
@@ -256,7 +256,7 @@ export default function SummaryDemo() {
                 <Bar dataKey="Goal" fill="#D4AF37" radius={[3, 3, 0, 0]} opacity={0.75} />
                 <Bar dataKey="Saved" radius={[3, 3, 0, 0]}>
                   {chartMonths.map((entry, i) => (
-                    <Cell key={i} fill={entry.Saved >= entry.Goal ? "#2E7D32" : "#B80000"} />
+                    <Cell key={i} fill={entry.Saved >= entry.Goal ? "#17914A" : "#B80000"} />
                   ))}
                 </Bar>
               </BarChart>
@@ -327,7 +327,7 @@ export default function SummaryDemo() {
                 <ReferenceLine y={0} stroke="#E0E0E0" strokeWidth={1.5} />
                 <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
                   {chartMonths.map((entry, i) => (
-                    <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#B80000"} />
+                    <Cell key={i} fill={entry.Surplus >= 0 ? "#17914A" : "#B80000"} />
                   ))}
                 </Bar>
               </BarChart>
@@ -343,7 +343,7 @@ export default function SummaryDemo() {
             <p className="text-xs text-[#9E9E9E] mb-4">How much you planned to save vs what you actually moved each month</p>
             <div className="flex items-center gap-4 mb-3">
               <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#81C784]" /><span className="text-[10px] text-[#9E9E9E]">Expected</span></div>
-              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
+              <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
             </div>
             <ResponsiveContainer width="100%" height={190}>
               <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
@@ -355,7 +355,7 @@ export default function SummaryDemo() {
                 <Bar dataKey="SavingsExpected" name="Expected" fill="#81C784" radius={[3, 3, 0, 0]} opacity={0.75} />
                 <Bar dataKey="SavingsActual" name="Actual" radius={[3, 3, 0, 0]}>
                   {chartMonths.map((entry, i) => (
-                    <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#2E7D32" : "#B80000"} />
+                    <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#17914A" : "#B80000"} />
                   ))}
                 </Bar>
               </BarChart>
@@ -404,12 +404,12 @@ export default function SummaryDemo() {
                     : "border-dashed border-[#E8E8E8] bg-[#FAFAFA]"
                   }`}
                 >
-                  <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
+                  <div className={`text-xs font-semibold mb-1 ${goalMet ? "text-[#17914A]" : "text-[#546E7A]"}`}>
                     {MONTH_NAMES[i]}
                   </div>
                   {m.hasData ? (
                     <>
-                      <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
+                      <div className={`text-sm font-bold tabular-nums ${goalMet ? "text-[#17914A]" : "text-[#1B5E20]"}`}>
                         {fmt(m.saved)}
                       </div>
                       <div className={`text-[10px] mt-0.5 ${goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
@@ -430,7 +430,7 @@ export default function SummaryDemo() {
           className="bg-gradient-to-r from-[#f0fbf0] to-[#E8F5E9] rounded-2xl border border-[#c8e8c8] p-5 text-center">
           <div className="text-sm font-semibold text-[#1B5E20] mb-1">Track your own year in Money Tree</div>
           <div className="text-xs text-[#546E7A] mb-3">See your real savings, streaks, and tree grow month by month.</div>
-          <Link to="/signup" className="inline-block bg-[#2E7D32] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#1B5E20] transition">
+          <Link to="/signup" className="inline-block bg-[#17914A] text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-[#1B5E20] transition">
             Start for free →
           </Link>
         </motion.div>

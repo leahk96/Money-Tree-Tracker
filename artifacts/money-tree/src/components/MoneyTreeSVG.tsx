@@ -543,7 +543,7 @@ function LevelUpCelebration({ stage, onDone }: { stage: number; onDone: () => vo
 
       {/* Rising badge */}
       <motion.div
-        className="absolute flex items-center gap-2 bg-[#2E7D32] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-green-900/30"
+        className="absolute flex items-center gap-2 bg-[#17914A] text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg shadow-green-900/30"
         initial={{ y: 30, opacity: 0, scale: 0.6 }}
         animate={{ y: [30, -10, -80], opacity: [0, 1, 1, 0], scale: [0.6, 1.1, 1, 0.9] }}
         transition={{ duration: 2.0, ease: "easeOut", times: [0, 0.25, 0.7, 1] }}

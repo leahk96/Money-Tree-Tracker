@@ -78,35 +78,35 @@
 
   /* Money Tree green palette */
   --background: 0 0% 98%;         /* #FAFAFA clean neutral white */
-  --foreground: 122 47% 23%;      /* #1B5E20 dark forest green */
+  --foreground: 145 73% 20%;      /* dark green */
   --border: 0 0% 88%;             /* #E0E0E0 neutral light border */
   --card: 0 0% 100%;              /* white */
-  --card-foreground: 122 47% 23%;
+  --card-foreground: 145 73% 20%;
   --card-border: 0 0% 88%;
   --sidebar: 0 0% 100%;
-  --sidebar-foreground: 122 47% 23%;
+  --sidebar-foreground: 145 73% 20%;
   --sidebar-border: 0 0% 88%;
-  --sidebar-primary: 122 47% 33%; /* #2E7D32 material green 800 */
+  --sidebar-primary: 145 73% 33%; /* #17914A sea green */
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 122 39% 95%;
-  --sidebar-accent-foreground: 122 47% 23%;
-  --sidebar-ring: 122 47% 33%;
+  --sidebar-accent: 145 39% 95%;
+  --sidebar-accent-foreground: 145 73% 20%;
+  --sidebar-ring: 145 73% 33%;
   --popover: 0 0% 100%;
-  --popover-foreground: 122 47% 23%;
+  --popover-foreground: 145 73% 20%;
   --popover-border: 0 0% 88%;
-  --primary: 122 47% 33%;         /* #2E7D32 */
+  --primary: 145 73% 33%;         /* #17914A */
   --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 96%;
-  --secondary-foreground: 122 47% 23%;
+  --secondary-foreground: 145 73% 20%;
   --muted: 0 0% 95%;
   --muted-foreground: 200 12% 45%;
-  --accent: 122 39% 95%;
-  --accent-foreground: 122 47% 23%;
+  --accent: 145 39% 95%;
+  --accent-foreground: 145 73% 20%;
   --destructive: 350 70% 55%;
   --destructive-foreground: 0 0% 100%;
   --input: 0 0% 88%;
-  --ring: 122 47% 33%;
-  --chart-1: 122 47% 33%;   /* savings green #2E7D32 */
+  --ring: 145 73% 33%;
+  --chart-1: 145 73% 33%;   /* savings green #17914A */
   --chart-2: 0 71% 47%;     /* bills muted red #C62828 */
   --chart-3: 213 77% 36%;   /* needs blue #1565C0 */
   --chart-4: 16 100% 45%;   /* wants deep amber #E65100 */

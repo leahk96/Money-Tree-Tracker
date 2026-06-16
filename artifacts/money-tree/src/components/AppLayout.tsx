@@ -40,8 +40,8 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
                 isActive(item)
-                  ? "bg-[#E8F5E9] text-[#2E7D32]"
-                  : "text-[#546E7A] hover:bg-[#F5F5F5] hover:text-[#2E7D32]"
+                  ? "bg-[#E8F5E9] text-[#17914A]"
+                  : "text-[#546E7A] hover:bg-[#F5F5F5] hover:text-[#17914A]"
               }`}
             >
               <span>{item.icon}</span>
@@ -72,7 +72,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               to={item.to}
               className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-medium transition ${
                 isActive(item)
-                  ? "text-[#2E7D32]"
+                  ? "text-[#17914A]"
                   : "text-[#9E9E9E] hover:text-[#546E7A]"
               }`}
             >

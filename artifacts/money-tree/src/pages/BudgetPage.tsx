@@ -13,7 +13,7 @@ import { Section, Month, LineItem } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
   income:  { label: "Income",  emoji: "💰", color: "#4CAF50", textColor: "#1B5E20", rowBg: "#F5F5F5" },
-  savings: { label: "Savings Allocations", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
+  savings: { label: "Savings Allocations", emoji: "🌱", color: "#17914A", textColor: "#1B5E20", rowBg: "#E8F5E9" },
   bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
   needs:   { label: "Needs",   emoji: "🛒", color: "#1565C0", textColor: "#0D47A1", rowBg: "#E3F2FD" },
   wants:   { label: "Wants",   emoji: "✨", color: "#B80000", textColor: "#BF360C", rowBg: "#FFF3E0" },
@@ -23,7 +23,7 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
-  income: "#4CAF50", savings: "#2E7D32", bills: "#C62828",
+  income: "#4CAF50", savings: "#17914A", bills: "#C62828",
   needs: "#1565C0", wants: "#B80000", debt: "#607D8B",
 };
 const SHORT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -59,7 +59,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
   }, [value, focused]);
 
   return (
-    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#2E7D32] bg-white ring-1 ring-[#2E7D32]/20" : "border-transparent"}`}>
+    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#17914A] bg-white ring-1 ring-[#17914A]/20" : "border-transparent"}`}>
       <span className="text-xs text-[#9E9E9E] pl-1.5">{symbol}</span>
       <input
         type="number" min="0" step="0.01"
@@ -119,13 +119,13 @@ function SideBySideSection({
               onChange={e => onNewRowNameChange(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") onAddConfirm(section); if (e.key === "Escape") onAddCancel(); }}
               placeholder="Item name…"
-              className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
+              className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]"
             />
-            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#2E7D32] text-white text-xs rounded">Add</button>
+            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#17914A] text-white text-xs rounded">Add</button>
             <button onClick={onAddCancel} className="px-1.5 py-0.5 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">✕</button>
           </div>
         ) : (
-          <button onClick={() => onAddStart(section)} className="text-xs text-[#2E7D32] hover:text-[#1B5E20] font-medium">+ Add row</button>
+          <button onClick={() => onAddStart(section)} className="text-xs text-[#17914A] hover:text-[#1B5E20] font-medium">+ Add row</button>
         )}
       </div>
     </div>
@@ -133,7 +133,7 @@ function SideBySideSection({
 }
 
 // ── Confetti burst ────────────────────────────────────────────────────────────
-const CONFETTI_COLORS = ["#FFD700","#4CAF50","#FF6B35","#2E7D32","#FFC107","#66BB6A","#FF8C00","#A5D6A7","#FFEB3B","#81C784"];
+const CONFETTI_COLORS = ["#FFD700","#4CAF50","#FF6B35","#17914A","#FFC107","#66BB6A","#FF8C00","#A5D6A7","#FFEB3B","#81C784"];
 const CONFETTI_COUNT = 48;
 
 function ConfettiBurst({ show }: { show: boolean }) {
@@ -454,7 +454,7 @@ function BudgetContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#17914A] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -464,13 +464,13 @@ function BudgetContent() {
       <ConfettiBurst show={showConfetti} />
       {/* Month nav */}
       <div className="flex items-center justify-between mb-4">
-        <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">←</button>
+        <button onClick={() => navigateMonth(-1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition">←</button>
         <h2 className="text-base font-semibold text-[#1B5E20]">{monthName}</h2>
-        <button onClick={() => navigateMonth(1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">→</button>
+        <button onClick={() => navigateMonth(1)} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition">→</button>
       </div>
 
       {/* Savings goal strip */}
-      <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#2E7D32]" : "bg-[#B80000]"}`}>
+      <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#17914A]" : "bg-[#B80000]"}`}>
         <div>
           <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
           <div className="text-white font-bold text-xl tabular-nums">
@@ -499,17 +499,17 @@ function BudgetContent() {
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
             <h3 className="font-semibold text-[#1B5E20] mb-4">Update savings goal</h3>
             <div className="relative mb-4">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2E7D32] font-semibold">{symbol}</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#17914A] font-semibold">{symbol}</span>
               <input
                 type="number" value={goalInput}
                 onChange={e => setGoalInput(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#2E7D32] text-[#1B5E20] text-lg font-semibold"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A] text-[#1B5E20] text-lg font-semibold"
                 autoFocus
               />
             </div>
             <div className="flex gap-3">
               <button onClick={() => setEditingGoal(false)} className="flex-1 py-2.5 border border-[#D0D0D0] text-[#546E7A] rounded-xl hover:bg-[#F5F5F5] transition">Cancel</button>
-              <button onClick={updateGoal} className="flex-1 py-2.5 bg-[#2E7D32] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition">Save</button>
+              <button onClick={updateGoal} className="flex-1 py-2.5 bg-[#17914A] text-white font-semibold rounded-xl hover:bg-[#1B5E20] transition">Save</button>
             </div>
           </div>
         </div>
@@ -580,12 +580,12 @@ function BudgetContent() {
                 disabled={copying}
                 className={`flex items-center gap-1.5 text-xs border rounded-lg px-2.5 py-1.5 transition font-medium ${
                   copyDone
-                    ? "border-[#4CAF50] text-[#2E7D32] bg-[#f0fbf0]"
-                    : "border-[#D0D0D0] text-[#2E7D32] hover:border-[#2E7D32] hover:bg-[#F5F5F5] bg-white"
+                    ? "border-[#4CAF50] text-[#17914A] bg-[#f0fbf0]"
+                    : "border-[#D0D0D0] text-[#17914A] hover:border-[#17914A] hover:bg-[#F5F5F5] bg-white"
                 }`}
               >
                 {copying ? (
-                  <div className="w-3 h-3 rounded-full border border-[#2E7D32] border-t-transparent animate-spin" />
+                  <div className="w-3 h-3 rounded-full border border-[#17914A] border-t-transparent animate-spin" />
                 ) : copyDone ? (
                   <span>✓</span>
                 ) : (
@@ -651,13 +651,13 @@ function BudgetContent() {
                         onChange={e => setNewRowName(e.target.value)}
                         onKeyDown={e => { if (e.key === "Enter") addRow("savings"); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
                         placeholder="e.g. Emergency fund…"
-                        className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
+                        className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]"
                       />
-                      <button onClick={() => addRow("savings")} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
+                      <button onClick={() => addRow("savings")} className="px-2 py-1 bg-[#17914A] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
                       <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                     </div>
                   ) : (
-                    <button onClick={() => { setAddingRow("savings"); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                    <button onClick={() => { setAddingRow("savings"); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#17914A] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                   )}
                 </div>
               </div>
@@ -762,13 +762,13 @@ function BudgetContent() {
                           onChange={e => setNewRowName(e.target.value)}
                           onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
                           placeholder="Item name…"
-                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
+                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]"
                         />
-                        <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
+                        <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#17914A] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
                         <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                       </div>
                     ) : (
-                      <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                      <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#17914A] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                     )}
                   </div>
                 </div>
@@ -778,7 +778,7 @@ function BudgetContent() {
             {/* Footer totals */}
             <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t-2 border-[#E0E0E0]">
               <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total income</div>
-              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#2E7D32]">{fmt(income)}</div>
+              <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#17914A]">{fmt(income)}</div>
               <div />
             </div>
             <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
@@ -786,9 +786,9 @@ function BudgetContent() {
               <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{fmt(allocated)}</div>
               <div />
             </div>
-            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#2E7D32] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
+            <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#17914A] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
               <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Remaining balance</div>
-              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+              <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
                 {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
               </div>
               <div />
@@ -803,7 +803,7 @@ function BudgetContent() {
           <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
             <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
             <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
-            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+            <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
               {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
             </div>
             <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
@@ -817,7 +817,7 @@ function BudgetContent() {
             <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
               <div className="flex items-start justify-between">
                 <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
-                <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+                <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
                   {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </span>
               </div>
@@ -831,7 +831,7 @@ function BudgetContent() {
           {/* Chart 2: YTD savings */}
           <div className="bg-white rounded-xl border border-[#E0E0E0] p-4 shadow-sm">
             <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-1">Saved year to date</div>
-            <div className="text-2xl font-bold text-[#2E7D32] tabular-nums mb-3">{fmt(ytdTotal)}</div>
+            <div className="text-2xl font-bold text-[#17914A] tabular-nums mb-3">{fmt(ytdTotal)}</div>
             {ytdData.length > 0 ? (
               <ResponsiveContainer width="100%" height={90}>
                 <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
@@ -841,7 +841,7 @@ function BudgetContent() {
                   <Tooltip content={<ChartTooltip />} cursor={{ fill: "#F5F5F5" }} />
                   <Bar dataKey="saved" radius={[3,3,0,0]}>
                     {ytdData.map((p, i) => (
-                      <Cell key={i} fill={p.isCurrent ? "#2E7D32" : "#4CAF50"} />
+                      <Cell key={i} fill={p.isCurrent ? "#17914A" : "#4CAF50"} />
                     ))}
                   </Bar>
                 </BarChart>

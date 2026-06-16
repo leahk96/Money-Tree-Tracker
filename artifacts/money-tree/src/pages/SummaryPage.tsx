@@ -56,7 +56,7 @@ function SummaryContent() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-10 h-10 rounded-full border-4 border-[#2E7D32] border-t-transparent animate-spin" />
+        <div className="w-10 h-10 rounded-full border-4 border-[#17914A] border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -98,7 +98,7 @@ function SummaryContent() {
         <button
           onClick={() => canPrev && setSelectedYear(years[yearIdx - 1])}
           disabled={!canPrev}
-          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30"
+          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition disabled:opacity-30"
         >
           ←
         </button>
@@ -113,7 +113,7 @@ function SummaryContent() {
         <button
           onClick={() => canNext && setSelectedYear(years[yearIdx + 1])}
           disabled={!canNext}
-          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition disabled:opacity-30"
+          className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition disabled:opacity-30"
         >
           →
         </button>
@@ -132,13 +132,13 @@ function SummaryContent() {
           <div className="flex-1 space-y-2">
             <div>
               <div className="text-xs text-[#607D8B] mb-0.5">Goals hit</div>
-              <div className="text-3xl font-bold text-[#2E7D32]">
+              <div className="text-3xl font-bold text-[#17914A]">
                 {goalsMetCount}<span className="text-lg text-[#9E9E9E] font-normal">/12</span>
               </div>
             </div>
             <div className="w-full bg-[#E8E8E8] rounded-full h-2">
               <motion.div
-                className="bg-[#2E7D32] h-2 rounded-full"
+                className="bg-[#17914A] h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${(goalsMetCount / 12) * 100}%` }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
@@ -167,7 +167,7 @@ function SummaryContent() {
             className="bg-white rounded-xl border border-[#E8E8E8] p-4"
           >
             <div className="text-xs text-[#607D8B] mb-1">{card.label}</div>
-            <div className={`text-xl font-bold ${card.positive ? "text-[#2E7D32]" : "text-[#c05a00]"}`}>{card.value}</div>
+            <div className={`text-xl font-bold ${card.positive ? "text-[#17914A]" : "text-[#c05a00]"}`}>{card.value}</div>
             {card.sub && <div className="text-xs text-[#9E9E9E] mt-0.5">{card.sub}</div>}
           </motion.div>
         ))}
@@ -185,7 +185,7 @@ function SummaryContent() {
           <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved — side by side each month</p>
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#D4AF37]" /><span className="text-[10px] text-[#9E9E9E]">Goal</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
           </div>
           <ResponsiveContainer width="100%" height={190}>
             <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
@@ -197,7 +197,7 @@ function SummaryContent() {
               <Bar dataKey="Goal" fill="#D4AF37" radius={[3, 3, 0, 0]} opacity={0.75} />
               <Bar dataKey="Saved" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
-                  <Cell key={i} fill={entry.Saved >= entry.Goal ? "#2E7D32" : "#B80000"} />
+                  <Cell key={i} fill={entry.Saved >= entry.Goal ? "#17914A" : "#B80000"} />
                 ))}
               </Bar>
             </BarChart>
@@ -278,7 +278,7 @@ function SummaryContent() {
               <ReferenceLine y={0} stroke="#E0E0E0" strokeWidth={1.5} />
               <Bar dataKey="Surplus" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
-                  <Cell key={i} fill={entry.Surplus >= 0 ? "#2E7D32" : "#B80000"} />
+                  <Cell key={i} fill={entry.Surplus >= 0 ? "#17914A" : "#B80000"} />
                 ))}
               </Bar>
             </BarChart>
@@ -298,7 +298,7 @@ function SummaryContent() {
           <p className="text-xs text-[#9E9E9E] mb-4">How much you planned to save vs what you actually moved each month</p>
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#81C784]" /><span className="text-[10px] text-[#9E9E9E]">Expected</span></div>
-            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#2E7D32]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
+            <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Actual (green = met, red = short)</span></div>
           </div>
           <ResponsiveContainer width="100%" height={190}>
             <BarChart data={chartMonths} barCategoryGap="25%" barGap={2}>
@@ -310,7 +310,7 @@ function SummaryContent() {
               <Bar dataKey="SavingsExpected" name="Expected" fill="#81C784" radius={[3, 3, 0, 0]} opacity={0.75} />
               <Bar dataKey="SavingsActual" name="Actual" radius={[3, 3, 0, 0]}>
                 {chartMonths.map((entry, i) => (
-                  <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#2E7D32" : "#B80000"} />
+                  <Cell key={i} fill={entry.SavingsActual >= entry.SavingsExpected ? "#17914A" : "#B80000"} />
                 ))}
               </Bar>
             </BarChart>
@@ -326,7 +326,7 @@ function SummaryContent() {
               <div className="mt-4 flex items-center justify-between rounded-xl border px-4 py-3 gap-4"
                 style={{ backgroundColor: onTrack ? "#F0FAF0" : "#FFF3F3", borderColor: onTrack ? "#C8E6C9" : "#FFCDD2" }}>
                 <div className="space-y-0.5">
-                  <div className="text-[10px] uppercase tracking-wide font-semibold" style={{ color: onTrack ? "#2E7D32" : "#B80000" }}>
+                  <div className="text-[10px] uppercase tracking-wide font-semibold" style={{ color: onTrack ? "#17914A" : "#B80000" }}>
                     Year total
                   </div>
                   <div className="text-xs text-[#546E7A]">
@@ -335,7 +335,7 @@ function SummaryContent() {
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-bold tabular-nums" style={{ color: onTrack ? "#2E7D32" : "#B80000" }}>
+                  <div className="text-2xl font-bold tabular-nums" style={{ color: onTrack ? "#17914A" : "#B80000" }}>
                     {hitPct}%
                   </div>
                   <div className="text-[10px] text-[#9E9E9E]">hit rate</div>
@@ -410,12 +410,12 @@ function SummaryContent() {
                   : "border-dashed border-[#E8E8E8] bg-[#FAFAFA]"
                 }`}
               >
-                <div className={`text-xs font-semibold mb-1 ${d.goalMet ? "text-[#2E7D32]" : "text-[#546E7A]"}`}>
+                <div className={`text-xs font-semibold mb-1 ${d.goalMet ? "text-[#17914A]" : "text-[#546E7A]"}`}>
                   {MONTH_NAMES[i]}
                 </div>
                 {d.hasData ? (
                   <>
-                    <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#2E7D32]" : "text-[#1B5E20]"}`}>
+                    <div className={`text-sm font-bold tabular-nums ${d.goalMet ? "text-[#17914A]" : "text-[#1B5E20]"}`}>
                       {fmt(d.totalSaved)}
                     </div>
                     <div className={`text-[10px] mt-0.5 ${d.goalMet ? "text-[#4a8a4a]" : "text-[#c06060]"}`}>
@@ -437,7 +437,7 @@ function SummaryContent() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.45 }}
         onClick={() => navigate("/garden")}
-        className="w-full py-3 bg-[#F5F5F5] border border-[#c8e4c8] rounded-xl text-sm font-medium text-[#2E7D32] hover:bg-[#e4f5e4] transition"
+        className="w-full py-3 bg-[#F5F5F5] border border-[#c8e4c8] rounded-xl text-sm font-medium text-[#17914A] hover:bg-[#e4f5e4] transition"
       >
         🌳 View your garden →
       </motion.button>

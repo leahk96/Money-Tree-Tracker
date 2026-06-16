@@ -7,7 +7,7 @@ import { Section } from "@/lib/types";
 
 const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: string; textColor: string; rowBg: string }> = {
   income:  { label: "Income",  emoji: "💰", color: "#4CAF50", textColor: "#1B5E20", rowBg: "#F5F5F5" },
-  savings: { label: "Savings Allocations", emoji: "🌱", color: "#2E7D32", textColor: "#1B5E20", rowBg: "#E8F5E9" },
+  savings: { label: "Savings Allocations", emoji: "🌱", color: "#17914A", textColor: "#1B5E20", rowBg: "#E8F5E9" },
   bills:   { label: "Bills",   emoji: "🏠", color: "#C62828", textColor: "#B71C1C", rowBg: "#FFEBEE" },
   needs:   { label: "Needs",   emoji: "🛒", color: "#1565C0", textColor: "#0D47A1", rowBg: "#E3F2FD" },
   wants:   { label: "Wants",   emoji: "✨", color: "#B80000", textColor: "#BF360C", rowBg: "#FFF3E0" },
@@ -17,7 +17,7 @@ const SECTION_CONFIG: Record<Section, { label: string; emoji: string; color: str
 const EXPENSE_SECTIONS: Section[] = ["bills", "needs", "wants", "debt"];
 const DUAL_AMOUNT_SECTIONS: Section[] = ["needs", "wants"];
 const PIE_COLORS: Record<Section, string> = {
-  income: "#4CAF50", savings: "#2E7D32", bills: "#C62828",
+  income: "#4CAF50", savings: "#17914A", bills: "#C62828",
   needs: "#1565C0", wants: "#B80000", debt: "#607D8B",
 };
 const PRIOR_MONTHS = [
@@ -44,7 +44,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
   const [focused, setFocused] = useState(false);
   const [local, setLocal] = useState(value === 0 ? "" : String(value));
   return (
-    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#2E7D32] bg-white ring-1 ring-[#2E7D32]/20" : "border-transparent"}`}>
+    <div className={`flex items-center rounded border transition-all ${focused ? "border-[#17914A] bg-white ring-1 ring-[#17914A]/20" : "border-transparent"}`}>
       <span className="text-xs text-[#9E9E9E] pl-1.5">{symbol}</span>
       <input
         type="number" min="0" step="0.01"
@@ -108,12 +108,12 @@ function SideBySideSection({
           <div className="flex gap-1">
             <input autoFocus value={newRowName} onChange={e => onNewRowNameChange(e.target.value)}
               onKeyDown={e => { if (e.key === "Enter") onAddConfirm(section); if (e.key === "Escape") onAddCancel(); }}
-              placeholder="Item name…" className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]" />
-            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#2E7D32] text-white text-xs rounded">Add</button>
+              placeholder="Item name…" className="flex-1 min-w-0 px-2 py-0.5 text-xs rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]" />
+            <button onClick={() => onAddConfirm(section)} className="px-1.5 py-0.5 bg-[#17914A] text-white text-xs rounded">Add</button>
             <button onClick={onAddCancel} className="px-1.5 py-0.5 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">✕</button>
           </div>
         ) : (
-          <button onClick={() => onAddStart(section)} className="text-xs text-[#2E7D32] hover:text-[#1B5E20] font-medium">+ Add row</button>
+          <button onClick={() => onAddStart(section)} className="text-xs text-[#17914A] hover:text-[#1B5E20] font-medium">+ Add row</button>
         )}
       </div>
     </div>
@@ -175,7 +175,7 @@ export default function BudgetDemo() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to save your data
       </div>
 
@@ -191,20 +191,20 @@ export default function BudgetDemo() {
             { label: "Garden",  to: "/garden-demo" },
             { label: "Summary", to: "/summary-demo" },
           ].map(n => (
-            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to === "/demo" ? "bg-[#E8F5E9] text-[#2E7D32]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
+            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to === "/demo" ? "bg-[#E8F5E9] text-[#17914A]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#2E7D32] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">Get started</Link>
+        <Link to="/signup" className="text-sm bg-[#17914A] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">Get started</Link>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-5 pb-10">
         <div className="flex items-center justify-between mb-4">
-          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">←</button>
+          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition">←</button>
           <h2 className="text-base font-semibold text-[#1B5E20]">May 2026</h2>
-          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#2E7D32] transition">→</button>
+          <button className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#E8E8E8] text-[#17914A] transition">→</button>
         </div>
 
-        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#2E7D32]" : "bg-[#B80000]"}`}>
+        <div className={`rounded-xl px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 mb-5 ${goalMet ? "bg-[#17914A]" : "bg-[#B80000]"}`}>
           <div>
             <div className="text-white/80 text-xs mb-0.5">Monthly savings goal</div>
             <div className="text-white font-bold text-xl tabular-nums">
@@ -282,13 +282,13 @@ export default function BudgetDemo() {
                           onChange={e => setNewRowName(e.target.value)}
                           onKeyDown={e => { if (e.key === "Enter") addRow("savings"); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
                           placeholder="e.g. Emergency fund…"
-                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]"
+                          className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]"
                         />
-                        <button onClick={() => addRow("savings")} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
+                        <button onClick={() => addRow("savings")} className="px-2 py-1 bg-[#17914A] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
                         <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                       </div>
                     ) : (
-                      <button onClick={() => { setAddingRow("savings"); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                      <button onClick={() => { setAddingRow("savings"); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#17914A] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                     )}
                   </div>
                 </div>
@@ -383,12 +383,12 @@ export default function BudgetDemo() {
                         <div className="flex gap-2 pl-9 pr-3 py-2">
                           <input autoFocus value={newRowName} onChange={e => setNewRowName(e.target.value)}
                             onKeyDown={e => { if (e.key === "Enter") addRow(section); if (e.key === "Escape") { setAddingRow(null); setNewRowName(""); } }}
-                            placeholder="Item name…" className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#2E7D32]" />
-                          <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#2E7D32] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
+                            placeholder="Item name…" className="flex-1 px-2 py-1 text-sm rounded border border-[#D0D0D0] focus:outline-none focus:ring-1 focus:ring-[#17914A]" />
+                          <button onClick={() => addRow(section)} className="px-2 py-1 bg-[#17914A] text-white text-xs rounded hover:bg-[#1B5E20]">Add</button>
                           <button onClick={() => { setAddingRow(null); setNewRowName(""); }} className="px-2 py-1 text-[#9E9E9E] text-xs rounded hover:bg-[#F5F5F5]">Cancel</button>
                         </div>
                       ) : (
-                        <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#2E7D32] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
+                        <button onClick={() => { setAddingRow(section); setNewRowName(""); }} className="w-full text-left pl-9 px-4 py-2 text-xs text-[#17914A] hover:bg-[#F5F5F5] transition font-medium">+ Add row</button>
                       )}
                     </div>
                   </div>
@@ -398,7 +398,7 @@ export default function BudgetDemo() {
               {/* Footer totals */}
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t-2 border-[#E0E0E0]">
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Total income</div>
-                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#2E7D32]">{fmt(income)}</div>
+                <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#17914A]">{fmt(income)}</div>
                 <div />
               </div>
               <div className="grid grid-cols-[1fr_auto_28px] bg-[#F5F5F5] border-t border-[#E8E8E8]">
@@ -406,9 +406,9 @@ export default function BudgetDemo() {
                 <div className="px-3 py-2.5 text-sm font-bold text-right tabular-nums text-[#C62828]">{fmt(allocated)}</div>
                 <div />
               </div>
-              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#2E7D32] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
+              <div className={`grid grid-cols-[1fr_auto_28px] border-t-2 ${saved >= 0 ? "border-[#17914A] bg-[#E8F5E9]" : "border-[#C62828] bg-[#FFEBEE]"}`}>
                 <div className="px-4 py-2.5 text-sm font-bold text-[#1B5E20]">Remaining balance</div>
-                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+                <div className={`px-3 py-2.5 text-sm font-bold text-right tabular-nums ${saved >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
                   {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                 </div>
                 <div />
@@ -423,7 +423,7 @@ export default function BudgetDemo() {
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-0.5">Left to spend</div>
               <div className="text-[10px] text-[#9E9E9E] mb-2">after expenses &amp; savings goal</div>
-              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+              <div className={`text-2xl font-bold tabular-nums mb-1 ${amountLeftToSpend >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
                 {amountLeftToSpend >= 0 ? fmt(amountLeftToSpend) : `−${fmt(Math.abs(amountLeftToSpend))}`}
               </div>
               <div className="w-full bg-[#E8E8E8] rounded-full h-3 overflow-hidden mb-1">
@@ -434,7 +434,7 @@ export default function BudgetDemo() {
               <div className="border-t border-[#F5F5F5] pt-3 space-y-2.5">
                 <div className="flex items-start justify-between">
                   <span className="text-xs text-[#607D8B] leading-tight max-w-[120px]">Remaining balance</span>
-                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#2E7D32]" : "text-[#C62828]"}`}>
+                  <span className={`text-sm font-bold tabular-nums ${saved >= 0 ? "text-[#17914A]" : "text-[#C62828]"}`}>
                     {saved >= 0 ? fmt(saved) : `−${fmt(Math.abs(saved))}`}
                   </span>
                 </div>
@@ -448,7 +448,7 @@ export default function BudgetDemo() {
             {/* YTD savings */}
             <div className="bg-white rounded-xl border border-[#E0E0E0] p-4">
               <div className="text-xs font-semibold text-[#546E7A] uppercase tracking-wide mb-1">Saved year to date</div>
-              <div className="text-2xl font-bold text-[#2E7D32] tabular-nums mb-3">{fmt(ytdTotal)}</div>
+              <div className="text-2xl font-bold text-[#17914A] tabular-nums mb-3">{fmt(ytdTotal)}</div>
               <ResponsiveContainer width="100%" height={90}>
                 <BarChart data={ytdData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
@@ -457,7 +457,7 @@ export default function BudgetDemo() {
                   <Tooltip content={<ChartTooltip />} cursor={{ fill: "#F5F5F5" }} />
                   <Bar dataKey="saved" radius={[3,3,0,0]}>
                     {ytdData.map((_, i) => (
-                      <Cell key={i} fill={i === ytdData.length - 1 ? "#2E7D32" : "#4CAF50"} />
+                      <Cell key={i} fill={i === ytdData.length - 1 ? "#17914A" : "#4CAF50"} />
                     ))}
                   </Bar>
                 </BarChart>

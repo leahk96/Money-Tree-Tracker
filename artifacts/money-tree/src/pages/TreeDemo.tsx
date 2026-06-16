@@ -68,7 +68,7 @@ export default function TreeDemo() {
   const { fmt } = useCurrency();
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
-      <div className="bg-[#2E7D32] text-white text-center text-sm py-2 px-4">
+      <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
         Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own tree
       </div>
 
@@ -84,10 +84,10 @@ export default function TreeDemo() {
             { label:"Garden", to:"/garden-demo" },
             { label:"Summary", to:"/summary-demo" },
           ].map(n => (
-            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/tree-demo" ? "bg-[#E8F5E9] text-[#2E7D32]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
+            <Link key={n.to} to={n.to} className={`px-4 py-2 rounded-lg text-sm font-medium transition ${n.to==="/tree-demo" ? "bg-[#E8F5E9] text-[#17914A]" : "text-[#546E7A] hover:bg-[#F5F5F5]"}`}>{n.label}</Link>
           ))}
         </nav>
-        <Link to="/signup" className="text-sm bg-[#2E7D32] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">Get started</Link>
+        <Link to="/signup" className="text-sm bg-[#17914A] text-white px-4 py-2 rounded-lg hover:bg-[#1B5E20] transition font-medium">Get started</Link>
       </header>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-5 pb-10">
@@ -100,7 +100,7 @@ export default function TreeDemo() {
         >
           <div className="flex items-center justify-between mb-1">
             <h2 className="font-bold text-[#1B5E20] text-base">Your Money Tree</h2>
-            <span className="text-xs font-semibold text-[#2E7D32] bg-[#E8F5E9] px-2.5 py-1 rounded-full">
+            <span className="text-xs font-semibold text-[#17914A] bg-[#E8F5E9] px-2.5 py-1 rounded-full">
               {MONTHS_MET}/12 goals met
             </span>
           </div>
@@ -117,7 +117,7 @@ export default function TreeDemo() {
             </p>
             <div className="flex gap-1 shrink-0 ml-3">
               {Array.from({ length: 12 }, (_, i) => (
-                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#2E7D32]" : "bg-[#E0E0E0]"}`} />
+                <div key={i} className={`w-2 h-2 rounded-full ${i < MONTHS_MET ? "bg-[#17914A]" : "bg-[#E0E0E0]"}`} />
               ))}
             </div>
           </div>
@@ -152,11 +152,11 @@ export default function TreeDemo() {
             <div className="text-lg font-bold text-[#1B5E20]">Bali 2026</div>
             <div className="mt-2 text-sm text-[#546E7A]">
               Saved so far:&nbsp;
-              <span className="font-semibold text-[#2E7D32]">{fmt(2030)}</span>
+              <span className="font-semibold text-[#17914A]">{fmt(2030)}</span>
               <span className="text-[#9E9E9E]"> / {fmt(8000)}</span>
             </div>
             <div className="mt-2 w-full bg-[#E8E8E8] rounded-full h-1.5">
-              <div className="bg-[#2E7D32] h-1.5 rounded-full" style={{ width: "25%" }} />
+              <div className="bg-[#17914A] h-1.5 rounded-full" style={{ width: "25%" }} />
             </div>
           </div>
         </motion.div>
