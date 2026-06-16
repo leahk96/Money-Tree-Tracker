@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/contexts/ProfileContext";
 import { supabase } from "@/lib/supabase";
+import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 
 const STEPS = [
   { id: 1, label: "Your why" },
@@ -19,6 +20,7 @@ export default function Onboarding() {
   const [goalName, setGoalName] = useState("");
   const [goalPhoto, setGoalPhoto] = useState<File | null>(null);
   const [goalPhotoPreview, setGoalPhotoPreview] = useState<string | null>(null);
+  const [selectedCurrency, setSelectedCurrency] = useState("GBP");
   const [error, setError] = useState("");
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,6 +63,7 @@ export default function Onboarding() {
       goal_name: goalName || null,
       goal_photo_url: photoUrl,
       best_streak: 0,
+      currency: selectedCurrency,
       onboarding_completed: true,
     } as any);
 
@@ -154,6 +157,18 @@ export default function Onboarding() {
                       <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
                     </label>
                   )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#17914A] mb-1.5">Currency</label>
+                  <select
+                    value={selectedCurrency}
+                    onChange={e => setSelectedCurrency(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#17914A] text-[#1B5E20] transition"
+                  >
+                    {Object.entries(SUPPORTED_CURRENCIES).map(([code, symbol]) => (
+                      <option key={code} value={code}>{code} — {symbol}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

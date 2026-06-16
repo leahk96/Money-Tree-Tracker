@@ -9,6 +9,7 @@ interface ProfileContextType {
   refreshProfile: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
   hasCompletedOnboarding: boolean;
+  isPremium: boolean;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -47,7 +48,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
-  const hasCompletedOnboarding = !!(profile && (profile as any).onboarding_completed);
+  const hasCompletedOnboarding = !!profile?.onboarding_completed;
+  const isPremium = !!profile?.is_premium;
 
   return (
     <ProfileContext.Provider value={{
@@ -56,6 +58,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       refreshProfile: fetchProfile,
       updateProfile,
       hasCompletedOnboarding,
+      isPremium,
     }}>
       {children}
     </ProfileContext.Provider>

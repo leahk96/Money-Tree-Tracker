@@ -9,6 +9,9 @@ export interface Profile {
   yearly_target: number | null;
   default_monthly_goal: number;
   best_streak: number;
+  onboarding_completed: boolean;
+  is_premium: boolean;
+  stripe_customer_id: string | null;
   created_at: string;
 }
 
