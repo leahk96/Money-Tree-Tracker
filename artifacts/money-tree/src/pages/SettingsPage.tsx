@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { AppLayout } from "@/components/AppLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
@@ -28,11 +28,8 @@ function SettingsContent() {
   // Goal section state
   const [goalName, setGoalName]   = useState(profile?.goal_name ?? "");
   const [goalTarget, setGoalTarget] = useState(profile?.goal_target_total ? String(profile.goal_target_total) : "");
-  const [goalPhotoUrl, setGoalPhotoUrl] = useState(profile?.goal_photo_url ?? "");
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [savingGoal, setSavingGoal] = useState(false);
   const [goalSaved, setGoalSaved] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
 
   // Currency section state
   const [selectedCurrency, setSelectedCurrency] = useState(profile?.currency ?? "GBP");
@@ -57,35 +54,14 @@ function SettingsContent() {
     if (profile) {
       setGoalName(profile.goal_name ?? "");
       setGoalTarget(profile.goal_target_total ? String(profile.goal_target_total) : "");
-      setGoalPhotoUrl(profile.goal_photo_url ?? "");
       setSelectedCurrency(profile.currency ?? "GBP");
     }
   }, [profile]);
-
-  const [photoError, setPhotoError] = useState("");
-
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    setUploadingPhoto(true);
-    setPhotoError("");
-    const ext = file.name.split(".").pop();
-    const path = `${user.id}/goal.${ext}`;
-    const { error } = await supabase.storage.from("goal-photos").upload(path, file, { upsert: true });
-    if (error) {
-      setPhotoError(`Upload failed: ${error.message}`);
-    } else {
-      const { data } = supabase.storage.from("goal-photos").getPublicUrl(path);
-      setGoalPhotoUrl(data.publicUrl);
-    }
-    setUploadingPhoto(false);
-  };
 
   const saveGoal = async () => {
     setSavingGoal(true);
     await updateProfile({
       goal_name: goalName.trim() || null,
-      goal_photo_url: goalPhotoUrl || null,
       goal_target_total: goalTarget ? parseCurrency(goalTarget) : null,
     });
     setSavingGoal(false);
@@ -147,40 +123,6 @@ function SettingsContent() {
         </div>
 
         <div className="px-5 py-5 space-y-5">
-          {/* Photo upload */}
-          <div className="flex items-center gap-4">
-            <div
-              onClick={() => fileRef.current?.click()}
-              className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#c8dcc8] bg-[#F5F5F5] flex items-center justify-center cursor-pointer hover:border-[#17914A] transition overflow-hidden shrink-0"
-            >
-              {goalPhotoUrl ? (
-                <img src={goalPhotoUrl} alt="Goal" className="w-full h-full object-cover" />
-              ) : uploadingPhoto ? (
-                <div className="w-5 h-5 rounded-full border-2 border-[#17914A] border-t-transparent animate-spin" />
-              ) : (
-                <div className="text-center">
-                  <div className="text-2xl mb-0.5">📷</div>
-                  <div className="text-[9px] text-[#9E9E9E] font-medium">Add photo</div>
-                </div>
-              )}
-            </div>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
-            <div className="flex-1">
-              {photoError && <p className="text-xs text-red-500 mb-1">{photoError}</p>}
-              <p className="text-xs text-[#546E7A] leading-relaxed">
-                Add a photo of what you're saving for — a holiday, car, house, or anything else. It'll appear on your tree page.
-              </p>
-              {goalPhotoUrl && (
-                <button
-                  onClick={() => setGoalPhotoUrl("")}
-                  className="text-xs text-red-400 hover:text-red-600 mt-1.5 transition"
-                >
-                  Remove photo
-                </button>
-              )}
-            </div>
-          </div>
-
           {/* Goal name */}
           <div>
             <label className="block text-xs font-semibold text-[#37474F] mb-1.5">Goal name</label>

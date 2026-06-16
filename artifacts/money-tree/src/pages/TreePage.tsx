@@ -174,23 +174,18 @@ function TreeContent() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl border border-[#E8E8E8] overflow-hidden"
+          className="bg-white rounded-2xl border border-[#E8E8E8] p-4"
         >
-          {profile.goal_photo_url && (
-            <img src={profile.goal_photo_url} alt={profile.goal_name} className="w-full h-32 object-cover" />
+          <div className="text-xs text-[#546E7A] mb-1">You're saving for</div>
+          <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
+          {data && (
+            <div className="text-sm text-[#546E7A] mt-1">
+              Total saved this year: <span className="font-semibold text-[#17914A]">{fmt(data.totalSavedThisYear)}</span>
+              {profile.yearly_target && (
+                <span className="text-[#9E9E9E]"> / {fmt(profile.yearly_target)}</span>
+              )}
+            </div>
           )}
-          <div className="p-4">
-            <div className="text-xs text-[#546E7A] mb-1">You're saving for</div>
-            <div className="text-lg font-bold text-[#1B5E20]">{profile.goal_name}</div>
-            {data && (
-              <div className="text-sm text-[#546E7A] mt-1">
-                Total saved this year: <span className="font-semibold text-[#17914A]">{fmt(data.totalSavedThisYear)}</span>
-                {profile.yearly_target && (
-                  <span className="text-[#9E9E9E]"> / {fmt(profile.yearly_target)}</span>
-                )}
-              </div>
-            )}
-          </div>
         </motion.div>
       )}
 

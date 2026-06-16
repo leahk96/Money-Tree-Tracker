@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProfile } from "@/contexts/ProfileContext";
-import { supabase } from "@/lib/supabase";
 import { SUPPORTED_CURRENCIES } from "@/lib/currency";
 
 const STEPS = [
@@ -18,21 +17,8 @@ export default function Onboarding() {
   const [loading, setLoading] = useState(false);
 
   const [goalName, setGoalName] = useState("");
-  const [goalPhoto, setGoalPhoto] = useState<File | null>(null);
-  const [goalPhotoPreview, setGoalPhotoPreview] = useState<string | null>(null);
   const [selectedCurrency, setSelectedCurrency] = useState("GBP");
   const [error, setError] = useState("");
-
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Photo must be under 5MB");
-      return;
-    }
-    setGoalPhoto(file);
-    setGoalPhotoPreview(URL.createObjectURL(file));
-  };
 
   const handleStep1 = () => {
     setError("");
@@ -44,27 +30,9 @@ export default function Onboarding() {
     setLoading(true);
     setError("");
 
-    let photoUrl: string | null = null;
-
-    if (goalPhoto) {
-      const ext = goalPhoto.name.split(".").pop();
-      const path = `${user.id}/goal.${ext}`;
-      const { error: uploadError } = await supabase.storage
-        .from("goal-photos")
-        .upload(path, goalPhoto, { upsert: true });
-
-      if (uploadError) {
-        setError(`Photo upload failed: ${uploadError.message}`);
-        setLoading(false);
-        return;
-      }
-      const { data } = supabase.storage.from("goal-photos").getPublicUrl(path);
-      photoUrl = data.publicUrl;
-    }
-
     const { error: profileError } = await updateProfile({
       goal_name: goalName || null,
-      goal_photo_url: photoUrl,
+      goal_photo_url: null,
       best_streak: 0,
       currency: selectedCurrency,
       onboarding_completed: true,
@@ -119,7 +87,7 @@ export default function Onboarding() {
             <div>
               <h2 className="text-xl font-semibold text-[#1B5E20] mb-2">What are you saving for?</h2>
               <p className="text-[#546E7A] text-sm mb-6">
-                Give your goal a name and an optional photo. This shows on your Money Tree to keep you motivated.
+                Give your goal a name. This shows on your Money Tree to keep you motivated.
               </p>
 
               <div className="space-y-4">
@@ -134,33 +102,6 @@ export default function Onboarding() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-[#17914A] mb-1.5">
-                    Goal photo <span className="text-[#9E9E9E] font-normal">(optional)</span>
-                  </label>
-                  {goalPhotoPreview ? (
-                    <div className="relative">
-                      <img
-                        src={goalPhotoPreview}
-                        alt="Goal preview"
-                        className="w-full h-40 object-cover rounded-xl border border-[#D0D0D0]"
-                      />
-                      <button
-                        onClick={() => { setGoalPhoto(null); setGoalPhotoPreview(null); }}
-                        className="absolute top-2 right-2 w-7 h-7 bg-white rounded-full flex items-center justify-center text-[#546E7A] hover:text-red-500 shadow-sm border border-[#e0e0e0] text-xs"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center w-full h-32 rounded-xl border-2 border-dashed border-[#D0D0D0] bg-[#FAFAFA] cursor-pointer hover:border-[#17914A] hover:bg-[#F5F5F5] transition">
-                      <span className="text-2xl mb-1">📷</span>
-                      <span className="text-sm text-[#546E7A]">Click to upload a photo</span>
-                      <span className="text-xs text-[#9E9E9E]">JPG, PNG, max 5MB</span>
-                      <input type="file" accept="image/*" onChange={handlePhotoChange} className="hidden" />
-                    </label>
-                  )}
-                </div>
                 <div>
                   <label className="block text-sm font-medium text-[#17914A] mb-1.5">Currency</label>
                   <select
