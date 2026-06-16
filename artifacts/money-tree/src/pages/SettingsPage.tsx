@@ -12,7 +12,18 @@ function SettingsContent() {
   const { symbol, fmt } = useCurrency();
   const { user, signOut } = useAuth();
   const { profile, updateProfile, refreshProfile } = useProfile();
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
+  const [upgradeSuccess, setUpgradeSuccess] = useState(false);
+
+  // Refresh profile after Stripe redirect so the banner disappears immediately
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("upgraded") === "true") {
+      setUpgradeSuccess(true);
+      refreshProfile();
+      navigate("/settings", { replace: true });
+    }
+  }, []);
 
   // Goal section state
   const [goalName, setGoalName]   = useState(profile?.goal_name ?? "");
@@ -115,6 +126,13 @@ function SettingsContent() {
   return (
     <div className="max-w-xl mx-auto px-4 py-8 space-y-6 pb-16">
       <h1 className="text-xl font-bold text-[#1B5E20]">Settings</h1>
+
+      {upgradeSuccess && (
+        <div className="flex items-center gap-3 px-4 py-3 bg-[#E8F5E9] border border-[#A5D6A7] rounded-2xl text-sm text-[#1B5E20] font-medium">
+          <span className="text-lg">🎉</span>
+          You're now a premium member — your progress is saved forever!
+        </div>
+      )}
 
       {/* ── SAVINGS GOAL ── */}
       <section className="bg-white rounded-2xl border border-[#E0E0E0] overflow-hidden">
@@ -219,8 +237,8 @@ function SettingsContent() {
               onChange={e => setSelectedCurrency(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] bg-white"
             >
-              {Object.entries(SUPPORTED_CURRENCIES).map(([code, { label, symbol }]) => (
-                <option key={code} value={code}>{symbol} — {label} ({code})</option>
+              {Object.entries(SUPPORTED_CURRENCIES).map(([code, sym]) => (
+                <option key={code} value={code}>{sym} — {code}</option>
               ))}
             </select>
           </div>
