@@ -15,7 +15,7 @@ interface ProfileContextType {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,8 +36,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+    if (!authLoading) {
+      fetchProfile();
+    }
+  }, [fetchProfile, authLoading]);
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: new Error("Not authenticated") };
@@ -48,13 +50,14 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
+  const isLoading = authLoading || loading;
   const hasCompletedOnboarding = !!profile?.onboarding_completed;
   const isPremium = !!profile?.is_premium;
 
   return (
     <ProfileContext.Provider value={{
       profile,
-      loading,
+      loading: isLoading,
       refreshProfile: fetchProfile,
       updateProfile,
       hasCompletedOnboarding,
