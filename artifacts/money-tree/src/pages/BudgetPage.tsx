@@ -67,7 +67,7 @@ function AmountInput({ value, onChange }: { value: number; onChange: (v: string)
         onChange={e => { setLocal(e.target.value); onChange(e.target.value); }}
         onFocus={() => { setFocused(true); setLocal(value === 0 ? "" : String(value)); }}
         onBlur={() => setFocused(false)}
-        placeholder="—"
+        placeholder=""
         className="w-20 py-1 pr-1.5 text-sm text-right bg-transparent focus:outline-none text-[#1B5E20] font-medium tabular-nums"
       />
     </div>
@@ -99,7 +99,7 @@ function SideBySideSection({
           <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
         </div>
         <span className="text-sm font-bold tabular-nums" style={{ color: cfg.color }}>
-          {total > 0 ? fmt(total) : <span className="text-[#BDBDBD] font-normal">—</span>}
+          {total > 0 ? fmt(total) : <span className="text-[#BDBDBD] font-normal"></span>}
         </span>
       </div>
 
@@ -482,7 +482,7 @@ function BudgetContent() {
             <div className="bg-white rounded-full h-3 transition-all duration-500" style={{ width: `${goalPct}%` }} />
           </div>
           <div className="text-white/80 text-xs mt-1 text-right">
-            {goalMet ? "✓ Goal met — tree growing!" : `${fmt(savingsGoal - saved)} to go`}
+            {goalMet ? "✓ Goal met! Tree growing!" : `${fmt(savingsGoal - saved)} to go`}
           </div>
         </div>
         <button
@@ -529,7 +529,7 @@ function BudgetContent() {
             <div>
               <div className="text-sm font-bold text-[#1B5E20]">🎉 Goal smashed! Your tree grew this month.</div>
               <div className="text-xs text-[#388E3C] mt-0.5">
-                You saved {fmt(saved)} —{" "}
+                You saved {fmt(saved)},{" "}
                 <span className="font-semibold">{fmt(saved - savingsGoal)}</span> more than your {fmt(savingsGoal)} goal
               </div>
             </div>
@@ -551,7 +551,7 @@ function BudgetContent() {
           >
             <div>
               <div className="text-sm font-semibold text-[#BF360C]">
-                ⏰ {daysLeft} day{daysLeft !== 1 ? "s" : ""} left — {fmt(savingsGoal - saved)} short of your goal
+                ⏰ {daysLeft} day{daysLeft !== 1 ? "s" : ""} left, {fmt(savingsGoal - saved)} short of your goal
               </div>
               <div className="text-xs text-[#B80000] mt-0.5">
                 Try reducing expenses this month to hit your savings goal
@@ -614,13 +614,13 @@ function BudgetContent() {
                   <div className="py-1.5 pr-1 text-center">
                     <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Expected</div>
                     <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
-                      {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                      {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal"></span>}
                     </div>
                   </div>
                   <div className="py-1.5 pr-1 text-center">
                     <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Actual</div>
                     <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
-                      {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                      {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal"></span>}
                     </div>
                   </div>
                   <div />
@@ -698,13 +698,13 @@ function BudgetContent() {
                       <div className="py-1.5 pr-1 text-center">
                         <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Expected</div>
                         <div className="text-xs font-bold tabular-nums text-right" style={{ color: cfg.color }}>
-                          {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                          {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal"></span>}
                         </div>
                       </div>
                       <div className="py-1.5 pr-1 text-center">
                         <div className="text-[9px] uppercase tracking-wide text-[#9E9E9E] mb-0.5">Actual</div>
                         <div className={`text-xs font-bold tabular-nums text-right ${!hasActual ? "opacity-30" : ""}`} style={{ color: cfg.color }}>
-                          {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                          {actualTotal > 0 ? fmt(actualTotal) : <span className="text-[#BDBDBD] font-normal"></span>}
                         </div>
                       </div>
                       <div />
@@ -717,7 +717,7 @@ function BudgetContent() {
                         <span className="text-sm font-bold" style={{ color: cfg.textColor }}>{cfg.label}</span>
                       </div>
                       <div className="px-2 py-2 text-sm font-bold text-right tabular-nums" style={{ color: cfg.color }}>
-                        {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal">—</span>}
+                        {expectedTotal > 0 ? fmt(expectedTotal) : <span className="text-[#BDBDBD] font-normal"></span>}
                       </div>
                       <div />
                     </div>

@@ -156,7 +156,7 @@ export default function SummaryDemo() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
-        Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to track your own summary
+        Demo preview. <Link to="/signup" className="underline font-medium">Sign up free</Link> to track your own summary
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
@@ -241,7 +241,7 @@ export default function SummaryDemo() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
             <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Monthly savings</h3>
-            <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved — side by side each month</p>
+            <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved, side by side each month</p>
             <div className="flex items-center gap-4 mb-3">
               <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#D4AF37]" /><span className="text-[10px] text-[#9E9E9E]">Goal</span></div>
               <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
@@ -316,7 +316,7 @@ export default function SummaryDemo() {
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
             className="bg-white rounded-2xl border border-[#E8E8E8] p-5">
             <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Money left to spend</h3>
-            <p className="text-xs text-[#9E9E9E] mb-4">Remaining after hitting your savings goal — green = surplus, orange = shortfall</p>
+            <p className="text-xs text-[#9E9E9E] mb-4">Remaining after hitting your savings goal. Green = surplus, orange = shortfall</p>
             <ResponsiveContainer width="100%" height={160}>
               <BarChart data={chartMonths} barCategoryGap="30%">
                 <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
@@ -417,7 +417,7 @@ export default function SummaryDemo() {
                       </div>
                     </>
                   ) : (
-                    <div className="text-[10px] text-[#BDBDBD]">—</div>
+                    <div className="text-[10px] text-[#BDBDBD]"></div>
                   )}
                 </motion.div>
               );

@@ -145,7 +145,7 @@ export default function GardenDemo() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
-        Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own garden
+        Demo preview. <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own garden
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">

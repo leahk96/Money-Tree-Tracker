@@ -182,7 +182,7 @@ function SummaryContent() {
           className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
         >
           <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Monthly savings</h3>
-          <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved — side by side each month</p>
+          <p className="text-xs text-[#9E9E9E] mb-4">Goal vs actual saved, side by side each month</p>
           <div className="flex items-center gap-4 mb-3">
             <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#D4AF37]" /><span className="text-[10px] text-[#9E9E9E]">Goal</span></div>
             <div className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-sm bg-[#17914A]" /><span className="text-[10px] text-[#9E9E9E]">Saved</span></div>
@@ -267,7 +267,7 @@ function SummaryContent() {
           className="bg-white rounded-2xl border border-[#E8E8E8] p-5"
         >
           <h3 className="font-semibold text-[#1B5E20] text-sm mb-1">Money left to spend</h3>
-          <p className="text-xs text-[#9E9E9E] mb-4">Remaining after hitting your savings goal — green = surplus, orange = shortfall</p>
+          <p className="text-xs text-[#9E9E9E] mb-4">Remaining after hitting your savings goal. Green = surplus, orange = shortfall</p>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={chartMonths} barCategoryGap="30%">
               <CartesianGrid strokeDasharray="3 3" stroke="#F5F5F5" vertical={false} />
@@ -423,7 +423,7 @@ function SummaryContent() {
                     </div>
                   </>
                 ) : (
-                  <div className="text-[10px] text-[#BDBDBD]">—</div>
+                  <div className="text-[10px] text-[#BDBDBD]"></div>
                 )}
               </motion.button>
             );

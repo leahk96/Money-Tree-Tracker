@@ -110,7 +110,7 @@ export default function Onboarding() {
                     className="w-full px-4 py-3 rounded-xl border border-[#D0D0D0] bg-[#FAFAFA] focus:outline-none focus:ring-2 focus:ring-[#17914A] text-[#1B5E20] transition"
                   >
                     {Object.entries(SUPPORTED_CURRENCIES).map(([code, symbol]) => (
-                      <option key={code} value={code}>{code} — {symbol}</option>
+                      <option key={code} value={code}>{code} {symbol}</option>
                     ))}
                   </select>
                 </div>

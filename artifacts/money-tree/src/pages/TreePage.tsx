@@ -55,7 +55,7 @@ function CoinSlot({ label, months, earned, index }: { label: string; months: str
 function MonthBox({ summary, isCurrent, onClick }: { summary: MonthSummary | null; month: number; isCurrent: boolean; onClick: () => void }) {
   const { fmt } = useCurrency();
   const monthIdx = summary ? summary.month - 1 : -1;
-  const name = monthIdx >= 0 ? MONTH_NAMES[monthIdx] : "—";
+  const name = monthIdx >= 0 ? MONTH_NAMES[monthIdx] : "";
   const hasData = !!summary;
   const goalMet = summary?.goalMet ?? false;
   const totalSaved = summary?.totalSaved ?? 0;
@@ -130,7 +130,7 @@ function TreeContent() {
           </span>
         </div>
         <p className="text-xs text-[#607D8B] mb-3">
-          Hit your monthly savings goal and your tree grows. Miss a month and it stays put — no shortcuts, no going backwards.
+          Hit your monthly savings goal and your tree grows. Miss a month and it stays put, no shortcuts, no going backwards.
         </p>
 
         <MoneyTreeSVG monthsGoalMet={goalsMetThisYear} celebrateOnChange />
@@ -263,7 +263,7 @@ function TreeContent() {
                 const remaining = 4 - coinsEarned;
                 return (
                   <div className="text-xs text-[#c8a000] mt-1.5 font-medium">
-                    {coinsEarned}/4 coins — {remaining} more quarter{remaining !== 1 ? "s" : ""} to go
+                    {coinsEarned}/4 coins, {remaining} more quarter{remaining !== 1 ? "s" : ""} to go
                   </div>
                 );
               })()}

@@ -69,7 +69,7 @@ export default function TreeDemo() {
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="bg-[#17914A] text-white text-center text-sm py-2 px-4">
-        Demo preview — <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own tree
+        Demo preview. <Link to="/signup" className="underline font-medium">Sign up free</Link> to grow your own tree
       </div>
 
       <header className="flex items-center justify-between px-6 py-3.5 bg-white border-b border-[#E8E8E8] sticky top-0 z-40">
@@ -105,7 +105,7 @@ export default function TreeDemo() {
             </span>
           </div>
           <p className="text-xs text-[#607D8B] mb-3">
-            Hit your monthly savings goal and your tree grows. Miss a month and it stays put — no shortcuts, no going backwards.
+            Hit your monthly savings goal and your tree grows. Miss a month and it stays put, no shortcuts, no going backwards.
           </p>
 
           <MoneyTreeSVG monthsGoalMet={MONTHS_MET} />
@@ -132,7 +132,7 @@ export default function TreeDemo() {
         >
           <div>
             <div className="text-base font-bold text-[#c05a00]">🔥 4 month streak!</div>
-            <div className="text-xs text-[#BF360C] mt-0.5">Q1 coin earned — 2 more months in Q2 to get your next one</div>
+            <div className="text-xs text-[#BF360C] mt-0.5">Q1 coin earned. 2 more months in Q2 to get your next one</div>
           </div>
           <div className="text-4xl">🔥</div>
         </motion.div>
@@ -221,7 +221,7 @@ export default function TreeDemo() {
                     Collect all 4 quarterly coins by hitting your goal every single month. At year end they melt into a gold bar.
                   </div>
                   <div className="text-xs text-[#c8a000] mt-1.5 font-medium">
-                    {coinsEarned}/4 coins — {4 - coinsEarned} more quarter{4 - coinsEarned !== 1 ? "s" : ""} to go
+                    {coinsEarned}/4 coins, {4 - coinsEarned} more quarter{4 - coinsEarned !== 1 ? "s" : ""} to go
                   </div>
                 </div>
               </div>

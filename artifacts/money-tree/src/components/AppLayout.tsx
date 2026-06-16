@@ -89,7 +89,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {/* Upgrade banner — desktop */}
         {!isPremium && (
           <div className="flex items-center justify-between px-6 py-2 bg-[#17914A] text-white">
-            <span className="text-sm">Upgrade to save your progress — pay once, yours forever.</span>
+            <span className="text-sm">Upgrade to save your progress. Pay once, yours forever.</span>
             <button onClick={handleUpgrade} disabled={upgrading} className="ml-4 px-4 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs hover:bg-gray-50 transition whitespace-nowrap disabled:opacity-60">
               {upgrading ? "Loading..." : "Upgrade"}
             </button>
@@ -105,7 +105,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       {/* Upgrade banner — mobile, fixed above bottom nav */}
       {!isPremium && (
         <div className="md:hidden fixed bottom-[60px] inset-x-0 z-30 flex items-center justify-between px-4 py-2.5 bg-[#17914A] text-white">
-          <span className="text-xs font-medium leading-tight">Pay once — save your progress forever.</span>
+          <span className="text-xs font-medium leading-tight">Pay once, save your progress forever.</span>
           <button onClick={handleUpgrade} disabled={upgrading} className="ml-3 px-3 py-1.5 bg-white text-[#17914A] font-semibold rounded-lg text-xs whitespace-nowrap disabled:opacity-60">
             {upgrading ? "..." : "Upgrade"}
           </button>

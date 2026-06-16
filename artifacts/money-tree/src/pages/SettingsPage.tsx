@@ -119,7 +119,7 @@ function SettingsContent() {
       {upgradeSuccess && (
         <div className="flex items-center gap-3 px-4 py-3 bg-[#E8F5E9] border border-[#A5D6A7] rounded-2xl text-sm text-[#1B5E20] font-medium">
           <span className="text-lg">🎉</span>
-          You're now a premium member — your progress is saved forever!
+          You're now a premium member. Your progress is saved forever!
         </div>
       )}
 
@@ -194,7 +194,7 @@ function SettingsContent() {
               className="w-full px-3.5 py-2.5 rounded-xl border border-[#D0D0D0] focus:outline-none focus:ring-2 focus:ring-[#17914A]/40 text-sm text-[#1B5E20] bg-white"
             >
               {Object.entries(SUPPORTED_CURRENCIES).map(([code, sym]) => (
-                <option key={code} value={code}>{sym} — {code}</option>
+                <option key={code} value={code}>{sym} {code}</option>
               ))}
             </select>
           </div>
