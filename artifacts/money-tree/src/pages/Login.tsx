@@ -29,8 +29,8 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img src="/logo.png" className="h-20 w-20 object-contain mx-auto mb-3" alt="Money Tree Tracker" />
-          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree Tracker</h1>
-          <p className="text-[#546E7A] mt-1">Your savings, growing</p>
+          <h1 className="text-3xl font-bold text-[#1B5E20]">Money Tree Budget Tracker</h1>
+          <p className="text-[#546E7A] mt-2 text-sm leading-snug">The budget tracking app that's better than a boring spreadsheet.<br />Watch your savings grow.</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8E8E8] p-8">
